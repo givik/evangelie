@@ -1,141 +1,131 @@
 .page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
   display: flex;
-  min-height: 100vh;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
+  background-color: black;
+}
+/* text sselection color */
+.page ::selection {
+  background-color: grey;
+  color: black;
 }
 
 .main {
   display: flex;
   min-height: 100vh;
   width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
-}
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
-}
-
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
-}
-
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
-}
-
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ctas {
-  display: flex;
   flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
+  align-items: flex-start;
+  padding: 26px 30px;
 }
 
-.ctas a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
+.dropdown-container {
+  display: flex; /* Forces children onto the same line */
+  gap: 20px; /* Adds space between the boxes */
+  align-items: center; /* Ensures they align vertically */
+}
+
+.dropdown {
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: 1px solid grey;
+  font-size: 16px;
+  margin-right: 10px;
+  appearance: none;
   cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
+  background-color: black;
+  color: white;
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
+.input {
+  width: 100%;
+  padding: 19px 16px;
+  border-radius: 8px;
+  border: 1px solid grey;
+  font-size: 16px;
+  color: white;
+  background-color: black;
+  margin-top: 30px;
+  margin-bottom: 13px;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.textarea {
+  width: 100%;
+  height: 300px;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid grey;
+  font-size: 16px;
+  color: white;
+  background-color: black;
+  margin-top: 16px;
+  resize: vertical; /* Allows vertical resizing */
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
+.button {
+  margin-top: 20px;
+  padding: 13px 22px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: black;
+  border: 1px solid grey;
+  color: white;
 }
 
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
+.button:hover {
+  background-color: rgb(78, 78, 78);
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
+.data {
+  width: 35%;
+  color: white;
+  font-size: 18px;
+  line-height: 1.6;
+  padding-top: 4px;
+  line-height: 1.8;
+  color: grey;
+  margin-right: 3%;
+}
 
-  .page {
-    --background: #000;
-    --foreground: #000;
+.form {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
 
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
-  }
+.record {
+  margin-bottom: 40px;
+  border: 1px dotted rgb(67, 67, 67);
+  padding: 15px 20px;
+  border-radius: 20px;
+}
+.book {
+  font-weight: bold;
+  font-size: 16px;
+  color: grey;
+}
+.chapter {
+  font-weight: bold;
+  font-size: 18px;
+  color: grey;
+  margin: 10px;
+}
+.line {
+  font-weight: bold;
+  font-size: 16px;
+  color: grey;
+}
+.author {
+  margin-top: 8px;
+  font-style: italic;
+  color: white;
+}
+.text {
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: grey;
+  font-size: 15px;
 }

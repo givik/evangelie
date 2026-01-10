@@ -1,64 +1,45 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import styles from './page.module.css';
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        <div className={styles.data}>
+          <div className={styles.record}>
+            <div className={styles.author}>ავტორის სახელი გვარი და წოდება</div>
+            <div className={styles.text}>
+              განმარტების ტექსტი განმარტების ტექსტი განმარტების ტექსტი...
+            </div>
+            <span className={styles.book}>მათეს სახარება</span>
+            <span className={styles.chapter}>თავი 1</span>
+            <span className={styles.line}>მუხლი 1</span>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className={styles.form}>
+          <div className={styles.dropdownContainer}>
+            <select name="book" className={styles.dropdown}>
+              <option value="option1">მათეს სახარება</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+            <select name="chapter" className={styles.dropdown}>
+              <option value="option1">თავი 1</option>
+              <option value="option2">თავი 2</option>
+              <option value="option3">თავი 3</option>
+            </select>
+            <select name="line" className={styles.dropdown}>
+              <option value="option1">მუხლი 1</option>
+              <option value="option2">მუხლი 2</option>
+              <option value="option3">მუხლი 3</option>
+            </select>
+          </div>
+          <input name="author" className={styles.input} type="text" placeholder="ავტორი..." />
+          <textarea
+            name="description"
+            className={styles.textarea}
+            placeholder="შეიყვანეთ ტექსტი..."
+          />
+          <button className={styles.button}>დამახსოვრება</button>
         </div>
       </main>
     </div>
