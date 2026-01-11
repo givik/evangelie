@@ -1,46 +1,29 @@
 import styles from './page.module.css';
+import { getData, getOptions } from './actions';
+import Form from './form';
 
-export default function Home() {
+export default async function Home() {
+  const definitions = (await getData())[0];
+  const defaults = (await getData())[1];
+
+  // options the full list of books/chaps/verses
+  const options = await getOptions();
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.data}>
-          <div className={styles.record}>
-            <div className={styles.author}>ავტორის სახელი გვარი და წოდება</div>
-            <div className={styles.text}>
-              განმარტების ტექსტი განმარტების ტექსტი განმარტების ტექსტი...
+          {definitions.map((def) => (
+            <div key={def.id} className={styles.record}>
+              <div className={styles.author}>{def.ავტორი}</div>
+              <span className={styles.book}>{defaults.წიგნი}</span> {/* Fixed: use dynamic data */}
+              <span className={styles.chapter}>თავი {defaults.თავი}</span>
+              <span className={styles.line}>მუხლი {defaults.მუხლი}</span>
+              <div className={styles.text}>{def.ტექსტი}</div>
             </div>
-            <span className={styles.book}>მათეს სახარება</span>
-            <span className={styles.chapter}>თავი 1</span>
-            <span className={styles.line}>მუხლი 1</span>
-          </div>
+          ))}
         </div>
-        <div className={styles.form}>
-          <div className={styles.dropdownContainer}>
-            <select name="book" className={styles.dropdown}>
-              <option value="option1">მათეს სახარება</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </select>
-            <select name="chapter" className={styles.dropdown}>
-              <option value="option1">თავი 1</option>
-              <option value="option2">თავი 2</option>
-              <option value="option3">თავი 3</option>
-            </select>
-            <select name="line" className={styles.dropdown}>
-              <option value="option1">მუხლი 1</option>
-              <option value="option2">მუხლი 2</option>
-              <option value="option3">მუხლი 3</option>
-            </select>
-          </div>
-          <input name="author" className={styles.input} type="text" placeholder="ავტორი..." />
-          <textarea
-            name="description"
-            className={styles.textarea}
-            placeholder="შეიყვანეთ ტექსტი..."
-          />
-          <button className={styles.button}>დამახსოვრება</button>
-        </div>
+        <Form options={options} defaults={defaults} />
       </main>
     </div>
   );

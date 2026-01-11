@@ -5,6 +5,7 @@
   justify-content: center;
   background-color: black;
 }
+
 /* text sselection color */
 .page ::selection {
   background-color: grey;
@@ -20,12 +21,6 @@
   padding: 26px 30px;
 }
 
-.dropdown-container {
-  display: flex; /* Forces children onto the same line */
-  gap: 20px; /* Adds space between the boxes */
-  align-items: center; /* Ensures they align vertically */
-}
-
 .dropdown {
   padding: 12px 22px;
   border-radius: 8px;
@@ -36,6 +31,8 @@
   cursor: pointer;
   background-color: black;
   color: white;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .input {
@@ -46,7 +43,6 @@
   font-size: 16px;
   color: white;
   background-color: black;
-  margin-top: 30px;
   margin-bottom: 13px;
 }
 
@@ -96,9 +92,25 @@
   flex-direction: column;
 }
 
+/* media query for responsiveness */
+@media (max-width: 824px) {
+  .main {
+    flex-direction: column;
+    align-items: center;
+  }
+  .data {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 30px;
+  }
+  .form {
+    width: 100%;
+  }
+}
+
 .record {
-  margin-bottom: 40px;
-  border: 1px dotted rgb(67, 67, 67);
+  margin-bottom: 30px;
+  border: 1px dotted rgb(39, 39, 39);
   padding: 15px 20px;
   border-radius: 20px;
 }
@@ -109,7 +121,7 @@
 }
 .chapter {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   color: grey;
   margin: 10px;
 }
@@ -120,6 +132,7 @@
 }
 .author {
   margin-top: 8px;
+  margin-bottom: 5px;
   font-style: italic;
   color: white;
 }
@@ -128,4 +141,15 @@
   margin-bottom: 13px;
   color: grey;
   font-size: 15px;
+  max-height: 300px;
+  overflow: scroll;
+  /* allways show scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: grey transparent;
+  /* Shrink text */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines to show */
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
