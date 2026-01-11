@@ -16,7 +16,8 @@ export default async function Home() {
           {definitions.map((def) => (
             <div key={def.id} className={styles.record}>
               <div className={styles.author}>{def.ავტორი}</div>
-              <span className={styles.book}>{defaults.წიგნი}</span> {/* Fixed: use dynamic data */}
+              <span className={styles.book}>{defaults.წიგნი}</span>
+              {/* Fixed: use dynamic data */}
               <span className={styles.chapter}>თავი {defaults.თავი}</span>
               <span className={styles.line}>მუხლი {defaults.მუხლი}</span>
               <div className={styles.text}>{def.ტექსტი}</div>

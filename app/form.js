@@ -42,6 +42,7 @@ export default function Form({ options, defaults }) {
   const [selectedChapter, setSelectedChapter] = useState(defaultChapter);
   const [selectedVerse, setSelectedVerse] = useState(defaultVerse);
   const [verseID, setVerseID] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // --- HANDLERS ---
 
@@ -88,68 +89,124 @@ export default function Form({ options, defaults }) {
     () => getVerses(selectedBook, selectedChapter),
     [options, selectedBook, selectedChapter]
   );
+  1;
+
+  const handleSubmit = async (formData) => {
+    setIsSubmitting(true);
+    try {
+      await addDefinition(formData);
+
+      const book = formData.get('book') || '';
+      const chapter = formData.get('chapter') || '';
+      const verse = formData.get('verse') || '';
+
+      setSelectedBook(book);
+      setSelectedChapter(chapter);
+      setSelectedVerse(verse);
+
+      //   if (book && chapter && verse) {
+      //     await handleChange(book, chapter, verse);
+      //   } else {
+      //     setVerseID('');
+      //   }
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <form action={addDefinition} className={styles.form}>
-      <div className={styles.dropdowncontainer}>
-        {/* BOOK SELECT */}
-        <select
-          name="book"
-          className={styles.dropdown}
+    <>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (isSubmitting) return;
+          const formEl = e.target;
+          const fd = new FormData(formEl);
+          const success = await handleSubmit(fd);
+          if (success) {
+            // clear author and text (uncontrolled fields) after successful insert
+            formEl.reset();
+          }
+        }}
+        className={styles.form}
+      >
+        <div className={styles.dropdowncontainer}>
+          {/* BOOK SELECT */}
+          <select
+            name="book"
+            className={styles.dropdown}
+            required
+            value={selectedBook}
+            onChange={handleBookChange}
+            disabled={isSubmitting}
+          >
+            {allBooks.map((book) => (
+              <option key={book} value={book}>
+                {book}
+              </option>
+            ))}
+          </select>
+
+          {/* CHAPTER SELECT */}
+          <select
+            name="chapter"
+            className={styles.dropdown}
+            required
+            value={selectedChapter}
+            onChange={handleChapterChange}
+            disabled={isSubmitting}
+          >
+            {currentChapters.map((chap) => (
+              <option key={chap} value={chap}>
+                თავი {chap}
+              </option>
+            ))}
+          </select>
+
+          {/* VERSE SELECT */}
+          <select
+            name="verse"
+            className={styles.dropdown}
+            required
+            value={selectedVerse}
+            onChange={handleVerseChange}
+            disabled={isSubmitting}
+          >
+            {currentVerses.map((verse) => (
+              <option key={verse} value={verse}>
+                მუხლი {verse}
+              </option>
+            ))}
+          </select>
+
+          <input type="hidden" id="verseID" name="verseID" value={verseID} />
+        </div>
+
+        <input
+          name="author"
+          className={styles.input}
+          type="text"
+          placeholder="ავტორი..."
           required
-          value={selectedBook}
-          onChange={handleBookChange}
-        >
-          {allBooks.map((book) => (
-            <option key={book} value={book}>
-              {book}
-            </option>
-          ))}
-        </select>
-
-        {/* CHAPTER SELECT */}
-        <select
-          name="chapter"
-          className={styles.dropdown}
+          disabled={isSubmitting}
+        />
+        <textarea
+          name="text"
+          className={styles.textarea}
+          placeholder="შეიყვანეთ ტექსტი..."
           required
-          value={selectedChapter}
-          onChange={handleChapterChange}
-        >
-          {currentChapters.map((chap) => (
-            <option key={chap} value={chap}>
-              თავი {chap}
-            </option>
-          ))}
-        </select>
-
-        {/* VERSE SELECT */}
-        <select
-          name="verse"
-          className={styles.dropdown}
-          required
-          value={selectedVerse}
-          onChange={handleVerseChange}
-        >
-          {currentVerses.map((verse) => (
-            <option key={verse} value={verse}>
-              მუხლი {verse}
-            </option>
-          ))}
-        </select>
-
-        <input type="hidden" id="verseID" name="verseID" value={verseID} />
-      </div>
-
-      <input name="author" className={styles.input} type="text" placeholder="ავტორი..." required />
-      <textarea
-        name="text"
-        className={styles.textarea}
-        placeholder="შეიყვანეთ ტექსტი..."
-        required
-      />
-      <button type="submit" className={styles.button}>
-        დამახსოვრება
-      </button>
-    </form>
+          disabled={isSubmitting}
+        />
+        <button type="submit" className={styles.button} disabled={isSubmitting}>
+          {isSubmitting ? 'მიმდინარეობს...' : 'დამახსოვრება'}
+        </button>
+        {/* {submitted && <div className={styles.successMessage}>ტექსტი წარმატებით დამახსოვრდა!</div>} */}
+      </form>
+    </>
   );
 }
