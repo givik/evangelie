@@ -104,12 +104,6 @@ export default function Form({ options, defaults }) {
       setSelectedChapter(chapter);
       setSelectedVerse(verse);
 
-      //   if (book && chapter && verse) {
-      //     await handleChange(book, chapter, verse);
-      //   } else {
-      //     setVerseID('');
-      //   }
-
       return true;
     } catch (err) {
       console.error(err);
@@ -122,6 +116,7 @@ export default function Form({ options, defaults }) {
   return (
     <>
       <form
+        autoComplete="off"
         onSubmit={async (e) => {
           e.preventDefault();
           if (isSubmitting) return;
