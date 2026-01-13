@@ -22,8 +22,8 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 # 2. LOOP THROUGH PAGES (e.g., Chapter 1 to _)
-for chapter in range(1, 22):
-    url = f"https://sasoeba.ge/ka/biblia/mtskheturi-g-mtatsmindelis/sakharebai-iovanesi/{chapter}"
+for chapter in range(1, 17):
+    url = f"https://sasoeba.ge/ka/biblia/tanamedrove-kartul-enaze-orthodoxy/markozis-sakhareba/{chapter}"
     print(f"Scraping chapter: {chapter}...")
 
     try:
@@ -43,28 +43,36 @@ for chapter in range(1, 22):
         container = soup.select_one('div.rt-Box > div.flex.flex-col.gap-rx-2')
 
         if container:
-            # recursive=False ensures we only look at immediate children
             for child in container.find_all(recursive=False):
+                # Default content
+                content = child.get_text(strip=True)
+                
+                # SPECIAL CASE: If it's a div, only look for the h3 inside it
+                if child.name == "div":
+                    h3_tag = child.find("h3")
+                    if h3_tag:
+                        content = h3_tag.get_text(strip=True).replace('\xa0', ' ')
+                    # else: content remains child.get_text() as fallback
+
                 results.append({
-                    "tag": child.name,          # e.g., 'span', 'p', 'a', 'h1'
-                    "content": child.get_text(strip=True),
-                    "class": child.get('class') # Optional: see the CSS classes too
+                    "tag": child.name,
+                    "content": content,
                 })
 
-        # Example Output:
-        # [
-        #   {"tag": "span", "content": "თავი 1", "class": ["rt-Text"]},
-        #   {"tag": "p", "content": "დასაწყისში...", "class": ["description"]}
-        # ]
-            
-        # 3. INSERT INTO DATABASE
+        # 3. INSERT INTO DATABASE (Logic stays the same)
+        theme = ""
         for result in results:
-            num, text = split_and_clean(result["content"])
-            cur.execute(
-                "UPDATE მუხლები SET თემა = %s WHERE თავი = %s AND მუხლი = %s AND წიგნი = %s", 
-                (text, headline_num, num, headline_text)
-            )
-        
+            if result["tag"] == "div":
+                theme = result["content"]  # Now contains only the H3 text
+            
+            if result["tag"] == "span":
+                num, text = split_and_clean(result["content"])
+                
+                cur.execute(
+                    "UPDATE მუხლები SET თემა = %s WHERE თავი = %s AND მუხლი = %s AND წიგნი = %s", 
+                    (theme, headline_num, num, headline_text)
+                )
+            
         conn.commit() # Commit after every chapter
         print(f"Saved chapter {chapter} to database.")
 

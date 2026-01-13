@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import styles from './page.module.css';
 import { addDefinition, getVerseID } from './actions';
+import Editor from 'react-simple-wysiwyg';
 
 export default function Form({ options, defaults }) {
   // --- HELPER FUNCTIONS (to calculate lists) ---
@@ -43,8 +44,13 @@ export default function Form({ options, defaults }) {
   const [selectedVerse, setSelectedVerse] = useState(defaultVerse);
   const [verseID, setVerseID] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [description, setDescription] = useState('');
 
   // --- HANDLERS ---
+
+  const onDescChange = (e) => {
+    setDescription(e.target.value);
+  };
 
   const handleChange = async (book, chapter, verse) => {
     const vID = await getVerseID(book, chapter, verse);
@@ -190,13 +196,22 @@ export default function Form({ options, defaults }) {
           required
           disabled={isSubmitting}
         />
-        <textarea
+        <Editor
           name="text"
           className={styles.textarea}
           placeholder="შეიყვანეთ ტექსტი..."
           required
           disabled={isSubmitting}
+          value={description}
+          onChange={onDescChange}
         />
+        {/* <textarea
+          name="text"
+          className={styles.textarea}
+          placeholder="შეიყვანეთ ტექსტი..."
+          required
+          disabled={isSubmitting}
+        /> */}
         <button type="submit" className={styles.button} disabled={isSubmitting}>
           {isSubmitting ? 'მიმდინარეობს...' : 'დამახსოვრება'}
         </button>
