@@ -46,8 +46,8 @@ for chapter in range(1, 28+1):
         for line in lines:
             num, text = split_and_clean(line)
             cur.execute(
-                "INSERT INTO მუხლები (ტექსტი, თავი, მუხლი, წიგნი) VALUES (%s, %s, %s, %s)", 
-                (text, headline_num, num, headline_text)
+                "UPDATE მუხლები SET ძველი_ტექსტი = %s WHERE თავი = %s AND მუხლი = %s AND წიგნი = %s", 
+                (text, headline_num, num, 'იოანეს სახარება')
             )
         
         conn.commit() # Commit after every chapter
