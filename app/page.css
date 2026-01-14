@@ -1,0 +1,26 @@
+/* App */
+body {
+  background: #111;
+  overflow: hidden;
+}
+
+.flip-book {
+  position: relative;
+  right: 25%;
+}
+
+.empty-page-cover {
+  background-color: #e6c8b6;
+}
+
+.empty-page {
+  background-color: #e6c8b6;
+}
+
+/* Loading */
+
+.page {
+  background-color: #e6c8b6;
+  padding: 50px;
+  line-height: 25px;
+}

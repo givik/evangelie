@@ -1,6 +1,6 @@
 // app/actions.js
 'use server';
-import { query } from '../lib/db';
+import { query } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 export async function getVerseID(book, chapter, verse) {

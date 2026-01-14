@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import styles from './page.module.css';
-import { addDefinition, getVerseID } from './actions';
+import { addDefinition, getVerseID } from '../actions';
 import Editor from 'react-simple-wysiwyg';
 
 export default function Form({ options, defaults }) {

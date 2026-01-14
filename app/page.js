@@ -1,30 +1,55 @@
-import styles from './page.module.css';
+'use client';
+import './page.css';
 import { getData, getOptions } from './actions';
-import Form from './form';
+import HTMLFlipBook from 'react-pageflip';
+import useWindowDimensions from '@/lib/useWindowDimensions';
 
-export default async function Home() {
-  const definitions = (await getData())[0];
-  const defaults = (await getData())[1];
-
-  // options the full list of books/chaps/verses
-  const options = await getOptions();
+export default function Home() {
+  const { height, width } = useWindowDimensions();
 
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <div className={styles.data}>
-          {definitions.map((def) => (
-            <div key={def.id} className={styles.record}>
-              <div className={styles.author}>{def.ავტორი}</div>
-              <span className={styles.book}>{defaults.წიგნი}</span>
-              <span className={styles.chapter}>თავი {defaults.თავი}</span>
-              <span className={styles.line}>მუხლი {defaults.მუხლი}</span>
-              <div className={styles.text}>{def.ტექსტი}</div>
-            </div>
-          ))}
+    <HTMLFlipBook
+      className="flip-book"
+      width={width - 100}
+      height={height - 100}
+      size="stretch"
+      drawShadow={true}
+      flippingTime={1000}
+      usePortrait={true}
+      maxShadowOpacity={0.5}
+      showCover={true}
+    >
+      <div className="page">
+        <div>
+          width: {width} ~ height: {height}
         </div>
-        <Form options={options} defaults={defaults} />
-      </main>
-    </div>
+        <p>1. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>2. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>3. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>4. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+      </div>
+      <div className="empty-page"></div>
+      <div className="page">
+        <p>1. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>2. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>3. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>4. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+      </div>
+      <div className="empty-page"></div>
+      <div className="page">
+        <p>1. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>2. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>3. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>4. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+      </div>
+      <div className="empty-page"></div>
+      <div className="page">
+        <p>1. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>2. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>3. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+        <p>4. ლორემ იპსუმ დოლორ სით ამეთ, კონსექტეტურ ადიპისცინგ ელი.</p>
+      </div>
+      <div className="empty-page"></div>
+    </HTMLFlipBook>
   );
 }
