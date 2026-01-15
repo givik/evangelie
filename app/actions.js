@@ -1,7 +1,41 @@
-// app/actions.js
 'use server';
 import { query } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+
+export async function getBooks() {
+  try {
+    const res = await query('SELECT DISTINCT წიგნი FROM მუხლები ORDER BY წიგნი');
+    return res.rows;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
+export async function getChapters(book) {
+  try {
+    const res = await query('SELECT DISTINCT თავი FROM მუხლები WHERE წიგნი = $1 ORDER BY თავი', [
+      book,
+    ]);
+    return res.rows;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
+export async function getVerses(book, chapter) {
+  try {
+    const res = await query(
+      'SELECT ტექსტი FROM მუხლები WHERE წიგნი = $1 AND თავი = $2 ORDER BY მუხლი',
+      [book, chapter]
+    );
+    return res.rows;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
 
 export async function getVerseID(book, chapter, verse) {
   try {
@@ -12,7 +46,7 @@ export async function getVerseID(book, chapter, verse) {
     return res.rows[0]?.id || null;
   } catch (e) {
     console.log(e);
-    return [];
+    return null;
   }
 }
 

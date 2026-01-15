@@ -1,26 +1,50 @@
-/* App */
 body {
-  background: #111;
-  overflow: hidden;
+  height: 100%;
 }
-
-.flip-book {
-  position: relative;
-  right: 25%;
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  gap: 20px; /* Space between divs */
+  height: 100%;
+  background: #f6f1e2;
+  /* color: #4e321b; */
 }
-
-.empty-page-cover {
-  background-color: #e6c8b6;
+select {
+  padding: 10px 15px;
+  padding-left: 10px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  padding-right: 35px;
+  border-radius: 7px;
+  font-size: 19px;
 }
-
-.empty-page {
-  background-color: #e6c8b6;
+/* align sidebar and content side by side */
+.sidebar {
+  border-right: 1px solid #ccc;
+  width: 20%;
 }
-
-/* Loading */
-
-.page {
-  background-color: #e6c8b6;
-  padding: 50px;
-  line-height: 25px;
+.sidebar .themes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+.content {
+  flex: 3;
+}
+.content h1 {
+  margin-bottom: 20px;
+  font-size: clamp(3rem, calc(3vw + 1rem), 3.5rem);
+}
+.verses {
+  margin-top: 30px;
+}
+.verses p {
+  font-size: clamp(1.5rem, calc(3vw + 1rem), 1.5rem);
+  line-height: 2.55rem;
 }
