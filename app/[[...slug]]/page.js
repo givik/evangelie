@@ -36,8 +36,11 @@ const Page = ({ params }) => {
     const storedBook = localStorage.getItem('selectedBook');
     const storedChapter = localStorage.getItem('selectedChapter');
 
-    setSelectedBook(storedBook || 'მათეს სახარება');
-    setSelectedChapter(storedChapter || '1');
+    // setSelectedBook(storedBook || 'მათეს სახარება');
+    // setSelectedChapter(storedChapter || '1');
+
+    const book = books.find((b) => b.name === storedBook);
+    if (book) router.push('/' + book.short + '/' + (storedChapter || '1'));
 
     setLoaded(true);
   }, []);
@@ -86,71 +89,75 @@ const Page = ({ params }) => {
 
   return (
     <div className="container">
-      <div className="controls">
-        <div className="book-selector">
-          <div className="themes">
-            {loaded &&
-              books.map((book, index) => (
+      {loaded && (
+        <div className="controls">
+          <div className="book-selector">
+            <div className="themes">
+              {books.map((book, index) => (
                 <div className={bookFontBold.className} key={index}>
                   {book.name}
                 </div>
               ))}
-          </div>
-          {loaded ? (
-            <select
-              value={selectedBook}
-              className={`short-book-name ` + bookFontBold.className}
-              onChange={handleBookChange}
-            >
-              {books.map((book, index) => (
-                <option key={index} value={book.name}>
-                  {book.short}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <div style={{ height: '40px' }} />
-          )}
-          {loaded ? (
-            <select
-              value={selectedBook}
-              className={`long-book-name ` + bookFontBold.className}
-              onChange={handleBookChange}
-            >
-              {books.map((book, index) => (
-                <option key={index}>{book.name}</option>
-              ))}
-            </select>
-          ) : (
-            <div style={{ height: '40px' }} />
-          )}
-          {loaded ? (
-            <select
-              value={selectedChapter}
-              className={'chapter-selector ' + bookFontBold.className}
-              onChange={handleChapterChange}
-            >
-              {chapters.length === 0 ? (
-                <option value="">თავი {selectedChapter}</option>
-              ) : (
-                chapters.map((chapter, index) => (
-                  <option key={index} value={chapter.თავი}>
-                    თავი {chapter.თავი}
+            </div>
+            {
+              <select
+                value={selectedBook}
+                className={`short-book-name ` + bookFontBold.className}
+                onChange={handleBookChange}
+              >
+                {books.map((book, index) => (
+                  <option key={index} value={book.name}>
+                    {book.short}
                   </option>
-                ))
-              )}
-            </select>
-          ) : (
-            <div style={{ height: '40px' }} />
-          )}
+                ))}
+              </select>
+            }
+            {
+              <select
+                defaultValue={selectedBook}
+                className={`long-book-name ` + bookFontBold.className}
+                onChange={handleBookChange}
+              >
+                {books.map((book, index) => (
+                  <option key={index} value={book.name}>
+                    {book.name}
+                  </option>
+                ))}
+              </select>
+            }
+            {
+              <select
+                value={selectedChapter}
+                className={'chapter-selector ' + bookFontBold.className}
+                onChange={handleChapterChange}
+              >
+                {chapters.length === 0 ? (
+                  <option value={selectedChapter}>თავი {selectedChapter}</option>
+                ) : (
+                  chapters.map((chapter, index) => (
+                    <option key={index} value={chapter.თავი}>
+                      თავი {chapter.თავი}
+                    </option>
+                  ))
+                )}
+              </select>
+            }
+          </div>
+          <div className="btn-container">
+            <button className={`btn ` + textFont.className}>{'<'} წინა თავი</button>
+            <button className={`btn ` + textFont.className}>შემდეგი თავი {'>'}</button>
+          </div>
         </div>
-        <div className="btn-container">
-          <button className={`btn ` + textFont.className}>{'<'} წინა თავი</button>
-          <button className={`btn ` + textFont.className}>შემდეგი თავი {'>'}</button>
-        </div>
-      </div>
+      )}
       <div className="content">
-        <h1 className={bookFontBold.className}>{loaded ? selectedBook : ''}</h1>
+        <h1 className={'header ' + bookFontBold.className}>
+          {loaded && (
+            <>
+              <span className="book-name">{selectedBook}</span>
+              <span className="book-chapter">თავი {selectedChapter} </span>
+            </>
+          )}
+        </h1>
         <div className="verses">
           {loaded
             ? verses.map((verse, index) => (
