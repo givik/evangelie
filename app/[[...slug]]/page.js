@@ -60,8 +60,6 @@ const Page = ({ params }) => {
     if (selectedBook) {
       getChapters(selectedBook).then((data) => {
         setChapters(data);
-        // console.log('selectedBook:', selectedBook);
-        // console.log('data:', data);
       });
     }
   }, [selectedBook]);
