@@ -7,6 +7,7 @@ body {
   padding: 20px;
   font-family: Arial, sans-serif;
   display: flex;
+  justify-content: center;
   gap: 20px; /* Space between divs */
   height: 100%;
   color: #333;
@@ -25,15 +26,15 @@ body {
   padding: min(1em, 3%);
   border-radius: 1rem;
   /* glass effect */
-  background: rgb(51 51 51 / 92%);
+  background: rgb(51 51 51 / 80%);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   width: 90%;
 }
 .controls .book-selector {
   display: flex;
-  gap: 0.5rem;
-  width: min-content;
+  gap: 1rem;
+  width: 50%;
 }
 .controls .book-selector select {
   padding: 10px 19px;
@@ -49,6 +50,25 @@ body {
   font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem);
   cursor: pointer;
   background-color: #f6f1e2;
+}
+.controls .btn-container {
+  width: 50%;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+.controls .btn {
+  padding: 10px 19px;
+  border-radius: 0.9rem;
+  border: none;
+  outline: none;
+  font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem);
+  cursor: pointer;
+  background-color: #f6f1e2;
+  width: 15rem;
+}
+.controls .btn:active {
+  opacity: 0.9;
 }
 
 /* .book-selector:hover:has(select) .themes {
@@ -83,4 +103,31 @@ body {
 }
 .verses p .index {
   font-size: 1.3rem;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .controls .btn-container {
+    display: none;
+  }
+  .controls .book-selector {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }

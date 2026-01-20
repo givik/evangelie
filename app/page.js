@@ -106,8 +106,10 @@ const Page = () => {
             <div style={{ height: '40px' }} />
           )}
         </div>
-        <button className="btn">წინა თავი</button>
-        <button className="btn">შემდეგი თავი</button>
+        <div className="btn-container">
+          <button className={`btn ` + textFont.className}>{'<'} წინა თავი</button>
+          <button className={`btn ` + textFont.className}>შემდეგი თავი {'>'}</button>
+        </div>
       </div>
       <div className="content">
         <h1 className={bookFontBold.className}>{loaded ? selectedBook : ''}</h1>
