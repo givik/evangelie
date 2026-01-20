@@ -1,18 +1,19 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { getChapters, getVerses } from './actions';
+import { useState, useEffect, use } from 'react';
+import { getChapters, getVerses } from '../actions';
+import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
 import './page.css';
 
 const bookFontBold = localFont({
-  src: './fonts/gl-lortkipanidze-bold.ttf',
+  src: '../fonts/gl-lortkipanidze-bold.ttf',
 });
 
 const textFont = localFont({
-  src: './fonts/bpg_nino_elite_round.otf',
+  src: '../fonts/bpg_nino_elite_round.otf',
 });
 
-const Page = () => {
+const Page = ({ params }) => {
   const [loaded, setLoaded] = useState(false);
   const [books, setBooks] = useState([
     { short: 'მათე', name: 'მათეს სახარება' },
@@ -26,6 +27,10 @@ const Page = () => {
   const [selectedBook, setSelectedBook] = useState('');
   const [selectedChapter, setSelectedChapter] = useState('1');
 
+  const { slug } = use(params);
+  const decodedSlug = slug ? slug.map((s) => decodeURIComponent(s)) : [];
+  const router = useRouter();
+
   useEffect(() => {
     // get selected book & chapter from local storage
     const storedBook = localStorage.getItem('selectedBook');
@@ -36,6 +41,20 @@ const Page = () => {
 
     setLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (decodedSlug.length > 0) {
+      // compare books.short and decodedSlug[0]
+      const book = books.find((b) => b.short === decodedSlug[0]);
+      if (book) {
+        setSelectedBook(book.name);
+      }
+
+      const chapter = decodedSlug[1] || '1';
+      setSelectedChapter(chapter);
+    }
+    setLoaded(true);
+  }, [decodedSlug]);
 
   useEffect(() => {
     if (selectedBook) {
@@ -55,8 +74,9 @@ const Page = () => {
 
   const handleBookChange = (e) => {
     const newBook = e.target.value;
-    setSelectedBook(newBook);
     localStorage.setItem('selectedBook', newBook);
+    const book = books.find((b) => b.name === newBook);
+    if (book) router.push('/' + book.short + '/' + selectedChapter);
   };
 
   const handleChapterChange = (e) => {
