@@ -32,15 +32,35 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   useEffect(() => {
-    // get selected book & chapter from local storage
-    const storedBook = localStorage.getItem('selectedBook');
-    const storedChapter = localStorage.getItem('selectedChapter');
+    let book = decodedSlug[0];
+    let chapter = decodedSlug[1];
+    let verse = decodedSlug[2];
 
-    // setSelectedBook(storedBook || 'მათეს სახარება');
-    // setSelectedChapter(storedChapter || '1');
+    if (book) {
+      console.log('YES');
+      book = books.find((b) => b.short === book).short;
 
-    const book = books.find((b) => b.name === storedBook);
-    if (book) router.push('/' + book.short + '/' + (storedChapter || '1'));
+      console.log('book', book);
+      console.log('chapter', chapter);
+      console.log('verse', verse);
+
+      if (book) localStorage.setItem('selectedBook', book);
+      if (chapter) localStorage.setItem('selectedChapter', chapter);
+      if (verse) localStorage.setItem('selectedVerse', verse);
+
+      setSelectedBook(book || 'მათე');
+      setSelectedChapter(chapter || '1');
+    } else {
+      console.log('No');
+      const book = localStorage.getItem('selectedBook') || 'მათე';
+      const chapter = localStorage.getItem('selectedChapter') || '1';
+      const verse = localStorage.getItem('selectedVerse');
+
+      console.log('book', book);
+      console.log('chapter', chapter);
+      console.log('verse', verse);
+      router.push(`/${book}/${chapter}`);
+    }
 
     setLoaded(true);
   }, []);
@@ -82,6 +102,24 @@ const Page = ({ params }) => {
 
   const handleChapterChange = (e) => {
     const newChapter = e.target.value;
+    localStorage.setItem('selectedChapter', newChapter);
+    const book = books.find((b) => b.name === selectedBook);
+    if (book) router.push('/' + book.short + '/' + newChapter);
+  };
+
+  const prevChapter = () => {
+    const newChapter = parseInt(selectedChapter) - 1;
+    // check if newChapter is valid and chapter exists
+    if (newChapter < 1) return;
+    localStorage.setItem('selectedChapter', newChapter);
+    const book = books.find((b) => b.name === selectedBook);
+    if (book) router.push('/' + book.short + '/' + newChapter);
+  };
+
+  const nextChapter = () => {
+    const newChapter = parseInt(selectedChapter) + 1;
+    // check if newChapter is valid and chapter exists
+    if (newChapter > chapters.length) return;
     localStorage.setItem('selectedChapter', newChapter);
     const book = books.find((b) => b.name === selectedBook);
     if (book) router.push('/' + book.short + '/' + newChapter);
@@ -144,8 +182,12 @@ const Page = ({ params }) => {
             }
           </div>
           <div className="btn-container">
-            <button className={`btn ` + textFont.className}>{'<'} წინა თავი</button>
-            <button className={`btn ` + textFont.className}>შემდეგი თავი {'>'}</button>
+            <button className={`btn ` + textFont.className} onClick={prevChapter}>
+              {'<'} წინა თავი
+            </button>
+            <button className={`btn ` + textFont.className} onClick={nextChapter}>
+              შემდეგი თავი {'>'}
+            </button>
           </div>
         </div>
       )}

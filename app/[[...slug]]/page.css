@@ -9,7 +9,7 @@ body {
   justify-content: center;
   height: 100%;
   color: #333;
-  padding-bottom: 100px; /* to prevent content being hidden behind controls */
+  padding-bottom: 150px; /* to prevent content being hidden behind controls */
 }
 /* align controls and content side by side */
 .controls {
@@ -87,13 +87,13 @@ body {
 }
 .content .header .book-name {
   font-size: clamp(3.1rem, calc(3vw + 1rem), 3.5rem);
-  flex: 3;
+  width: 75%;
 }
 .content .header .book-chapter {
-  font-size: clamp(2.1rem, calc(3vw + 1rem), 3.5rem);
-  width: 49%;
-  text-align: left;
-  flex: 1;
+  color: rgb(33, 33, 33);
+  font-size: clamp(2.1rem, calc(2.6vw + 1rem), 3.5rem);
+  width: 20%;
+  text-align: right;
 }
 .content h1 {
   margin-bottom: 20px;
@@ -104,7 +104,7 @@ body {
 }
 .verses p {
   font-size: clamp(1.9rem, calc(1vw + 1rem), 3.5rem);
-  line-height: 2.3rem;
+  line-height: 2.4rem;
   margin-bottom: 1.3rem;
   margin-left: 0.5rem;
 }
