@@ -59,10 +59,24 @@ const Page = () => {
     localStorage.setItem('selectedBook', newBook);
   };
 
+  const handleChapterChange = (e) => {
+    const newChapter = e.target.value;
+    setSelectedChapter(newChapter);
+    localStorage.setItem('selectedChapter', newChapter);
+  };
+
   return (
     <div className="container">
-      <div className="sidebar">
+      <div className="controls">
         <div className="book-selector">
+          <div className="themes">
+            {loaded &&
+              books.map((book, index) => (
+                <div className={bookFontBold.className} key={index}>
+                  {book}
+                </div>
+              ))}
+          </div>
           {loaded ? (
             <select
               value={selectedBook}
@@ -76,25 +90,35 @@ const Page = () => {
           ) : (
             <div style={{ height: '40px' }} />
           )}
-          <div className="themes">
-            {loaded &&
-              books.map((book, index) => (
-                <div className={bookFontBold.className} key={index}>
-                  {book}
-                </div>
+          {loaded ? (
+            <select
+              value={selectedChapter}
+              className={bookFontBold.className}
+              onChange={handleChapterChange}
+            >
+              {chapters.map((chapter, index) => (
+                <option key={index} value={chapter.თავი}>
+                  თავი {chapter.თავი}
+                </option>
               ))}
-          </div>
+            </select>
+          ) : (
+            <div style={{ height: '40px' }} />
+          )}
         </div>
+        <button className="btn">წინა თავი</button>
+        <button className="btn">შემდეგი თავი</button>
       </div>
       <div className="content">
         <h1 className={bookFontBold.className}>{loaded ? selectedBook : ''}</h1>
         <div className="verses">
-          {loaded &&
-            verses.map((verse, index) => (
-              <p key={index} className={textFont.className}>
-                {index + 1}. {verse.ტექსტი}
-              </p>
-            ))}
+          {loaded
+            ? verses.map((verse, index) => (
+                <p key={index} className={textFont.className}>
+                  <span className="index">{index + 1}</span> .{verse.ტექსტი}
+                </p>
+              ))
+            : ''}
         </div>
       </div>
     </div>

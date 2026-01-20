@@ -1,5 +1,6 @@
 body {
   height: 100%;
+  background: #f6f1e2;
 }
 .container {
   margin: 0 auto;
@@ -8,43 +9,78 @@ body {
   display: flex;
   gap: 20px; /* Space between divs */
   height: 100%;
-  background: #f6f1e2;
-  /* color: #4e321b; */
+  color: #333;
+  padding-bottom: 100px; /* to prevent content being hidden behind controls */
 }
-select {
-  padding: 10px 15px;
-  padding-left: 10px;
+/* align controls and content side by side */
+.controls {
+  position: fixed;
+  /* From https://css.glass */
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  gap: 2rem;
+  bottom: 2%;
+  padding: min(1em, 3%);
+  border-radius: 1rem;
+  /* glass effect */
+  background: rgb(51 51 51 / 92%);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  width: 90%;
+}
+.controls .book-selector {
+  display: flex;
+  gap: 0.5rem;
+  width: min-content;
+}
+.controls .book-selector select {
+  padding: 10px 19px;
   appearance: none;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 20px;
   padding-right: 35px;
-  border-radius: 7px;
-  font-size: 19px;
+  border-radius: 0.9rem;
+  border: none;
+  outline: none;
+  font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem);
+  cursor: pointer;
+  background-color: #f6f1e2;
 }
-/* align sidebar and content side by side */
-.sidebar {
-  border-right: 1px solid #ccc;
-  width: 20%;
-}
-.sidebar .themes {
+
+/* .book-selector:hover:has(select) .themes {
+  display: flex;
+} */
+
+.controls .themes {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-top: 15px;
+  margin: 15px 0 0 0;
+  font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem);
+  display: none;
+  cursor: default;
 }
+
 .content {
   flex: 3;
 }
 .content h1 {
   margin-bottom: 20px;
-  font-size: clamp(3rem, calc(3vw + 1rem), 3.5rem);
+  font-size: clamp(3.1rem, calc(3vw + 1rem), 3.5rem);
 }
 .verses {
   margin-top: 30px;
 }
 .verses p {
-  font-size: clamp(1.5rem, calc(3vw + 1rem), 1.5rem);
-  line-height: 2.55rem;
+  font-size: 1.6rem;
+  line-height: 2.3rem;
+  margin-bottom: 1.3rem;
+  margin-left: 0.5rem;
+}
+.verses p .index {
+  font-size: 1.3rem;
 }
