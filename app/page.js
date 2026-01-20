@@ -15,10 +15,10 @@ const textFont = localFont({
 const Page = () => {
   const [loaded, setLoaded] = useState(false);
   const [books, setBooks] = useState([
-    'მათეს სახარება',
-    'მარკოზის სახარება',
-    'ლუკას სახარება',
-    'იოანეს სახარება',
+    { short: 'მათე', name: 'მათეს სახარება' },
+    { short: 'მარკოზი', name: 'მარკოზის სახარება' },
+    { short: 'ლუკა', name: 'ლუკას სახარება' },
+    { short: 'იოანე', name: 'იოანეს სახარება' },
   ]);
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
@@ -73,18 +73,33 @@ const Page = () => {
             {loaded &&
               books.map((book, index) => (
                 <div className={bookFontBold.className} key={index}>
-                  {book}
+                  {book.name}
                 </div>
               ))}
           </div>
           {loaded ? (
             <select
               value={selectedBook}
-              className={bookFontBold.className}
+              className={`short-book-name ` + bookFontBold.className}
               onChange={handleBookChange}
             >
               {books.map((book, index) => (
-                <option key={index}>{book}</option>
+                <option key={index} value={book.name}>
+                  {book.short}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div style={{ height: '40px' }} />
+          )}
+          {loaded ? (
+            <select
+              value={selectedBook}
+              className={`long-book-name ` + bookFontBold.className}
+              onChange={handleBookChange}
+            >
+              {books.map((book, index) => (
+                <option key={index}>{book.name}</option>
               ))}
             </select>
           ) : (

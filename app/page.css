@@ -5,7 +5,6 @@ body {
 .container {
   margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
   gap: 20px; /* Space between divs */
@@ -24,9 +23,9 @@ body {
   gap: 2rem;
   bottom: 2%;
   padding: min(1em, 3%);
-  border-radius: 1rem;
+  border-radius: 0.9rem;
   /* glass effect */
-  background: rgb(51 51 51 / 80%);
+  background: rgb(51 51 51 / 95%);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   width: 90%;
@@ -96,7 +95,7 @@ body {
   margin-top: 30px;
 }
 .verses p {
-  font-size: 1.6rem;
+  font-size: clamp(1.9rem, calc(2vw + 1rem), 3.5rem);
   line-height: 2.3rem;
   margin-bottom: 1.3rem;
   margin-left: 0.5rem;
@@ -107,6 +106,9 @@ body {
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+  .controls .book-selector .long-book-name {
+    display: none;
+  }
   .controls .btn-container {
     display: none;
   }
@@ -114,14 +116,26 @@ body {
     width: 100%;
     justify-content: center;
   }
+  .controls .book-selector select {
+    font-size: clamp(1rem, calc(2vw + 1rem), 3.5rem);
+  }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
+  .controls .book-selector .long-book-name {
+    display: none;
+  }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+  .controls .book-selector .short-book-name {
+    display: none;
+  }
+  .controls .book-selector .long-book-name {
+    display: flex;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
