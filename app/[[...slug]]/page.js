@@ -76,13 +76,14 @@ const Page = ({ params }) => {
     const newBook = e.target.value;
     localStorage.setItem('selectedBook', newBook);
     const book = books.find((b) => b.name === newBook);
-    if (book) router.push('/' + book.short + '/' + selectedChapter);
+    if (book) router.push('/' + book.short + '/1');
   };
 
   const handleChapterChange = (e) => {
     const newChapter = e.target.value;
-    setSelectedChapter(newChapter);
     localStorage.setItem('selectedChapter', newChapter);
+    const book = books.find((b) => b.name === selectedBook);
+    if (book) router.push('/' + book.short + '/' + newChapter);
   };
 
   return (
@@ -128,14 +129,18 @@ const Page = ({ params }) => {
           {loaded ? (
             <select
               value={selectedChapter}
-              className={bookFontBold.className}
+              className={'chapter-selector ' + bookFontBold.className}
               onChange={handleChapterChange}
             >
-              {chapters.map((chapter, index) => (
-                <option key={index} value={chapter.თავი}>
-                  თავი {chapter.თავი}
-                </option>
-              ))}
+              {chapters.length === 0 ? (
+                <option value="">თავი {selectedChapter}</option>
+              ) : (
+                chapters.map((chapter, index) => (
+                  <option key={index} value={chapter.თავი}>
+                    თავი {chapter.თავი}
+                  </option>
+                ))
+              )}
             </select>
           ) : (
             <div style={{ height: '40px' }} />
