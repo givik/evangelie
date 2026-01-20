@@ -3,6 +3,7 @@ import { useState, useEffect, use } from 'react';
 import { getChapters, getVerses } from '../actions';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
+import DropdownMenuDemo from '@/components/dropdown';
 import './page.css';
 
 const bookFontBold = localFont({
@@ -39,10 +40,9 @@ const Page = ({ params }) => {
     if (book) {
       console.log('YES');
       book = books.find((b) => b.short === book).short;
-
-      console.log('book', book);
-      console.log('chapter', chapter);
-      console.log('verse', verse);
+      // console.log('book', book);
+      // console.log('chapter', chapter);
+      // console.log('verse', verse);
 
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
@@ -56,9 +56,9 @@ const Page = ({ params }) => {
       const chapter = localStorage.getItem('selectedChapter') || '1';
       const verse = localStorage.getItem('selectedVerse');
 
-      console.log('book', book);
-      console.log('chapter', chapter);
-      console.log('verse', verse);
+      // console.log('book', book);
+      // console.log('chapter', chapter);
+      // console.log('verse', verse);
       router.push(`/${book}/${chapter}`);
     }
 
@@ -129,6 +129,7 @@ const Page = ({ params }) => {
     <div className="container">
       {loaded && (
         <div className="controls">
+          <DropdownMenuDemo />
           <div className="book-selector">
             <div className="themes">
               {books.map((book, index) => (
