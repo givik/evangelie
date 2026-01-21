@@ -1,0 +1,83 @@
+.item {
+  border-radius: 12px;
+  position: relative;
+  width: 100%;
+}
+
+.item-title,
+.item-long-line,
+.item-short-line,
+.item-image {
+  background-color: rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.item-image {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  height: 16rem;
+  width: 100%;
+}
+
+.item-title {
+  border-radius: 0.8rem;
+  height: 1.6rem;
+  margin: 2rem 0 2rem 2rem;
+  width: 14rem;
+}
+
+.item-long-line {
+  border-radius: 0.5rem;
+  height: 1rem;
+  margin: 1rem 0 1rem 0.3rem;
+}
+
+.item-short-line {
+  border-radius: 0.5rem;
+  height: 1rem;
+  margin: 1rem 0 2rem 0.3rem;
+  width: 12rem;
+}
+
+.item-title::after,
+.item-long-line::after,
+.item-short-line::after,
+.item-image::after {
+  animation: background-shimmer 1.5s linear infinite forwards;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+  background-repeat: no-repeat;
+  background-size: 12rem 100%;
+  border-radius: inherit;
+  content: '';
+  height: inherit;
+  position: absolute;
+  width: inherit;
+}
+
+.item-title::after,
+.item-long-line::after,
+.item-short-line::after {
+  /* To calculate this delay (for sync purposes):
+  delay = distance-delta / animation-speed
+  where:
+  distance-delta = image-left(x)-position - text-left(x)-position
+  (in this case distance-delta = text left margin)
+  animation-speed = animation-distance / animation-duration
+  ---------------------------------------------------------------
+  To better understand the purpose of this delay,
+  comment it and replace linear gradient color (above) for some
+  more contrast color like red, blue, green, etc.
+  */
+  animation-delay: 0.075s;
+}
+
+/* Animation */
+@keyframes background-shimmer {
+  0% {
+    background-position: -12rem 0;
+  }
+
+  100% {
+    background-position: calc(12rem + 16rem) 0;
+  }
+}

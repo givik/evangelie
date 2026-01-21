@@ -1,9 +1,9 @@
 'use client';
 import { useState, useEffect, use } from 'react';
 import { getChapters, getVerses } from '../actions';
+import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
-import DropdownMenuDemo from '@/components/dropdown';
 import './page.css';
 
 const bookFontBold = localFont({
@@ -129,7 +129,6 @@ const Page = ({ params }) => {
     <div className="container">
       {loaded && (
         <div className="controls">
-          <DropdownMenuDemo />
           <div className="book-selector">
             <div className="themes">
               {books.map((book, index) => (
@@ -202,13 +201,19 @@ const Page = ({ params }) => {
           )}
         </h1>
         <div className="verses">
-          {loaded
-            ? verses.map((verse, index) => (
-                <p key={index} className={textFont.className}>
-                  <span className="index">{index + 1}</span> .{verse.ტექსტი}
-                </p>
-              ))
-            : ''}
+          {!loaded && verses.length === 0 && (
+            <>
+              <Placeholder />
+              <div className={`loading-text ` + textFont.className}>წმინდა სახარება</div>
+              <Placeholder />
+            </>
+          )}
+          {loaded &&
+            verses.map((verse, index) => (
+              <p key={index} className={textFont.className}>
+                <span className="index">{index + 1}</span> .{verse.ტექსტი}
+              </p>
+            ))}
         </div>
       </div>
     </div>
