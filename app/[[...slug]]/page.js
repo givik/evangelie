@@ -4,6 +4,8 @@ import { getChapters, getVerses } from '../actions';
 import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
+import Image from 'next/image';
+
 import './page.css';
 
 const bookFontBold = localFont({
@@ -185,7 +187,10 @@ const Page = ({ params }) => {
             <button className={`btn ` + textFont.className} onClick={prevChapter}>
               {'<'} წინა თავი
             </button>
-            <button className={`btn ` + textFont.className} onClick={nextChapter}>
+            <button
+              className={`btn paper paper-curl-right ` + textFont.className}
+              onClick={nextChapter}
+            >
               შემდეგი თავი {'>'}
             </button>
           </div>
@@ -204,7 +209,10 @@ const Page = ({ params }) => {
           {!loaded && verses.length === 0 && (
             <>
               <Placeholder />
-              <div className={`loading-text ` + textFont.className}>წმინდა სახარება</div>
+              <div className={`loading-text ` + textFont.className}>
+                წმინდა
+                <Image src="/cross-orthodox.svg" width={42} height={42} alt="ჯვარი" /> სახარება
+              </div>
               <Placeholder />
             </>
           )}
