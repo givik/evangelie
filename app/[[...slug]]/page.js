@@ -131,6 +131,48 @@ const Page = ({ params }) => {
     <div className="container">
       {loaded && (
         <div className="controls">
+          <nav role="navigation">
+            <div id="menuToggle">
+              <input type="checkbox" id="menuCheckbox" />
+
+              <span></span>
+              <span></span>
+              <span></span>
+
+              <ul id="menu">
+                <li>
+                  <a href="#">
+                    <label htmlFor="menuCheckbox" onClick={() => this.parentNode.click()}>
+                      Home
+                    </label>
+                  </a>
+                </li>
+                <li>
+                  <a href="#about">
+                    <label htmlFor="menuCheckbox" onClick={() => this.parentNode.click()}>
+                      About
+                    </label>
+                  </a>
+                </li>
+
+                <li>
+                  <label htmlFor="menuCheckbox">
+                    <a>Info</a>
+                  </label>
+                </li>
+                <li>
+                  <label htmlFor="menuCheckbox">
+                    <a>Contact</a>
+                  </label>
+                </li>
+                <li>
+                  <a href="https://erikterwan.com/" target="_blank">
+                    Show me more
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
           <div className="book-selector">
             <div className="themes">
               {books.map((book, index) => (
@@ -185,14 +227,21 @@ const Page = ({ params }) => {
           </div>
           <div className="btn-container">
             <button className={`btn ` + textFont.className} onClick={prevChapter}>
-              {'<'} წინა თავი
+              {'<'}{' '}
+              <span>
+                წინა <span>თავი</span>
+              </span>
             </button>
             <button className={`btn ` + textFont.className} onClick={nextChapter}>
-              შემდეგი თავი {'>'}
+              <span>
+                შემდეგი <span>თავი</span>
+              </span>{' '}
+              {'>'}
             </button>
           </div>
         </div>
       )}
+
       <div className="content">
         <h1 className={'header ' + bookFontBold.className}>
           {loaded && (
@@ -224,7 +273,7 @@ const Page = ({ params }) => {
                 <div key={verse.id} className={textFont.className}>
                   {topic && <div className={'topic'}>{topic}</div>}
                   <p className="verse">
-                    <span className="index">{index + 1}</span> .{verse.ტექსტი}
+                    <span className="index">{index + 1}</span> .{verse.ძველი_ტექსტი}
                   </p>
                 </div>
               );

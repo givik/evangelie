@@ -27,7 +27,7 @@ export async function getChapters(book) {
 export async function getVerses(book, chapter) {
   try {
     const res = await query(
-      'SELECT id, თემა, მუხლი, ტექსტი FROM მუხლები WHERE წიგნი = $1 AND თავი = $2 ORDER BY მუხლი',
+      'SELECT id, თემა, მუხლი, ტექსტი, ძველი_ტექსტი FROM მუხლები WHERE წიგნი = $1 AND თავი = $2 ORDER BY მუხლი',
       [book, chapter],
     );
     return res.rows;

@@ -1,3 +1,6 @@
+* {
+  scroll-behavior: smooth;
+}
 body {
   height: 100%;
   background: #f6f1e2;
@@ -37,10 +40,16 @@ body {
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
+.controls > nav {
+  width: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .controls .book-selector {
   display: flex;
   justify-content: flex-start;
-  gap: 1rem;
+  gap: 0.5rem;
   width: 45%;
 }
 .controls .book-selector select {
@@ -53,7 +62,6 @@ body {
   border-radius: 0.9rem;
   border: 1px solid #333;
   color: #000;
-  text-align: center;
   outline: none;
   cursor: pointer;
   background-color: #f6f1e2;
@@ -63,7 +71,7 @@ body {
   min-width: 7rem;
 }
 .controls .btn-container {
-  width: 53%;
+  width: 48%;
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
@@ -71,6 +79,7 @@ body {
 .btn {
   border-radius: 0.9rem;
   border: 1px solid #333;
+  color: #333;
   outline: none;
   font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem);
   cursor: pointer;
@@ -128,7 +137,7 @@ body {
   color: grey;
   /* display: flex;
   justify-content: center; */
-  /* text-shadow: 0px 0px 1px grey; */
+  /* text-shadow: 0px 0px 0.5px gold; */
 }
 .verses .verse {
   font-size: clamp(1.9rem, calc(1vw + 1rem), 3.5rem);
@@ -155,16 +164,159 @@ body {
   float: right;
   margin-top: 3rem;
   border-bottom: 1px solid #333;
+  color: #333;
 }
 .bottom-next-page:hover {
   border-bottom: 2px solid #333;
 }
+
+#menuToggle {
+  z-index: 1;
+  -webkit-user-select: none;
+  user-select: none;
+  position: fixed;
+}
+
+#menuToggle a {
+  text-decoration: none;
+  color: #232323;
+
+  transition: color 0.3s ease;
+}
+
+#menuToggle a:hover {
+  color: tomato;
+}
+
+#menuToggle input {
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+
+  cursor: pointer;
+
+  opacity: 0; /* hide this */
+  z-index: 2; /* and place it over the hamburger */
+
+  -webkit-touch-callout: none;
+}
+
+/*
+ * Just a quick hamburger
+ */
+#menuToggle span {
+  display: block;
+  width: min(8vw, 33px);
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+
+  background: #333;
+  border-radius: 3px;
+
+  z-index: 1;
+
+  transform-origin: 4px 0px;
+
+  transition:
+    transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    opacity 0.55s ease;
+}
+
+#menuToggle span:first-child {
+  transform-origin: 0% 0%;
+}
+
+#menuToggle span:nth-last-child(2) {
+  transform-origin: 0% 100%;
+}
+
+/* 
+ * Transform all the slices of hamburger
+ * into a crossmark.
+ */
+#menuToggle input:checked ~ span {
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  background: #232323;
+}
+
+/*
+ * But let's hide the middle one.
+ */
+#menuToggle input:checked ~ span:nth-last-child(3) {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+/*
+ * Ohyeah and the last one should go the other direction
+ */
+#menuToggle input:checked ~ span:nth-last-child(2) {
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+/*
+ * Make this absolute positioned
+ * at the top left of the screen
+ */
+#menu {
+  position: absolute;
+  max-width: 400px;
+  width: 100vw;
+  max-height: 100vh;
+  margin: -100px 0 0 -50px;
+  padding: 50px;
+  padding-top: 125px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: #ededed;
+  list-style-type: none;
+  -webkit-font-smoothing: antialiased;
+  /* to stop flickering of text in safari */
+
+  transform-origin: 0% 0%;
+  transform: translate(-110%, 0);
+
+  transition: transform 0.2s cubic-bezier(0.77, 0.2, 0.05, 1);
+}
+
+#menu li {
+  padding: 10px 0;
+  font-size: 22px;
+}
+
+#menu li label {
+  cursor: pointer;
+}
+
+/*
+ * And let's slide it in from the left
+ */
+#menuToggle input:checked ~ ul {
+  transform: none;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+/* Extra extra small devices */
+@media only screen and (max-width: 306px) {
+  #menuToggle {
+    display: none;
+  }
+  .controls .book-selector {
+    justify-content: left;
+    width: 100%;
   }
 }
 
@@ -178,12 +330,15 @@ body {
   }
   .controls .book-selector {
     width: 100%;
-    justify-content: center;
+    justify-content: right;
   }
   .controls .book-selector select {
-    font-size: clamp(1.7rem, calc(1vw + 0.1rem), 3.5rem);
+    font-size: clamp(1.3rem, calc(1vw + 0.1rem), 3.5rem);
     padding-right: 2rem;
-    width: 9rem;
+    width: 7rem;
+  }
+  #menuToggle {
+    margin-left: 7%;
   }
 }
 
@@ -197,17 +352,37 @@ body {
     width: 12rem;
   }
   .controls .btn {
-    font-size: clamp(1.2rem, calc(1vw + 0.1rem), 3.5rem);
-    width: 12rem;
+    font-size: clamp(1.7rem, calc(2vw + 0.1rem), 3.5rem);
+    width: 5rem;
+  }
+  .btn span {
+    display: none;
   }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+  .controls .btn {
+    font-size: clamp(1.2rem, calc(1vw + 0.1rem), 3.5rem);
+    width: 7rem;
+  }
+  .btn > span {
+    display: inline;
+  }
+  .btn span > span {
+    display: none;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
+  .controls .btn {
+    width: 12rem;
+  }
+  .btn span,
+  .btn span span {
+    display: inline;
+  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
