@@ -175,6 +175,7 @@ body {
   -webkit-user-select: none;
   user-select: none;
   position: fixed;
+  margin-top: 0.5rem;
 }
 
 #menuToggle a {
@@ -209,8 +210,8 @@ body {
  */
 #menuToggle span {
   display: block;
-  width: min(8vw, 33px);
-  height: 4px;
+  width: 30px;
+  height: 3px;
   margin-bottom: 5px;
   position: relative;
 
@@ -222,9 +223,9 @@ body {
   transform-origin: 4px 0px;
 
   transition:
-    transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-    opacity 0.55s ease;
+    transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1),
+    background 0.3s cubic-bezier(0.77, 0.2, 0.05, 1),
+    opacity 0.35s ease;
 }
 
 #menuToggle span:first-child {
@@ -266,23 +267,33 @@ body {
  */
 #menu {
   position: absolute;
-  max-width: 400px;
+  max-width: min(90vw, 400px);
   width: 100vw;
   max-height: 100vh;
-  margin: -100px 0 0 -50px;
-  padding: 50px;
-  padding-top: 125px;
+  margin: 34px 0 0 -18px;
+  padding: 34px 34px 34px;
   box-sizing: border-box;
   overflow-y: auto;
   background: #ededed;
   list-style-type: none;
   -webkit-font-smoothing: antialiased;
   /* to stop flickering of text in safari */
+  /* glass effect */
+  background: #f6f1e2;
+  box-shadow: 0 12px 22px 0 #f6f1e2;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  /* background: rgba(255, 255, 255, 0.2); */
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 
   transform-origin: 0% 0%;
   transform: translate(-110%, 0);
 
-  transition: transform 0.2s cubic-bezier(0.77, 0.2, 0.05, 1);
+  transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
 
 #menu li {
@@ -310,7 +321,7 @@ body {
   }
 }
 /* Extra extra small devices */
-@media only screen and (max-width: 306px) {
+@media only screen and (max-width: 336px) {
   #menuToggle {
     display: none;
   }
@@ -338,7 +349,7 @@ body {
     width: 7rem;
   }
   #menuToggle {
-    margin-left: 7%;
+    margin-left: 3rem;
   }
 }
 
