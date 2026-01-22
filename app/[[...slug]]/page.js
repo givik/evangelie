@@ -142,32 +142,16 @@ const Page = ({ params }) => {
               <ul id="menu">
                 <li>
                   <a href="#">
-                    <label htmlFor="menuCheckbox" onClick={() => this.parentNode.click()}>
+                    <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
                       Home
                     </label>
                   </a>
                 </li>
                 <li>
                   <a href="#about">
-                    <label htmlFor="menuCheckbox" onClick={() => this.parentNode.click()}>
+                    <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
                       About
                     </label>
-                  </a>
-                </li>
-
-                <li>
-                  <label htmlFor="menuCheckbox">
-                    <a>Info</a>
-                  </label>
-                </li>
-                <li>
-                  <label htmlFor="menuCheckbox">
-                    <a>Contact</a>
-                  </label>
-                </li>
-                <li>
-                  <a href="https://erikterwan.com/" target="_blank">
-                    Show me more
                   </a>
                 </li>
               </ul>
@@ -266,18 +250,26 @@ const Page = ({ params }) => {
             verses.map((verse, index) => {
               let topic;
               if (!topics.includes(verse.თემა)) {
-                topics.push(verse.თემა);
+                // topics.push(verse.თემა);
+                topics[verse.id] = verse.თემა;
                 topic = verse.თემა;
               }
               return (
                 <div key={verse.id} className={textFont.className}>
-                  {topic && <div className={'topic'}>{topic}</div>}
+                  {topic && (
+                    <div id={verse.id} className={'topic'}>
+                      {topic}
+                    </div>
+                  )}
                   <p className="verse">
                     <span className="index">{index + 1}</span> .{verse.ძველი_ტექსტი}
                   </p>
                 </div>
               );
             })}
+          <div id="about" className={'topic'}>
+            about
+          </div>
         </div>
         {verses.length > 0 && (
           <button className={`btn bottom-next-page ` + textFont.className} onClick={nextChapter}>
