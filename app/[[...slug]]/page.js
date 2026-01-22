@@ -40,7 +40,6 @@ const Page = ({ params }) => {
     let verse = decodedSlug[2];
 
     if (book) {
-      console.log('YES');
       book = books.find((b) => b.short === book).short;
       // console.log('book', book);
       // console.log('chapter', chapter);
@@ -53,7 +52,6 @@ const Page = ({ params }) => {
       setSelectedBook(book || 'მათე');
       setSelectedChapter(chapter || '1');
     } else {
-      console.log('No');
       const book = localStorage.getItem('selectedBook') || 'მათე';
       const chapter = localStorage.getItem('selectedChapter') || '1';
       const verse = localStorage.getItem('selectedVerse');
@@ -127,6 +125,8 @@ const Page = ({ params }) => {
     if (book) router.push('/' + book.short + '/' + newChapter);
   };
 
+  let topics = [];
+
   return (
     <div className="container">
       {loaded && (
@@ -152,7 +152,7 @@ const Page = ({ params }) => {
                 ))}
               </select>
             }
-            {
+            {/* {
               <select
                 defaultValue={selectedBook}
                 className={`long-book-name ` + bookFontBold.className}
@@ -164,7 +164,7 @@ const Page = ({ params }) => {
                   </option>
                 ))}
               </select>
-            }
+            } */}
             {
               <select
                 value={selectedChapter}
@@ -187,10 +187,7 @@ const Page = ({ params }) => {
             <button className={`btn ` + textFont.className} onClick={prevChapter}>
               {'<'} წინა თავი
             </button>
-            <button
-              className={`btn paper paper-curl-right ` + textFont.className}
-              onClick={nextChapter}
-            >
+            <button className={`btn ` + textFont.className} onClick={nextChapter}>
               შემდეგი თავი {'>'}
             </button>
           </div>
@@ -217,12 +214,27 @@ const Page = ({ params }) => {
             </>
           )}
           {loaded &&
-            verses.map((verse, index) => (
-              <p key={index} className={textFont.className}>
-                <span className="index">{index + 1}</span> .{verse.ტექსტი}
-              </p>
-            ))}
+            verses.map((verse, index) => {
+              let topic;
+              if (!topics.includes(verse.თემა)) {
+                topics.push(verse.თემა);
+                topic = verse.თემა;
+              }
+              return (
+                <div key={verse.id} className={textFont.className}>
+                  {topic && <div className={'topic'}>{topic}</div>}
+                  <p className="verse">
+                    <span className="index">{index + 1}</span> .{verse.ტექსტი}
+                  </p>
+                </div>
+              );
+            })}
         </div>
+        {verses.length > 0 && (
+          <button className={`btn bottom-next-page ` + textFont.className} onClick={nextChapter}>
+            შემდეგი თავი {'>'}
+          </button>
+        )}
       </div>
     </div>
   );
