@@ -1,8 +1,11 @@
 'use server';
 import { query } from '@/lib/db';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, cacheTag, cacheLife, updateTag } from 'next/cache';
 
 export async function getBooks() {
+  'use cache'; // This tells Next.js to cache the result of this function
+  cacheTag('bible-data', 'all-books'); // Attach tags for revalidation
+  cacheLife('max'); // Optional: Tells Next to keep it cached as long as possible
   try {
     const res = await query('SELECT DISTINCT წიგნი FROM მუხლები ORDER BY წიგნი');
     return res.rows;
@@ -13,6 +16,8 @@ export async function getBooks() {
 }
 
 export async function getChapters(book) {
+  'use cache';
+  cacheTag('bible-data', 'chapters');
   try {
     const res = await query('SELECT DISTINCT თავი FROM მუხლები WHERE წიგნი = $1 ORDER BY თავი', [
       book,
@@ -25,6 +30,9 @@ export async function getChapters(book) {
 }
 
 export async function getVerses(book, chapter) {
+  'use cache';
+  // Use a unique tag for this specific chapter
+  cacheTag('bible-data', `verses-${book}-${chapter}`);
   try {
     const res = await query(
       'SELECT id, თემა, მუხლი, ტექსტი, ძველი_ტექსტი FROM მუხლები WHERE წიგნი = $1 AND თავი = $2 ORDER BY მუხლი',
@@ -38,6 +46,8 @@ export async function getVerses(book, chapter) {
 }
 
 export async function getVerseID(book, chapter, verse) {
+  'use cache';
+  cacheTag('bible-data', 'verse-id');
   try {
     const res = await query(
       'SELECT id FROM მუხლები WHERE წიგნი = $1 AND თავი = $2 AND მუხლი = $3',
@@ -51,6 +61,8 @@ export async function getVerseID(book, chapter, verse) {
 }
 
 export async function getOptions() {
+  'use cache';
+  cacheTag('bible-data', 'options');
   try {
     const res = await query('SELECT id, წიგნი, თავი, მუხლი FROM მუხლები ORDER BY id');
     return res.rows;
@@ -61,6 +73,8 @@ export async function getOptions() {
 }
 
 export async function getData() {
+  'use cache';
+  cacheTag('bible-data', 'data');
   try {
     const res1 = await query('SELECT * FROM განმარტებები ORDER BY id DESC LIMIT 1');
     const res2 = await query('SELECT id, წიგნი, თავი, მუხლი FROM მუხლები WHERE id = $1', [
@@ -88,6 +102,10 @@ export async function addDefinition(formData) {
       author,
       text,
     ]);
+
+    // updateTag is like revalidateTag but optimized for Server Actions
+    // It immediately expires the cache so the next redirect/render is fresh.
+    updateTag('bible-data');
 
     // Refresh the page data automatically
     revalidatePath('/');

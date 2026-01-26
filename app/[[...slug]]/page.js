@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, Suspense } from 'react';
 import { getChapters, getVerses } from '../actions';
 import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
@@ -128,57 +128,58 @@ const Page = ({ params }) => {
   let topics = [];
 
   return (
-    <div className="container">
-      {loaded && (
-        <div className="controls">
-          <nav role="navigation">
-            <div id="menuToggle">
-              <input type="checkbox" id="menuCheckbox" />
+    <Suspense>
+      <div className="container">
+        {loaded && (
+          <div className="controls">
+            <nav role="navigation">
+              <div id="menuToggle">
+                <input type="checkbox" id="menuCheckbox" />
 
-              <span></span>
-              <span></span>
-              <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
 
-              <ul id="menu">
-                <li>
-                  <a href="#">
-                    <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
-                      Home
-                    </label>
-                  </a>
-                </li>
-                <li>
-                  <a href="#about">
-                    <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
-                      About
-                    </label>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <div className="book-selector">
-            <div className="themes">
-              {books.map((book, index) => (
-                <div className={bookFontBold.className} key={index}>
-                  {book.name}
-                </div>
-              ))}
-            </div>
-            {
-              <select
-                value={selectedBook}
-                className={`short-book-name ` + bookFontBold.className}
-                onChange={handleBookChange}
-              >
+                <ul id="menu">
+                  <li>
+                    <a href="#">
+                      <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
+                        Home
+                      </label>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#about">
+                      <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
+                        About
+                      </label>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+            <div className="book-selector">
+              <div className="themes">
                 {books.map((book, index) => (
-                  <option key={index} value={book.name}>
-                    {book.short}
-                  </option>
+                  <div className={bookFontBold.className} key={index}>
+                    {book.name}
+                  </div>
                 ))}
-              </select>
-            }
-            {/* {
+              </div>
+              {
+                <select
+                  value={selectedBook}
+                  className={`short-book-name ` + bookFontBold.className}
+                  onChange={handleBookChange}
+                >
+                  {books.map((book, index) => (
+                    <option key={index} value={book.name}>
+                      {book.short}
+                    </option>
+                  ))}
+                </select>
+              }
+              {/* {
               <select
                 defaultValue={selectedBook}
                 className={`long-book-name ` + bookFontBold.className}
@@ -191,93 +192,94 @@ const Page = ({ params }) => {
                 ))}
               </select>
             } */}
-            {
-              <select
-                value={selectedChapter}
-                className={'chapter-selector ' + bookFontBold.className}
-                onChange={handleChapterChange}
-              >
-                {chapters.length === 0 ? (
-                  <option value={selectedChapter}>თავი {selectedChapter}</option>
-                ) : (
-                  chapters.map((chapter, index) => (
-                    <option key={index} value={chapter.თავი}>
-                      თავი {chapter.თავი}
-                    </option>
-                  ))
-                )}
-              </select>
-            }
-          </div>
-          <div className="btn-container">
-            <button className={`btn ` + textFont.className} onClick={prevChapter}>
-              {'<'}{' '}
-              <span>
-                წინა <span>თავი</span>
-              </span>
-            </button>
-            <button className={`btn ` + textFont.className} onClick={nextChapter}>
-              <span>
-                შემდეგი <span>თავი</span>
-              </span>{' '}
-              {'>'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div className="content">
-        <h1 className={'header ' + bookFontBold.className}>
-          {loaded && (
-            <>
-              <span className="book-name">{selectedBook}</span>
-              <span className="book-chapter">თავი {selectedChapter} </span>
-            </>
-          )}
-        </h1>
-        <div className="verses">
-          {!loaded && verses.length === 0 && (
-            <>
-              <Placeholder />
-              <div className={`loading-text ` + textFont.className}>
-                წმინდა
-                <Image src="/cross-orthodox.svg" width={42} height={42} alt="ჯვარი" /> სახარება
-              </div>
-              <Placeholder />
-            </>
-          )}
-          {loaded &&
-            verses.map((verse, index) => {
-              let topic;
-              if (!topics.includes(verse.თემა)) {
-                // topics.push(verse.თემა);
-                topics[verse.id] = verse.თემა;
-                topic = verse.თემა;
-              }
-              return (
-                <div key={verse.id} className={textFont.className}>
-                  {topic && (
-                    <div id={verse.id} className={'topic'}>
-                      {topic}
-                    </div>
+              {
+                <select
+                  value={selectedChapter}
+                  className={'chapter-selector ' + bookFontBold.className}
+                  onChange={handleChapterChange}
+                >
+                  {chapters.length === 0 ? (
+                    <option value={selectedChapter}>თავი {selectedChapter}</option>
+                  ) : (
+                    chapters.map((chapter, index) => (
+                      <option key={index} value={chapter.თავი}>
+                        თავი {chapter.თავი}
+                      </option>
+                    ))
                   )}
-                  <p className="verse">
-                    <span className="index">{index + 1}</span> .{verse.ძველი_ტექსტი}
-                  </p>
-                </div>
-              );
-            })}
-          <div id="about" className={'topic'}>
-            about
+                </select>
+              }
+            </div>
+            <div className="btn-container">
+              <button className={`btn ` + textFont.className} onClick={prevChapter}>
+                {'<'}{' '}
+                <span>
+                  წინა <span>თავი</span>
+                </span>
+              </button>
+              <button className={`btn ` + textFont.className} onClick={nextChapter}>
+                <span>
+                  შემდეგი <span>თავი</span>
+                </span>{' '}
+                {'>'}
+              </button>
+            </div>
           </div>
-        </div>
-        {verses.length > 0 && (
-          <button className={`btn bottom-next-page ` + textFont.className} onClick={nextChapter}>
-            შემდეგი თავი {'>'}
-          </button>
         )}
+
+        <div className="content">
+          <h1 className={'header ' + bookFontBold.className}>
+            {loaded && (
+              <>
+                <span className="book-name">{selectedBook}</span>
+                <span className="book-chapter">თავი {selectedChapter} </span>
+              </>
+            )}
+          </h1>
+          <div className="verses">
+            {!loaded && verses.length === 0 && (
+              <>
+                <Placeholder />
+                <div className={`loading-text ` + textFont.className}>
+                  წმინდა
+                  <Image src="/cross-orthodox.svg" width={42} height={42} alt="ჯვარი" /> სახარება
+                </div>
+                <Placeholder />
+              </>
+            )}
+            {loaded &&
+              verses.map((verse, index) => {
+                let topic;
+                if (!topics.includes(verse.თემა)) {
+                  // topics.push(verse.თემა);
+                  topics[verse.id] = verse.თემა;
+                  topic = verse.თემა;
+                }
+                return (
+                  <div key={verse.id} className={textFont.className}>
+                    {topic && (
+                      <div id={verse.id} className={'topic'}>
+                        {topic}
+                      </div>
+                    )}
+                    <p className="verse">
+                      <span className="index">{index + 1}</span> .{verse.ძველი_ტექსტი}
+                    </p>
+                  </div>
+                );
+              })}
+            <div id="about" className={'topic'}>
+              about
+            </div>
+          </div>
+          {verses.length > 0 && (
+            <button className={`btn bottom-next-page ` + textFont.className} onClick={nextChapter}>
+              შემდეგი თავი {'>'}
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
