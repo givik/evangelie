@@ -89,6 +89,18 @@ export async function getData() {
   }
 }
 
+export async function getThemes(book) {
+  'use cache';
+  cacheTag('bible-data', 'themes');
+  try {
+    const res = await query('SELECT DISTINCT თემა FROM მუხლები WHERE წიგნი = $1', [book]);
+    return res.rows;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
 export async function addDefinition(formData) {
   // Extract values using the "name" attribute from the form inputs
 
