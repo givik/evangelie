@@ -1,3 +1,5 @@
+import Placeholder from '@/components/Placeholder';
+
 export default function Loading() {
-  return <div>იტვირთება...</div>; // Your loading state
+  return <Placeholder />; // Your loading state
 }

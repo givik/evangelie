@@ -241,8 +241,8 @@ const Page = ({ params }) => {
               <>
                 <Placeholder />
                 <div className={`loading-text ` + textFont.className}>
-                  წმინდა
-                  <Image src="/cross-orthodox.svg" width={42} height={42} alt="ჯვარი" /> სახარება
+                  <Image src="/cross-orthodox.svg" width={42} height={42} alt="ჯვარი" /> წმინდა
+                  წერილი
                 </div>
                 <Placeholder />
               </>
