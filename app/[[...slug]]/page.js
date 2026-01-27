@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, use, Suspense } from 'react';
-import { getChapters, getVerses } from '../actions';
+import { getChapters, getThemes, getVerses } from '../actions';
 import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
@@ -26,6 +26,7 @@ const Page = ({ params }) => {
   ]);
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
+  const [themes, setThemes] = useState([]);
 
   const [selectedBook, setSelectedBook] = useState('');
   const [selectedChapter, setSelectedChapter] = useState('1');
@@ -84,6 +85,10 @@ const Page = ({ params }) => {
       getChapters(selectedBook).then((data) => {
         setChapters(data);
       });
+
+      getThemes(selectedBook).then((data) => {
+        setThemes(data);
+      });
     }
   }, [selectedBook]);
 
@@ -96,15 +101,15 @@ const Page = ({ params }) => {
   const handleBookChange = (e) => {
     const newBook = e.target.value;
     localStorage.setItem('selectedBook', newBook);
-    const book = books.find((b) => b.name === newBook);
-    if (book) router.push('/' + book.short + '/1');
+    const book = shortBook(selectedBook);
+    if (book) router.push('/' + book + '/1');
   };
 
   const handleChapterChange = (e) => {
     const newChapter = e.target.value;
     localStorage.setItem('selectedChapter', newChapter);
-    const book = books.find((b) => b.name === selectedBook);
-    if (book) router.push('/' + book.short + '/' + newChapter);
+    const book = shortBook(selectedBook);
+    if (book) router.push('/' + book + '/' + newChapter);
   };
 
   const prevChapter = () => {
@@ -112,8 +117,8 @@ const Page = ({ params }) => {
     // check if newChapter is valid and chapter exists
     if (newChapter < 1) return;
     localStorage.setItem('selectedChapter', newChapter);
-    const book = books.find((b) => b.name === selectedBook);
-    if (book) router.push('/' + book.short + '/' + newChapter);
+    const book = shortBook(selectedBook);
+    if (book) router.push('/' + book + '/' + newChapter);
   };
 
   const nextChapter = () => {
@@ -121,11 +126,16 @@ const Page = ({ params }) => {
     // check if newChapter is valid and chapter exists
     if (newChapter > chapters.length) return;
     localStorage.setItem('selectedChapter', newChapter);
-    const book = books.find((b) => b.name === selectedBook);
-    if (book) router.push('/' + book.short + '/' + newChapter);
+    const book = shortBook(selectedBook);
+    if (book) router.push('/' + book + '/' + newChapter);
+  };
+
+  const shortBook = (bookName) => {
+    return books.find((b) => b.name === bookName).short;
   };
 
   let topics = [];
+  let chaptersForThemes = [];
 
   return (
     <Suspense>
@@ -141,31 +151,36 @@ const Page = ({ params }) => {
                 <span></span>
 
                 <ul id="menu">
-                  <li>
-                    <a href="#">
-                      <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
-                        Home
-                      </label>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#about">
-                      <label htmlFor="menuCheckbox" onClick={(e) => e.target.parentNode.click()}>
-                        About
-                      </label>
-                    </a>
-                  </li>
+                  {themes.map((theme) => {
+                    let chap = '';
+                    if (!chaptersForThemes.includes(theme.თავი)) {
+                      chap = theme.თავი;
+                      chaptersForThemes.push(theme.თავი);
+                    }
+
+                    const book = shortBook(selectedBook);
+                    return (
+                      <li className={textFont.className} key={theme.id}>
+                        {chap && <div className="menu-chapter">{chap}</div>}
+                        <a
+                          onClick={() => {
+                            router.push(`/${book}/${theme.თავი}/#${theme.id}`);
+                          }}
+                        >
+                          <label
+                            htmlFor="menuCheckbox"
+                            onClick={(e) => e.target.parentNode.click()}
+                          >
+                            {theme.თემა}
+                          </label>
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </nav>
             <div className="book-selector">
-              <div className="themes">
-                {books.map((book, index) => (
-                  <div className={bookFontBold.className} key={index}>
-                    {book.name}
-                  </div>
-                ))}
-              </div>
               {
                 <select
                   value={selectedBook}
@@ -263,14 +278,11 @@ const Page = ({ params }) => {
                       </div>
                     )}
                     <p className="verse">
-                      <span className="index">{index + 1}</span> .{verse.ძველი_ტექსტი}
+                      <span className="index">{index + 1}</span>. {verse.ძველი_ტექსტი}
                     </p>
                   </div>
                 );
               })}
-            <div id="about" className={'topic'}>
-              about
-            </div>
           </div>
           {verses.length > 0 && (
             <button className={`btn bottom-next-page ` + textFont.className} onClick={nextChapter}>

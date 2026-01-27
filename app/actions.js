@@ -93,7 +93,7 @@ export async function getThemes(book) {
   'use cache';
   cacheTag('bible-data', 'themes');
   try {
-    const res = await query('SELECT DISTINCT თემა FROM მუხლები WHERE წიგნი = $1', [book]);
+    const res = await query('SELECT თემა, id, წიგნი, თავი FROM თემები WHERE წიგნი = $1', [book]);
     return res.rows;
   } catch (e) {
     console.log(e);

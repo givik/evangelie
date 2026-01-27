@@ -5,9 +5,7 @@ import Form from './form';
 export default async function Home() {
   const definitions = (await getData())[0];
   const defaults = (await getData())[1];
-
-  // options the full list of books/chaps/verses
-  const options = await getOptions();
+  const options = await getOptions(); // Full list of books/chaps/verses
 
   return (
     <div className={styles.page}>

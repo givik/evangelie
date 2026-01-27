@@ -42,8 +42,9 @@
   border: 1px solid grey;
 
   font-size: 15px;
-  color: #0e0e0e;
-  background-color: white;
+
+  color: #fff;
+  background-color: #0f0f0e;
   margin-bottom: 13px;
   outline: none;
 }
@@ -53,8 +54,8 @@
   height: 300px;
   padding: 18px;
   font-size: 15px;
-  color: #0e0e0e;
-  background-color: white;
+  color: #fff;
+  background-color: #0f0f0e;
   resize: vertical; /* Allows vertical resizing */
   outline: none;
 }
@@ -138,7 +139,6 @@
   margin-top: 8px;
   margin-bottom: 5px;
   font-style: italic;
-  color: white;
 }
 .text {
   margin-top: 11px;
