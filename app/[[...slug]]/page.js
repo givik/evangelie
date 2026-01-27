@@ -41,7 +41,8 @@ const Page = ({ params }) => {
     let verse = decodedSlug[2];
 
     if (book) {
-      book = books.find((b) => b.short === book).short;
+      // console.log('book', book);
+      // book = shortBook(book);
       // console.log('book', book);
       // console.log('chapter', chapter);
       // console.log('verse', verse);
@@ -101,7 +102,7 @@ const Page = ({ params }) => {
   const handleBookChange = (e) => {
     const newBook = e.target.value;
     localStorage.setItem('selectedBook', newBook);
-    const book = shortBook(selectedBook);
+    const book = shortBook(newBook);
     if (book) router.push('/' + book + '/1');
   };
 
@@ -131,6 +132,7 @@ const Page = ({ params }) => {
   };
 
   const shortBook = (bookName) => {
+    console.log('bookName', bookName);
     return books.find((b) => b.name === bookName).short;
   };
 
