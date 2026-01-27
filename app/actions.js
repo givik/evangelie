@@ -7,7 +7,7 @@ export async function getBooks() {
   cacheTag('bible-data', 'all-books'); // Attach tags for revalidation
   cacheLife('max'); // Optional: Tells Next to keep it cached as long as possible
   try {
-    const res = await query('SELECT DISTINCT წიგნი FROM მუხლები ORDER BY წიგნი');
+    const res = await query('SELECT DISTINCT წიგნი FROM public.მუხლები ORDER BY წიგნი');
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -19,9 +19,10 @@ export async function getChapters(book) {
   'use cache';
   cacheTag('bible-data', 'chapters');
   try {
-    const res = await query('SELECT DISTINCT თავი FROM მუხლები WHERE წიგნი = $1 ORDER BY თავი', [
-      book,
-    ]);
+    const res = await query(
+      'SELECT DISTINCT თავი FROM public.მუხლები WHERE წიგნი = $1 ORDER BY თავი',
+      [book],
+    );
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -35,7 +36,7 @@ export async function getVerses(book, chapter) {
   cacheTag('bible-data', `verses-${book}-${chapter}`);
   try {
     const res = await query(
-      'SELECT id, თემა, მუხლი, ტექსტი, ძველი_ტექსტი FROM მუხლები WHERE წიგნი = $1 AND თავი = $2 ORDER BY მუხლი',
+      'SELECT id, თემა, მუხლი, ტექსტი, ძველი_ტექსტი FROM public.მუხლები WHERE წიგნი = $1 AND თავი = $2 ORDER BY მუხლი',
       [book, chapter],
     );
     return res.rows;
@@ -50,7 +51,7 @@ export async function getVerseID(book, chapter, verse) {
   cacheTag('bible-data', 'verse-id');
   try {
     const res = await query(
-      'SELECT id FROM მუხლები WHERE წიგნი = $1 AND თავი = $2 AND მუხლი = $3',
+      'SELECT id FROM public.მუხლები WHERE წიგნი = $1 AND თავი = $2 AND მუხლი = $3',
       [book, chapter, verse],
     );
     return res.rows[0]?.id || null;
@@ -64,7 +65,7 @@ export async function getOptions() {
   'use cache';
   cacheTag('bible-data', 'options');
   try {
-    const res = await query('SELECT id, წიგნი, თავი, მუხლი FROM მუხლები ORDER BY id');
+    const res = await query('SELECT id, წიგნი, თავი, მუხლი FROM public.მუხლები ORDER BY id');
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -76,8 +77,8 @@ export async function getData() {
   'use cache';
   cacheTag('bible-data', 'data');
   try {
-    const res1 = await query('SELECT * FROM განმარტებები ORDER BY id DESC LIMIT 1');
-    const res2 = await query('SELECT id, წიგნი, თავი, მუხლი FROM მუხლები WHERE id = $1', [
+    const res1 = await query('SELECT * FROM public.განმარტებები ORDER BY id DESC LIMIT 1');
+    const res2 = await query('SELECT id, წიგნი, თავი, მუხლი FROM public.მუხლები WHERE id = $1', [
       res1.rows[0]?.mukhli_id || 0,
     ]);
     // Merge data
@@ -93,7 +94,9 @@ export async function getThemes(book) {
   'use cache';
   cacheTag('bible-data', 'themes');
   try {
-    const res = await query('SELECT თემა, id, წიგნი, თავი FROM თემები WHERE წიგნი = $1', [book]);
+    const res = await query('SELECT თემა, id, წიგნი, თავი FROM public.თემები WHERE წიგნი = $1', [
+      book,
+    ]);
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -102,8 +105,6 @@ export async function getThemes(book) {
 }
 
 export async function addDefinition(formData) {
-  // Extract values using the "name" attribute from the form inputs
-
   const verseID = formData.get('verseID');
   const author = formData.get('author');
   const text = formData.get('text');
