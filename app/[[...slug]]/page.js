@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, use, Suspense } from 'react';
-import { getChapters, getThemes, getVerses } from '../actions';
+import { getChapters, getThemes, getVerses, getBooks } from '../actions';
 import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
@@ -36,6 +36,10 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   useEffect(() => {
+    getBooks().then((res) => {
+      console.log('_DEBUG_: ', res);
+    });
+
     let book = decodedSlug[0];
     let chapter = decodedSlug[1];
     let verse = decodedSlug[2];
@@ -132,7 +136,6 @@ const Page = ({ params }) => {
   };
 
   const shortBook = (bookName) => {
-    console.log('bookName', bookName);
     return books.find((b) => b.name === bookName).short;
   };
 

@@ -3,15 +3,11 @@ import { query } from '@/lib/db';
 import { revalidatePath, cacheTag, cacheLife, updateTag } from 'next/cache';
 
 export async function getBooks() {
-  'use cache'; // This tells Next.js to cache the result of this function
-  cacheTag('bible-data', 'all-books'); // Attach tags for revalidation
-  cacheLife('max'); // Optional: Tells Next to keep it cached as long as possible
   try {
     const res = await query('SELECT DISTINCT წიგნი FROM public.მუხლები ORDER BY წიგნი');
     return res.rows;
   } catch (e) {
-    console.log(e);
-    return [];
+    return e;
   }
 }
 
