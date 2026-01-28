@@ -81,7 +81,7 @@ const Page = ({ params }) => {
     }
 
     setLoaded(true);
-  }, []);
+  }, [decodedSlug]);
 
   useEffect(() => {
     console.log('useEffect[selectedBook]');
