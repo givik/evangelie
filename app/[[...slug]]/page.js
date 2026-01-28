@@ -30,6 +30,7 @@ const Page = ({ params }) => {
   const [themes, setThemes] = useState([]);
   const [selectedBook, setSelectedBook] = useState('');
   const [selectedChapter, setSelectedChapter] = useState('1');
+  const [loadingVerses, setLoadingVerses] = useState(false);
 
   const { slug } = use(params);
   const router = useRouter();
@@ -105,7 +106,17 @@ const Page = ({ params }) => {
     if (!selectedBook || !selectedChapter) return;
 
     console.log('Fetching verses for:', selectedBook, selectedChapter);
-    getVerses(selectedBook, selectedChapter).then(setVerses);
+
+    // Show loading state
+    setLoadingVerses(true);
+
+    getVerses(selectedBook, selectedChapter)
+      .then((data) => {
+        setVerses(data);
+      })
+      .finally(() => {
+        setLoadingVerses(false);
+      });
   }, [selectedBook, selectedChapter]);
 
   const handleBookChange = useCallback(
@@ -188,17 +199,11 @@ const Page = ({ params }) => {
                 <span></span>
 
                 <ul id="menu">
-                  {themes.map((theme) => {
-                    let chap = '';
-                    if (!chaptersForThemes.includes(theme.თავი)) {
-                      chap = theme.თავი;
-                      chaptersForThemes.push(theme.თავი);
-                    }
-
+                  {chaptersForThemes.map((theme) => {
                     const book = shortBook(selectedBook);
                     return (
                       <li className={textFont.className} key={theme.id}>
-                        {chap && <div className="menu-chapter">{chap}</div>}
+                        {theme.showChapter && <div className="menu-chapter">{theme.თავი}</div>}
                         <a
                           onClick={() => {
                             router.push(`/${book}/${theme.თავი}/#${theme.id}`);
@@ -278,7 +283,8 @@ const Page = ({ params }) => {
           </h1>
 
           <div className="verses">
-            {!loaded && verses.length === 0 && (
+            {/* Initial page load */}
+            {!loaded && (
               <>
                 <Placeholder />
                 <div className={`loading-text ${textFont.className}`}>
@@ -296,7 +302,27 @@ const Page = ({ params }) => {
               </>
             )}
 
+            {/* Loading verses after navigation */}
+            {loaded && loadingVerses && (
+              <>
+                <Placeholder />
+                <div className={`loading-text ${textFont.className}`}>
+                  <Image
+                    src="/cross-orthodox.svg"
+                    width={42}
+                    height={42}
+                    alt="ჯვარი"
+                    loading="eager"
+                  />
+                  იტვირთება...
+                </div>
+                <Placeholder />
+              </>
+            )}
+
+            {/* Display verses */}
             {loaded &&
+              !loadingVerses &&
               versesWithTopics.map((verse, index) => (
                 <div key={verse.id} className={textFont.className}>
                   {verse.showTopic && (
@@ -311,7 +337,7 @@ const Page = ({ params }) => {
               ))}
           </div>
 
-          {verses.length > 0 && (
+          {verses.length > 0 && !loadingVerses && (
             <button className={`btn bottom-next-page ${textFont.className}`} onClick={nextChapter}>
               შემდეგი თავი {'>'}
             </button>
