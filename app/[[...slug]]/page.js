@@ -81,7 +81,7 @@ const Page = ({ params }) => {
     }
 
     setLoaded(true);
-  }, [slug]);
+  }, [selectedBook, selectedChapter]);
 
   useEffect(() => {
     console.log('useEffect[selectedBook]');
