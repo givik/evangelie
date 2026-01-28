@@ -63,13 +63,16 @@ const Page = ({ params }) => {
     if (book) {
       console.log('book exists');
       // Store the decoded Georgian text
+
+      // Find the full book name
+      const bookObj = books.find((b) => b.short === book);
+      book = bookObj ? bookObj.name : book;
+
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
       if (verse) localStorage.setItem('selectedVerse', verse);
 
-      // Find the full book name
-      const bookObj = books.find((b) => b.short === book);
-      setSelectedBook(bookObj ? bookObj.name : book);
+      setSelectedBook(book);
       setSelectedChapter(chapter || '1');
     } else {
       const savedBook = localStorage.getItem('selectedBook') || 'მათე';
