@@ -69,26 +69,29 @@ const Page = ({ params }) => {
       const bookObj = books.find((b) => b.short === book);
       book = bookObj ? bookObj.name : book;
 
-      console.log('book (useEffect [selectedBook, selectedChapter]):', book);
-
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
       if (verse) localStorage.setItem('selectedVerse', verse);
 
       setSelectedBook(book);
       setSelectedChapter(chapter || '1');
+
+      // let book = selectedBook ? selectedBook : localStorage.getItem('selectedBook');
+      chapter = chapter || localStorage.getItem('selectedChapter') || '1';
+      console.log('book (useEffect [selectedBook, selectedChapter]):', book);
+      console.log('chapter (useEffect [selectedBook, selectedChapter]):', chapter);
+
+      getVerses(selectedBook, selectedChapter).then(setVerses);
     } else {
-      const savedBook = localStorage.getItem('selectedBook') || 'მათე';
-      const savedChapter = localStorage.getItem('selectedChapter') || '1';
+      book = localStorage.getItem('selectedBook') || 'მათე';
+      chapter = localStorage.getItem('selectedChapter') || '1';
 
       // Make sure we're using decoded values
-      console.log('Redirecting to:', `/${savedBook}/${savedChapter}`);
-      router.push(`/${savedBook}/${savedChapter}`);
+      console.log('Redirecting to:', `/${book}/${chapter}`);
+      router.push(`/${book}/${chapter}`);
     }
 
-    console.log('before setLoaded(true)');
     setLoaded(true);
-    console.log('after setLoaded(true)');
   }, [selectedBook, selectedChapter]);
 
   useEffect(() => {
@@ -107,17 +110,6 @@ const Page = ({ params }) => {
       });
     }
   }, [selectedBook]);
-
-  useEffect(() => {
-    console.log('useEffect [selectedBook, selectedChapter]');
-    let book = selectedBook ? selectedBook : localStorage.getItem('selectedBook');
-    let chapter = selectedChapter ? selectedChapter : localStorage.getItem('selectedChapter');
-    if (book && chapter) {
-      console.log('book (useEffect [selectedBook, selectedChapter]):', book);
-      console.log('chapter (useEffect [selectedBook, selectedChapter]):', chapter);
-      getVerses(selectedBook, selectedChapter).then(setVerses);
-    }
-  }, [selectedBook, selectedChapter]);
 
   const handleBookChange = (e) => {
     const newBook = e.target.value;
