@@ -314,7 +314,7 @@ const Page = ({ params }) => {
                     alt="ჯვარი"
                     loading="eager"
                   />
-                  იტვირთება...
+                  {/* იტვირთება... */}
                 </div>
                 <Placeholder />
               </>
