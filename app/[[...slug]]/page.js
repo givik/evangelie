@@ -84,12 +84,12 @@ const Page = ({ params }) => {
   }, [selectedBook, selectedChapter]);
 
   useEffect(() => {
-    console.log('useEffect[selectedBook]');
     let book = selectedBook ? selectedBook : localStorage.getItem('selectedBook');
-    console.log('book:', book);
 
     if (book) {
+      console.log('book:', book);
       getChapters(book).then((data) => {
+        console.log('chapters:', data);
         setChapters(data);
       });
 
