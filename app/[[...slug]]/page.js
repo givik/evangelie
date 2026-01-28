@@ -55,8 +55,8 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   useEffect(() => {
-    // console.log('useEffect[]');
-    let book = decodedSlug[0]; // This is already decoded: "ლუკა"
+    console.log('useEffect[]');
+    let book = decodedSlug[0];
     let chapter = decodedSlug[1];
     let verse = decodedSlug[2];
 
