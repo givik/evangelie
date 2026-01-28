@@ -61,6 +61,7 @@ const Page = ({ params }) => {
     let verse = decodedSlug[2];
 
     if (book) {
+      console.log('book exists');
       // Store the decoded Georgian text
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
@@ -83,6 +84,8 @@ const Page = ({ params }) => {
   }, []);
 
   useEffect(() => {
+    console.log('useEffect[selectedBook]');
+    console.log('selectedBook:', selectedBook);
     if (selectedBook) {
       getChapters(selectedBook).then((data) => {
         setChapters(data);
@@ -95,6 +98,8 @@ const Page = ({ params }) => {
   }, [selectedBook]);
 
   useEffect(() => {
+    console.log('useEffect[selectedChapter]');
+    console.log('selectedChapter:', selectedChapter);
     if (selectedBook && selectedChapter) {
       getVerses(selectedBook, selectedChapter).then(setVerses);
     }
