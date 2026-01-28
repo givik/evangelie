@@ -51,11 +51,11 @@ const Page = ({ params }) => {
       })
     : [];
 
-  console.log('DECODED_SLUG', decodedSlug);
+  // console.log('DECODED_SLUG', decodedSlug);
   const router = useRouter();
 
   useEffect(() => {
-    console.log('useEffect[]');
+    // console.log('useEffect[]');
     let book = decodedSlug[0]; // This is already decoded: "ლუკა"
     let chapter = decodedSlug[1];
     let verse = decodedSlug[2];
@@ -81,20 +81,6 @@ const Page = ({ params }) => {
 
     setLoaded(true);
   }, []);
-
-  useEffect(() => {
-    if (decodedSlug.length > 0) {
-      // compare books.short and decodedSlug[0]
-      const book = books.find((b) => b.short === decodedSlug[0]);
-      if (book) {
-        setSelectedBook(book.name);
-      }
-
-      const chapter = decodedSlug[1] || '1';
-      setSelectedChapter(chapter);
-    }
-    setLoaded(true);
-  }, [decodedSlug]);
 
   useEffect(() => {
     if (selectedBook) {
