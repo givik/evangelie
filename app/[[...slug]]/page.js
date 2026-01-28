@@ -17,7 +17,7 @@ const textFont = localFont({
 });
 
 const Page = ({ params }) => {
-  console.log('Page');
+  // console.log('Page');
   const [loaded, setLoaded] = useState(false);
   const [books, setBooks] = useState([
     { short: 'მათე', name: 'მათეს სახარება' },
@@ -54,6 +54,10 @@ const Page = ({ params }) => {
 
   // console.log('DECODED_SLUG', decodedSlug);
   const router = useRouter();
+
+  useEffect(() => {
+    console.log('!RENDER!');
+  }, [verses]);
 
   useEffect(() => {
     console.log('useEffect []');
