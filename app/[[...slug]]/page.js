@@ -32,40 +32,51 @@ const Page = ({ params }) => {
   const [selectedChapter, setSelectedChapter] = useState('1');
 
   const { slug } = use(params);
-  const decodedSlug = slug ? slug.map((s) => decodeURIComponent(s)) : [];
+  const decodedSlug = slug
+    ? slug.map((s) => {
+        let decoded = s;
+        let prevDecoded;
+
+        // Keep decoding until nothing changes
+        do {
+          prevDecoded = decoded;
+          try {
+            decoded = decodeURIComponent(decoded);
+          } catch (e) {
+            break;
+          }
+        } while (decoded !== prevDecoded && decoded.includes('%'));
+
+        return decoded;
+      })
+    : [];
+
+  console.log('DECODED_SLUG', decodedSlug);
   const router = useRouter();
 
   useEffect(() => {
-    getBooks().then((res) => {
-      console.log('_DEBUG_: ', res);
-    });
-
-    let book = decodedSlug[0];
+    console.log('useEffect[]');
+    let book = decodedSlug[0]; // This is already decoded: "ლუკა"
     let chapter = decodedSlug[1];
     let verse = decodedSlug[2];
 
     if (book) {
-      // console.log('book', book);
-      // book = shortBook(book);
-      // console.log('book', book);
-      // console.log('chapter', chapter);
-      // console.log('verse', verse);
-
+      // Store the decoded Georgian text
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
       if (verse) localStorage.setItem('selectedVerse', verse);
 
-      setSelectedBook(book || 'მათე');
+      // Find the full book name
+      const bookObj = books.find((b) => b.short === book);
+      setSelectedBook(bookObj ? bookObj.name : book);
       setSelectedChapter(chapter || '1');
     } else {
-      const book = localStorage.getItem('selectedBook') || 'მათე';
-      const chapter = localStorage.getItem('selectedChapter') || '1';
-      const verse = localStorage.getItem('selectedVerse');
+      const savedBook = localStorage.getItem('selectedBook') || 'მათე';
+      const savedChapter = localStorage.getItem('selectedChapter') || '1';
 
-      // console.log('book', book);
-      // console.log('chapter', chapter);
-      // console.log('verse', verse);
-      router.push(`/${book}/${chapter}`);
+      // Make sure we're using decoded values
+      console.log('Redirecting to:', `/${savedBook}/${savedChapter}`);
+      router.push(`/${savedBook}/${savedChapter}`);
     }
 
     setLoaded(true);
@@ -105,9 +116,14 @@ const Page = ({ params }) => {
 
   const handleBookChange = (e) => {
     const newBook = e.target.value;
-    localStorage.setItem('selectedBook', newBook);
     const book = shortBook(newBook);
-    if (book) router.push('/' + book + '/1');
+    const url = '/' + book + '/1';
+
+    console.log('=== BOOK CHANGE ===');
+    console.log('URL to navigate:', url);
+
+    localStorage.setItem('selectedBook', book);
+    if (book) router.push(url); // Use push instead of replace
   };
 
   const handleChapterChange = (e) => {
@@ -128,11 +144,19 @@ const Page = ({ params }) => {
 
   const nextChapter = () => {
     const newChapter = parseInt(selectedChapter) + 1;
-    // check if newChapter is valid and chapter exists
-    if (newChapter > chapters.length) return;
-    localStorage.setItem('selectedChapter', newChapter);
+    if (newChapter < 1 || newChapter > chapters.length) return;
+
     const book = shortBook(selectedBook);
-    if (book) router.push('/' + book + '/' + newChapter);
+    const url = '/' + book + '/' + newChapter;
+
+    // console.log('=== NEXT CHAPTER ===');
+    // console.log('Selected book (full):', selectedBook);
+    // console.log('Short book:', book);
+    // console.log('New chapter:', newChapter);
+    // console.log('URL to navigate:', url);
+
+    localStorage.setItem('selectedChapter', newChapter);
+    if (book) router.push(url);
   };
 
   const shortBook = (bookName) => {
@@ -188,6 +212,7 @@ const Page = ({ params }) => {
             <div className="book-selector">
               {
                 <select
+                  name="books"
                   value={selectedBook}
                   className={`short-book-name ` + bookFontBold.className}
                   onChange={handleBookChange}
@@ -214,6 +239,7 @@ const Page = ({ params }) => {
             } */}
               {
                 <select
+                  name="chapters"
                   value={selectedChapter}
                   className={'chapter-selector ' + bookFontBold.className}
                   onChange={handleChapterChange}
