@@ -17,6 +17,7 @@ const textFont = localFont({
 });
 
 const Page = ({ params }) => {
+  console.log('Page');
   const [loaded, setLoaded] = useState(false);
   const [books, setBooks] = useState([
     { short: 'მათე', name: 'მათეს სახარება' },
@@ -55,7 +56,7 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('useEffect[]');
+    console.log('useEffect [selectedBook, selectedChapter]');
     let book = decodedSlug[0];
     let chapter = decodedSlug[1];
     let verse = decodedSlug[2];
@@ -67,6 +68,8 @@ const Page = ({ params }) => {
       // Find the full book name
       const bookObj = books.find((b) => b.short === book);
       book = bookObj ? bookObj.name : book;
+
+      console.log('book (useEffect [selectedBook, selectedChapter]):', book);
 
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
@@ -83,16 +86,19 @@ const Page = ({ params }) => {
       router.push(`/${savedBook}/${savedChapter}`);
     }
 
+    console.log('before setLoaded(true)');
     setLoaded(true);
+    console.log('after setLoaded(true)');
   }, [selectedBook, selectedChapter]);
 
   useEffect(() => {
+    console.log('useEffect [selectedBook]');
     let book = selectedBook ? selectedBook : localStorage.getItem('selectedBook');
 
     if (book) {
-      console.log('book:', book);
+      console.log('book (useEffect [selectedBook]):', book);
       getChapters(book).then((data) => {
-        console.log('chapters:', data);
+        // console.log('chapters (useEffect [selectedBook]):', data);
         setChapters(data);
       });
 
@@ -103,9 +109,12 @@ const Page = ({ params }) => {
   }, [selectedBook]);
 
   useEffect(() => {
-    console.log('useEffect[selectedChapter]');
-    console.log('selectedChapter:', selectedChapter);
-    if (selectedBook && selectedChapter) {
+    console.log('useEffect [selectedBook, selectedChapter]');
+    let book = selectedBook ? selectedBook : localStorage.getItem('selectedBook');
+    let chapter = selectedChapter ? selectedChapter : localStorage.getItem('selectedChapter');
+    if (book && chapter) {
+      console.log('book (useEffect [selectedBook, selectedChapter]):', book);
+      console.log('chapter (useEffect [selectedBook, selectedChapter]):', chapter);
       getVerses(selectedBook, selectedChapter).then(setVerses);
     }
   }, [selectedBook, selectedChapter]);

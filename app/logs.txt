@@ -1,0 +1,74 @@
+Page
+Page
+useEffect [selectedBook, selectedChapter]
+Redirecting to: /მათე/1
+before setLoaded(true)
+after setLoaded(true)
+useEffect [selectedBook]
+useEffect [selectedBook, selectedChapter]
+Page
+Page
+useEffect [selectedBook, selectedChapter]
+book exists
+book (useEffect [selectedBook, selectedChapter]): მათეს სახარება
+before setLoaded(true)
+after setLoaded(true)
+useEffect [selectedBook]
+book (useEffect [selectedBook]): მათეს სახარება
+useEffect [selectedBook, selectedChapter]
+book (useEffect [selectedBook, selectedChapter]): მათეს სახარება
+chapter (useEffect [selectedBook, selectedChapter]): 1
+
+useEffect [selectedBook, selectedChapter]
+book exists
+book (useEffect [selectedBook, selectedChapter]): მათეს სახარება
+before setLoaded(true)
+after setLoaded(true)
+useEffect [selectedBook]
+book (useEffect [selectedBook]): მათეს სახარება
+useEffect [selectedBook, selectedChapter]
+book (useEffect [selectedBook, selectedChapter]): მათეს სახარება
+chapter (useEffect [selectedBook, selectedChapter]): 1
+page.js:20 Page
+Page
+page.js:59 useEffect [selectedBook, selectedChapter]
+page.js:65 book exists
+page.js:72 book (useEffect [selectedBook, selectedChapter]): მათეს სახარება
+page.js:89 before setLoaded(true)
+page.js:91 after setLoaded(true)
+page.js:95 useEffect [selectedBook]
+page.js:99 book (useEffect [selectedBook]): მათეს სახარება
+page.js:112 useEffect [selectedBook, selectedChapter]
+page.js:116 book (useEffect [selectedBook, selectedChapter]): მათეს სახარება
+page.js:117 chapter (useEffect [selectedBook, selectedChapter]): 1
+page.js:20 Page
+Page
+page.js:101 chapters (useEffect [selectedBook]): (28) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, _debugInfo: Array(4)]
+page.js:20 Page
+Page
+page.js:20 Page
+Page
+page.js:20 Page
+Page
+page.js:101 chapters (useEffect [selectedBook]): (28) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, _debugInfo: Array(5)]
+page.js:20 Page
+Page
+page.js:20 Page
+Page
+page.js:20 Page
+Page
+page.js:101 chapters (useEffect [selectedBook]): (28) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, _debugInfo: Array(4)]
+page.js:20 Page
+Page
+forward-logs-shared.ts:95 [Fast Refresh] rebuilding
+forward-logs-shared.ts:95 [Fast Refresh] done in 124ms
+page.js:20 Page
+Page
+page.js:20 Page
+Page
+page.js:20 Page
+page.js:20 Page
+page.js:20 Page
+Page
+page.js:20 Page
+Page
