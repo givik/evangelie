@@ -181,12 +181,23 @@ body {
 #menuToggle a {
   text-decoration: none;
   color: #232323;
+  margin-left: 0rem;
 
-  transition: color 0.3s ease;
+  transition:
+    color 0.3s ease,
+    margin-left 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
 }
 
 #menuToggle a:hover {
-  color: tomato;
+  /* color: tomato; */
+  margin-left: 0.5rem;
+  text-decoration: underline;
+  transition:
+    margin-left 0.3s ease-in-out,
+    color 3s ease;
+  text-decoration-thickness: 0.01rem;
+  text-underline-offset: 0.3rem;
 }
 
 #menuToggle input {
@@ -243,7 +254,7 @@ body {
 #menuToggle input:checked ~ span {
   opacity: 1;
   transform: rotate(45deg) translate(-2px, -1px);
-  background: #232323;
+  background: #333;
 }
 
 /*
@@ -269,7 +280,7 @@ body {
   position: absolute;
   max-width: min(90vw, 400px);
   width: 100vw;
-  max-height: 100vh;
+  max-height: calc(100vh - 34px - 80px);
   margin: 34px 0 0 -18px;
   padding: 34px 34px 34px;
   box-sizing: border-box;
@@ -289,11 +300,24 @@ body {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-
+  /* border: 1px solid #333; */
   transform-origin: 0% 0%;
   transform: translate(-110%, 0);
 
   transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+}
+
+#menu .book-name {
+  color: #333;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  font-size: clamp(2.2rem, calc(1vw + 0.1rem), 3.5rem);
+}
+
+#menu .menu-chapter {
+  color: #333;
+  text-align: center;
+  margin-bottom: 0.75rem;
 }
 
 #menu li {
@@ -303,6 +327,7 @@ body {
 
 #menu li label {
   cursor: pointer;
+  color: #000;
 }
 
 /*
@@ -343,7 +368,7 @@ body {
     width: 100%;
     justify-content: right;
   }
-  .controls .book-selector select {
+  .controls select {
     font-size: clamp(1.3rem, calc(1vw + 0.1rem), 3.5rem);
     padding-right: 2rem;
     width: 7rem;
@@ -359,7 +384,7 @@ body {
     display: none;
   }
   .controls select {
-    font-size: clamp(1.2rem, calc(1vw + 0.1rem), 3.5rem);
+    font-size: clamp(1.3rem, calc(1vw + 0.1rem), 3.5rem);
     width: 12rem;
   }
   .controls .btn {

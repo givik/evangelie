@@ -199,11 +199,18 @@ const Page = ({ params }) => {
                 <span></span>
 
                 <ul id="menu">
+                  <div className={'book-name ' + bookFontBold.className}>
+                    {selectedBook} (თემები)
+                  </div>
                   {chaptersForThemes.map((theme) => {
                     const book = shortBook(selectedBook);
                     return (
                       <li className={textFont.className} key={theme.id}>
-                        {theme.showChapter && <div className="menu-chapter">{theme.თავი}</div>}
+                        {theme.showChapter && (
+                          <div className={'menu-chapter ' + bookFontBold.className}>
+                            •- თავი {theme.თავი} -•
+                          </div>
+                        )}
                         <a
                           onClick={() => {
                             router.push(`/${book}/${theme.თავი}/#${theme.id}`);

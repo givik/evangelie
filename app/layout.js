@@ -3,7 +3,7 @@ import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'სახარება',
-  description: 'A modern Georgian Bible reader application built with Next.js',
+  description: 'A Georgian Bible reader.',
 };
 
 export default function RootLayout({ children }) {
