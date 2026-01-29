@@ -77,26 +77,32 @@ const Page = ({ params }) => {
 
   // Initialize from URL or localStorage only once
   useEffect(() => {
-    if (!loaded || !decodedSlug.length) return;
-
+    // console.log('Initialization useEffect');
     let book = decodedSlug[0];
-    let chapter = decodedSlug[1] || '1';
+    let chapter = decodedSlug[1];
 
-    const bookObj = BOOKS.find((b) => b.short === book);
-    const fullName = bookObj ? bookObj.name : book;
+    if (book) {
+      const bookObj = BOOKS.find((b) => b.short === book);
+      book = bookObj ? bookObj.name : book;
 
-    // Only update if different to avoid infinite loops
-    if (fullName !== selectedBook) setSelectedBook(fullName);
-    if (chapter !== selectedChapter) setSelectedChapter(chapter);
+      setSelectedBook(book);
+      setSelectedChapter(chapter || '1');
 
-    localStorage.setItem('selectedBook', fullName);
-    localStorage.setItem('selectedChapter', chapter);
-  }, [decodedSlug, loaded, selectedBook, selectedChapter]);
+      if (book) localStorage.setItem('selectedBook', book);
+      if (chapter) localStorage.setItem('selectedChapter', chapter);
+    } else {
+      const storedBook = localStorage.getItem('selectedBook') || 'მათეს სახარება';
+      const storedChapter = localStorage.getItem('selectedChapter') || '1';
 
-  // Separate initial mount logic
-  useEffect(() => {
+      setSelectedBook(storedBook);
+      setSelectedChapter(storedChapter);
+
+      const shortBookName = BOOKS.find((b) => b.name === storedBook)?.short || 'მათე';
+      router.replace(`/${shortBookName}/${storedChapter}`);
+    }
+
     setLoaded(true);
-  }, []);
+  }, []); // Only run once on mount
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
@@ -132,22 +138,35 @@ const Page = ({ params }) => {
 
   // Scroll to hash anchor after verses are loaded
   useEffect(() => {
-    // Only scroll if we aren't loading and have verses
     if (!loaded || loadingVerses || verses.length === 0) return;
 
-    const hash = window.location.hash;
-    if (!hash) return;
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const elementId = hash.substring(1);
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            scrollToElement(elementId);
+          }, 50);
+        });
+      }
+    };
 
-    const elementId = hash.substring(1);
+    // Scroll when verses finish loading
+    scrollToHash();
 
-    // Use a slight delay to ensure React has finished rendering the DOM nodes
-    const timer = setTimeout(() => {
-      scrollToElement(elementId);
-    }, 100); // 100ms is usually the "sweet spot" for production hydration
+    // Also listen for hash changes (when clicking menu items on same page)
+    const handleHashChange = () => {
+      scrollToHash();
+    };
 
-    return () => clearTimeout(timer);
-  }, [verses, loadingVerses, loaded, scrollToElement]);
-  // verses is the key dependency here: it fires when the new data arrives
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [loaded, loadingVerses, verses, scrollToElement]);
 
   const handleBookChange = useCallback(
     (e) => {
@@ -201,16 +220,17 @@ const Page = ({ params }) => {
     (themeChapter, themeId) => {
       const shortBookName = shortBook(selectedBook);
 
+      // If navigating to same chapter, just scroll
       if (parseInt(themeChapter) === parseInt(selectedChapter)) {
         scrollToElement(themeId.toString());
+        // Close the menu
+        const menuCheckbox = document.getElementById('menuCheckbox');
+        if (menuCheckbox) menuCheckbox.checked = false;
       } else {
-        // Changed to push for better UX, though replace works too
+        // Navigate to different chapter with hash
+        console.log(`navigating to: /${shortBookName}/${themeChapter}#${themeId}`);
         router.push(`/${shortBookName}/${themeChapter}#${themeId}`);
       }
-
-      // Close menu
-      const menuCheckbox = document.getElementById('menuCheckbox');
-      if (menuCheckbox) menuCheckbox.checked = false;
     },
     [selectedBook, selectedChapter, router, shortBook, scrollToElement],
   );
