@@ -226,11 +226,20 @@ const Page = ({ params }) => {
         // Close the menu
         const menuCheckbox = document.getElementById('menuCheckbox');
         if (menuCheckbox) menuCheckbox.checked = false;
-      } else {
-        // Navigate to different chapter with hash
-        console.log(`navigating to: /${shortBookName}/${themeChapter}#${themeId}`);
-        router.replace(`/${shortBookName}/${themeChapter}#${themeId}`);
+        return;
       }
+
+      // Navigate to different chapter: update state + localStorage, then navigate with hash
+      const chapterStr = themeChapter.toString();
+      localStorage.setItem('selectedChapter', chapterStr);
+      setSelectedChapter(chapterStr);
+
+      // Use router.push so history behaves naturally (push vs replace is optional)
+      router.push(`/${shortBookName}/${chapterStr}#${themeId}`);
+
+      // Close the menu after navigation
+      const menuCheckbox = document.getElementById('menuCheckbox');
+      if (menuCheckbox) menuCheckbox.checked = false;
     },
     [selectedBook, selectedChapter, router, shortBook, scrollToElement],
   );
