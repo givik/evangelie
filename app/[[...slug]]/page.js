@@ -3,6 +3,7 @@ import { useState, useEffect, use, Suspense, useMemo, useCallback } from 'react'
 import { getChapters, getThemes, getVerses, getBooks } from '../actions';
 import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import localFont from 'next/font/local';
 import Image from 'next/image';
 
@@ -77,14 +78,12 @@ const Page = ({ params }) => {
 
   console.log('Page render');
 
-  // Initialize from URL or localStorage only once
+  // Sync state from URL whenever the route (slug) changes (e.g. theme click to another chapter)
   useEffect(() => {
-    // console.log('Initialization useEffect');
     let book = decodedSlug[0];
     let chapter = decodedSlug[1];
 
     if (book) {
-      console.log('book exists');
       const bookObj = BOOKS.find((b) => b.short === book);
       book = bookObj ? bookObj.name : book;
 
@@ -94,7 +93,6 @@ const Page = ({ params }) => {
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
     } else {
-      console.log('book does not exists');
       const storedBook = localStorage.getItem('selectedBook') || 'მათეს სახარება';
       const storedChapter = localStorage.getItem('selectedChapter') || '1';
 
@@ -106,7 +104,7 @@ const Page = ({ params }) => {
     }
 
     setLoaded(true);
-  }, []); // Only run once on mount
+  }, [decodedSlug, router]);
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
@@ -225,26 +223,6 @@ const Page = ({ params }) => {
     router.push(`/${shortBookName}/${newChapter}`);
   }, [selectedChapter, selectedBook, chapters.length, router, shortBook]);
 
-  // Handle theme navigation from menu
-  const handleThemeClick = useCallback(
-    (themeChapter, themeId) => {
-      const shortBookName = shortBook(selectedBook);
-
-      // If navigating to same chapter, just scroll
-      if (parseInt(themeChapter) === parseInt(selectedChapter)) {
-        scrollToElement(themeId.toString());
-        // Close the menu
-        const menuCheckbox = document.getElementById('menuCheckbox');
-        if (menuCheckbox) menuCheckbox.checked = false;
-      } else {
-        // Navigate to different chapter with hash
-        console.log(`navigating to: /${shortBookName}/${themeChapter}#${themeId}`);
-        router.push(`/${shortBookName}/${themeChapter}#${themeId}`);
-      }
-    },
-    [selectedBook, selectedChapter, router, shortBook, scrollToElement],
-  );
-
   // Memoize chapter grouping for themes
   const chaptersForThemes = useMemo(() => {
     const seen = new Set();
@@ -282,6 +260,12 @@ const Page = ({ params }) => {
                     {selectedBook} (თემები)
                   </div>
                   {chaptersForThemes.map((theme) => {
+                    const shortBookName = shortBook(selectedBook);
+                    const isSameChapter =
+                      parseInt(theme.თავი) === parseInt(selectedChapter);
+                    const href = isSameChapter
+                      ? `#${theme.id}`
+                      : `/${shortBookName}/${theme.თავი}#${theme.id}`;
                     return (
                       <li className={textFont.className} key={theme.id}>
                         {theme.showChapter && (
@@ -289,14 +273,22 @@ const Page = ({ params }) => {
                             •- თავი {theme.თავი} -•
                           </div>
                         )}
-                        <a
-                          onClick={() => handleThemeClick(theme.თავი, theme.id)}
+                        <Link
+                          href={href}
+                          onClick={(e) => {
+                            if (isSameChapter) {
+                              e.preventDefault();
+                              scrollToElement(theme.id.toString());
+                            }
+                            const menuCheckbox = document.getElementById('menuCheckbox');
+                            if (menuCheckbox) menuCheckbox.checked = false;
+                          }}
                           style={{ cursor: 'pointer' }}
                         >
                           <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
                             {theme.თემა}
                           </label>
-                        </a>
+                        </Link>
                       </li>
                     );
                   })}
