@@ -75,6 +75,8 @@ const Page = ({ params }) => {
     }
   }, []);
 
+  console.log('Page render');
+
   // Initialize from URL or localStorage only once
   useEffect(() => {
     // console.log('Initialization useEffect');
@@ -108,6 +110,7 @@ const Page = ({ params }) => {
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
+    console.log('useEffect [selectedBook]');
     if (!selectedBook) return;
 
     // console.log('Fetching chapters and themes for:', selectedBook);
@@ -122,6 +125,7 @@ const Page = ({ params }) => {
 
   // Fetch verses when book or chapter changes
   useEffect(() => {
+    console.log('useEffect [selectedBook, selectedChapter]');
     if (!selectedBook || !selectedChapter) return;
 
     // console.log('Fetching verses for:', selectedBook, selectedChapter);
