@@ -58,6 +58,23 @@ const Page = ({ params }) => {
     return BOOKS.find((b) => b.name === bookName)?.short || '';
   }, []);
 
+  // Scroll to element with offset
+  const scrollToElement = useCallback((elementId) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const controlsPanel = document.querySelector('.controls');
+      const offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80;
+
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  }, []);
+
   // Initialize from URL or localStorage only once
   useEffect(() => {
     console.log('Initialization useEffect');
@@ -123,30 +140,29 @@ const Page = ({ params }) => {
   useEffect(() => {
     if (!loaded || loadingVerses || verses.length === 0) return;
 
-    // Check if there's a hash in the URL
-    const hash = window.location.hash;
-    if (hash) {
-      // Small delay to ensure DOM is fully rendered
-      setTimeout(() => {
-        const elementId = hash.substring(1); // Remove the # symbol
-        const element = document.getElementById(elementId);
-        if (element) {
-          // Get the controls panel height to calculate offset
-          const controlsPanel = document.querySelector('.controls');
-          const offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80; // 20px extra padding
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const elementId = hash.substring(1);
+        scrollToElement(elementId);
+      }
+    };
 
-          // Calculate position accounting for the fixed header
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - offset;
+    // Small delay to ensure DOM is fully rendered
+    const timeoutId = setTimeout(scrollToHash, 150);
 
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth',
-          });
-        }
-      }, 100);
-    }
-  }, [loaded, loadingVerses, verses]);
+    // Also listen for hash changes (when clicking menu items)
+    const handleHashChange = () => {
+      setTimeout(scrollToHash, 100);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [loaded, loadingVerses, verses, scrollToElement]);
 
   const handleBookChange = useCallback(
     (e) => {
@@ -195,6 +211,25 @@ const Page = ({ params }) => {
     router.push(`/${shortBookName}/${newChapter}`);
   }, [selectedChapter, selectedBook, chapters.length, router, shortBook]);
 
+  // Handle theme navigation from menu
+  const handleThemeClick = useCallback(
+    (themeChapter, themeId) => {
+      const shortBookName = shortBook(selectedBook);
+
+      // If navigating to same chapter, just scroll
+      if (parseInt(themeChapter) === parseInt(selectedChapter)) {
+        scrollToElement(themeId.toString());
+        // Close the menu
+        const menuCheckbox = document.getElementById('menuCheckbox');
+        if (menuCheckbox) menuCheckbox.checked = false;
+      } else {
+        // Navigate to different chapter with hash
+        router.push(`/${shortBookName}/${themeChapter}#${themeId}`);
+      }
+    },
+    [selectedBook, selectedChapter, router, shortBook, scrollToElement],
+  );
+
   // Memoize chapter grouping for themes
   const chaptersForThemes = useMemo(() => {
     const seen = new Set();
@@ -232,7 +267,6 @@ const Page = ({ params }) => {
                     {selectedBook} (თემები)
                   </div>
                   {chaptersForThemes.map((theme) => {
-                    const book = shortBook(selectedBook);
                     return (
                       <li className={textFont.className} key={theme.id}>
                         {theme.showChapter && (
@@ -241,14 +275,10 @@ const Page = ({ params }) => {
                           </div>
                         )}
                         <a
-                          onClick={() => {
-                            router.push(`/${book}/${theme.თავი}/#${theme.id}`);
-                          }}
+                          onClick={() => handleThemeClick(theme.თავი, theme.id)}
+                          style={{ cursor: 'pointer' }}
                         >
-                          <label
-                            htmlFor="menuCheckbox"
-                            onClick={(e) => e.target.parentNode.click()}
-                          >
+                          <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
                             {theme.თემა}
                           </label>
                         </a>
