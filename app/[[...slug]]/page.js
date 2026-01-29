@@ -119,6 +119,35 @@ const Page = ({ params }) => {
       });
   }, [selectedBook, selectedChapter]);
 
+  // Scroll to hash anchor after verses are loaded
+  useEffect(() => {
+    if (!loaded || loadingVerses || verses.length === 0) return;
+
+    // Check if there's a hash in the URL
+    const hash = window.location.hash;
+    if (hash) {
+      // Small delay to ensure DOM is fully rendered
+      setTimeout(() => {
+        const elementId = hash.substring(1); // Remove the # symbol
+        const element = document.getElementById(elementId);
+        if (element) {
+          // Get the controls panel height to calculate offset
+          const controlsPanel = document.querySelector('.controls');
+          const offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80; // 20px extra padding
+
+          // Calculate position accounting for the fixed header
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
+        }
+      }, 100);
+    }
+  }, [loaded, loadingVerses, verses]);
+
   const handleBookChange = useCallback(
     (e) => {
       const newBook = e.target.value;
@@ -199,18 +228,11 @@ const Page = ({ params }) => {
                 <span></span>
 
                 <ul id="menu">
-                  <div className={'book-name ' + bookFontBold.className}>
-                    {selectedBook} (თემები)
-                  </div>
                   {chaptersForThemes.map((theme) => {
                     const book = shortBook(selectedBook);
                     return (
                       <li className={textFont.className} key={theme.id}>
-                        {theme.showChapter && (
-                          <div className={'menu-chapter ' + bookFontBold.className}>
-                            •- თავი {theme.თავი} -•
-                          </div>
-                        )}
+                        {theme.showChapter && <div className="menu-chapter">{theme.თავი}</div>}
                         <a
                           onClick={() => {
                             router.push(`/${book}/${theme.თავი}/#${theme.id}`);
@@ -263,13 +285,31 @@ const Page = ({ params }) => {
             </div>
 
             <div className="btn-container">
-              <button className={`btn ${textFont.className}`} onClick={prevChapter}>
+              <button
+                className={`btn ${textFont.className}`}
+                onClick={() => {
+                  if (!loaded) return;
+                  if (loadingVerses) return;
+                  if (verses.length < 1) return;
+
+                  prevChapter();
+                }}
+              >
                 {'<'}{' '}
                 <span>
                   წინა <span>თავი</span>
                 </span>
               </button>
-              <button className={`btn ${textFont.className}`} onClick={nextChapter}>
+              <button
+                className={`btn ${textFont.className}`}
+                onClick={() => {
+                  if (!loaded) return;
+                  if (loadingVerses) return;
+                  if (verses.length < 1) return;
+
+                  nextChapter();
+                }}
+              >
                 <span>
                   შემდეგი <span>თავი</span>
                 </span>{' '}
@@ -321,7 +361,7 @@ const Page = ({ params }) => {
                     alt="ჯვარი"
                     loading="eager"
                   />
-                  {/* იტვირთება... */}
+                  იტვირთება...
                 </div>
                 <Placeholder />
               </>
@@ -345,7 +385,16 @@ const Page = ({ params }) => {
           </div>
 
           {verses.length > 0 && !loadingVerses && (
-            <button className={`btn bottom-next-page ${textFont.className}`} onClick={nextChapter}>
+            <button
+              className={`btn bottom-next-page ${textFont.className}`}
+              onClick={() => {
+                if (!loaded) return;
+                if (loadingVerses) return;
+                if (verses.length < 1) return;
+
+                nextChapter();
+              }}
+            >
               შემდეგი თავი {'>'}
             </button>
           )}
