@@ -144,22 +144,26 @@ const Page = ({ params }) => {
       const hash = window.location.hash;
       if (hash) {
         const elementId = hash.substring(1);
-        scrollToElement(elementId);
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            scrollToElement(elementId);
+          }, 50);
+        });
       }
     };
 
-    // Small delay to ensure DOM is fully rendered
-    const timeoutId = setTimeout(scrollToHash, 150);
+    // Scroll when verses finish loading
+    scrollToHash();
 
-    // Also listen for hash changes (when clicking menu items)
+    // Also listen for hash changes (when clicking menu items on same page)
     const handleHashChange = () => {
-      setTimeout(scrollToHash, 100);
+      scrollToHash();
     };
 
     window.addEventListener('hashchange', handleHashChange);
 
     return () => {
-      clearTimeout(timeoutId);
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, [loaded, loadingVerses, verses, scrollToElement]);
