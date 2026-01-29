@@ -77,32 +77,26 @@ const Page = ({ params }) => {
 
   // Initialize from URL or localStorage only once
   useEffect(() => {
-    // console.log('Initialization useEffect');
+    if (!loaded || !decodedSlug.length) return;
+
     let book = decodedSlug[0];
-    let chapter = decodedSlug[1];
+    let chapter = decodedSlug[1] || '1';
 
-    if (book) {
-      const bookObj = BOOKS.find((b) => b.short === book);
-      book = bookObj ? bookObj.name : book;
+    const bookObj = BOOKS.find((b) => b.short === book);
+    const fullName = bookObj ? bookObj.name : book;
 
-      setSelectedBook(book);
-      setSelectedChapter(chapter || '1');
+    // Only update if different to avoid infinite loops
+    if (fullName !== selectedBook) setSelectedBook(fullName);
+    if (chapter !== selectedChapter) setSelectedChapter(chapter);
 
-      if (book) localStorage.setItem('selectedBook', book);
-      if (chapter) localStorage.setItem('selectedChapter', chapter);
-    } else {
-      const storedBook = localStorage.getItem('selectedBook') || 'მათეს სახარება';
-      const storedChapter = localStorage.getItem('selectedChapter') || '1';
+    localStorage.setItem('selectedBook', fullName);
+    localStorage.setItem('selectedChapter', chapter);
+  }, [decodedSlug, loaded, selectedBook, selectedChapter]);
 
-      setSelectedBook(storedBook);
-      setSelectedChapter(storedChapter);
-
-      const shortBookName = BOOKS.find((b) => b.name === storedBook)?.short || 'მათე';
-      router.replace(`/${shortBookName}/${storedChapter}`);
-    }
-
+  // Separate initial mount logic
+  useEffect(() => {
     setLoaded(true);
-  }, []); // Only run once on mount
+  }, []);
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
@@ -138,35 +132,22 @@ const Page = ({ params }) => {
 
   // Scroll to hash anchor after verses are loaded
   useEffect(() => {
+    // Only scroll if we aren't loading and have verses
     if (!loaded || loadingVerses || verses.length === 0) return;
 
-    const scrollToHash = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const elementId = hash.substring(1);
-        // Use requestAnimationFrame to ensure DOM is ready
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            scrollToElement(elementId);
-          }, 50);
-        });
-      }
-    };
+    const hash = window.location.hash;
+    if (!hash) return;
 
-    // Scroll when verses finish loading
-    scrollToHash();
+    const elementId = hash.substring(1);
 
-    // Also listen for hash changes (when clicking menu items on same page)
-    const handleHashChange = () => {
-      scrollToHash();
-    };
+    // Use a slight delay to ensure React has finished rendering the DOM nodes
+    const timer = setTimeout(() => {
+      scrollToElement(elementId);
+    }, 100); // 100ms is usually the "sweet spot" for production hydration
 
-    window.addEventListener('hashchange', handleHashChange);
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, [loaded, loadingVerses, verses, scrollToElement]);
+    return () => clearTimeout(timer);
+  }, [verses, loadingVerses, loaded, scrollToElement]);
+  // verses is the key dependency here: it fires when the new data arrives
 
   const handleBookChange = useCallback(
     (e) => {
@@ -220,24 +201,14 @@ const Page = ({ params }) => {
     (themeChapter, themeId) => {
       const shortBookName = shortBook(selectedBook);
 
-      // If navigating to same chapter, just scroll
       if (parseInt(themeChapter) === parseInt(selectedChapter)) {
         scrollToElement(themeId.toString());
-        // Close the menu
-        const menuCheckbox = document.getElementById('menuCheckbox');
-        if (menuCheckbox) menuCheckbox.checked = false;
-        return;
+      } else {
+        // Changed to push for better UX, though replace works too
+        router.push(`/${shortBookName}/${themeChapter}#${themeId}`);
       }
 
-      // Navigate to different chapter: update state + localStorage, then navigate with hash
-      const chapterStr = themeChapter.toString();
-      localStorage.setItem('selectedChapter', chapterStr);
-      setSelectedChapter(chapterStr);
-
-      // Use router.push so history behaves naturally (push vs replace is optional)
-      router.push(`/${shortBookName}/${chapterStr}#${themeId}`);
-
-      // Close the menu after navigation
+      // Close menu
       const menuCheckbox = document.getElementById('menuCheckbox');
       if (menuCheckbox) menuCheckbox.checked = false;
     },
