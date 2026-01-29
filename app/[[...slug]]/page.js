@@ -32,9 +32,7 @@ const Page = ({ params }) => {
   const [selectedChapter, setSelectedChapter] = useState('1');
   const [loadingVerses, setLoadingVerses] = useState(false);
 
-  const resolvedParams = use(params); // Rename for clarity
-  const slug = resolvedParams?.slug;
-
+  const { slug } = use(params);
   const router = useRouter();
 
   // Memoize decoded slug to prevent recalculation
@@ -77,21 +75,16 @@ const Page = ({ params }) => {
     }
   }, []);
 
-  console.log('Page render', { slug, decodedSlug }); // Add more debugging
+  console.log('Page render');
 
   // Initialize from URL or localStorage only once
   useEffect(() => {
-    // Wait for slug to be available
-    if (!slug) {
-      console.log('slug not yet available');
-      return;
-    }
-
+    // console.log('Initialization useEffect');
     let book = decodedSlug[0];
     let chapter = decodedSlug[1];
 
     if (book) {
-      console.log('book exists:', book);
+      console.log('book exists');
       const bookObj = BOOKS.find((b) => b.short === book);
       book = bookObj ? bookObj.name : book;
 
@@ -113,7 +106,7 @@ const Page = ({ params }) => {
     }
 
     setLoaded(true);
-  }, [slug, decodedSlug, router]); // Add dependencies
+  }, []); // Only run once on mount
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
