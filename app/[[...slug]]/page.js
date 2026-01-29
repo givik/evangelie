@@ -228,6 +228,7 @@ const Page = ({ params }) => {
         if (menuCheckbox) menuCheckbox.checked = false;
       } else {
         // Navigate to different chapter with hash
+        console.log(`navigating to: /${shortBookName}/${themeChapter}#${themeId}`);
         router.push(`/${shortBookName}/${themeChapter}#${themeId}`);
       }
     },
