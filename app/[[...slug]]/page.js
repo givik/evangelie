@@ -36,7 +36,7 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   // Memoize decoded slug to prevent recalculation
-  const decodedSlug = useMemo(() => {
+  const decodedSlug = () => {
     if (!slug) return [];
     return slug.map((s) => {
       let decoded = s;
@@ -51,7 +51,7 @@ const Page = ({ params }) => {
       } while (decoded !== prevDecoded && decoded.includes('%'));
       return decoded;
     });
-  }, [slug]);
+  };
 
   // Memoize book lookup function
   const shortBook = useCallback((bookName) => {
