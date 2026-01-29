@@ -146,11 +146,24 @@ const Page = ({ params }) => {
   useEffect(() => {
     if (!loaded || loadingVerses || verses.length === 0) return;
 
-    const scrollToHash = () => {
+    const hash = window.location.hash;
+    if (hash) {
+      const elementId = hash.substring(1);
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          scrollToElement(elementId);
+        }, 100);
+      });
+    }
+  }, [loaded, loadingVerses, verses.length, scrollToElement]);
+
+  // Handle hash changes separately (for same-page navigation)
+  useEffect(() => {
+    const handleHashChange = () => {
       const hash = window.location.hash;
-      if (hash) {
+      if (hash && !loadingVerses && verses.length > 0) {
         const elementId = hash.substring(1);
-        // Use requestAnimationFrame to ensure DOM is ready
         requestAnimationFrame(() => {
           setTimeout(() => {
             scrollToElement(elementId);
@@ -159,20 +172,11 @@ const Page = ({ params }) => {
       }
     };
 
-    // Scroll when verses finish loading
-    scrollToHash();
-
-    // Also listen for hash changes (when clicking menu items on same page)
-    const handleHashChange = () => {
-      scrollToHash();
-    };
-
     window.addEventListener('hashchange', handleHashChange);
-
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
-  }, [loaded, loadingVerses, verses, scrollToElement]);
+  }, [loadingVerses, verses.length, scrollToElement]);
 
   const handleBookChange = useCallback(
     (e) => {
