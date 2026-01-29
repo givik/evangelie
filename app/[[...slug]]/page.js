@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, use, Suspense, useMemo, useCallback } from 'react';
-import { getChapters, getThemes, getVerses, getBooks } from '../actions';
+import { getChapters, getThemes, getVerses } from '../actions';
 import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
@@ -29,42 +29,32 @@ const Page = ({ params }) => {
   const [verses, setVerses] = useState([]);
   const [themes, setThemes] = useState([]);
   const [selectedBook, setSelectedBook] = useState('');
-  const [selectedChapter, setSelectedChapter] = useState('1');
+  const [selectedChapter, setSelectedChapter] = useState('');
   const [loadingVerses, setLoadingVerses] = useState(false);
 
   const { slug } = use(params);
   const router = useRouter();
 
-  // Memoize decoded slug to prevent recalculation
   const decodedSlug = useMemo(() => {
     if (!slug) return [];
     return slug.map((s) => {
-      let decoded = s;
-      let prevDecoded;
-      do {
-        prevDecoded = decoded;
-        try {
-          decoded = decodeURIComponent(decoded);
-        } catch (e) {
-          break;
-        }
-      } while (decoded !== prevDecoded && decoded.includes('%'));
-      return decoded;
+      try {
+        return decodeURIComponent(s);
+      } catch (e) {
+        return s;
+      }
     });
   }, [slug]);
 
-  // Memoize book lookup function
   const shortBook = useCallback((bookName) => {
-    return BOOKS.find((b) => b.name === bookName)?.short || '';
+    return BOOKS.find((b) => b.name === bookName)?.short || 'მათე';
   }, []);
 
-  // Scroll to element with offset
   const scrollToElement = useCallback((elementId) => {
     const element = document.getElementById(elementId);
     if (element) {
       const controlsPanel = document.querySelector('.controls');
       const offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80;
-
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -75,41 +65,40 @@ const Page = ({ params }) => {
     }
   }, []);
 
-  // Initialize from URL or localStorage only once
+  // 1. Handle initial mount
   useEffect(() => {
-    // console.log('Initialization useEffect');
-    let book = decodedSlug[0];
-    let chapter = decodedSlug[1];
+    setLoaded(true);
+  }, []);
 
-    if (book) {
-      const bookObj = BOOKS.find((b) => b.short === book);
-      book = bookObj ? bookObj.name : book;
+  // 2. SYNC STATE WITH URL (This fixes the Chapter 5 to 8 issue)
+  useEffect(() => {
+    if (!loaded) return;
 
-      setSelectedBook(book);
-      setSelectedChapter(chapter || '1');
+    let bookShort = decodedSlug[0];
+    let chapter = decodedSlug[1] || '1';
 
-      if (book) localStorage.setItem('selectedBook', book);
-      if (chapter) localStorage.setItem('selectedChapter', chapter);
+    if (bookShort) {
+      const bookObj = BOOKS.find((b) => b.short === bookShort);
+      const fullName = bookObj ? bookObj.name : bookShort;
+
+      // Only update state if it actually changed to prevent loops
+      if (fullName !== selectedBook) setSelectedBook(fullName);
+      if (chapter !== selectedChapter) setSelectedChapter(chapter);
+
+      localStorage.setItem('selectedBook', fullName);
+      localStorage.setItem('selectedChapter', chapter);
     } else {
+      // Default fallback if no slug exists
       const storedBook = localStorage.getItem('selectedBook') || 'მათეს სახარება';
       const storedChapter = localStorage.getItem('selectedChapter') || '1';
-
-      setSelectedBook(storedBook);
-      setSelectedChapter(storedChapter);
-
-      const shortBookName = BOOKS.find((b) => b.name === storedBook)?.short || 'მათე';
-      router.replace(`/${shortBookName}/${storedChapter}`);
+      const shortName = BOOKS.find((b) => b.name === storedBook)?.short || 'მათე';
+      router.replace(`/${shortName}/${storedChapter}`);
     }
+  }, [decodedSlug, loaded, selectedBook, selectedChapter, router]);
 
-    setLoaded(true);
-  }, []); // Only run once on mount
-
-  // Fetch chapters and themes when book changes
+  // 3. Fetch chapters and themes
   useEffect(() => {
     if (!selectedBook) return;
-
-    // console.log('Fetching chapters and themes for:', selectedBook);
-
     Promise.all([getChapters(selectedBook), getThemes(selectedBook)]).then(
       ([chaptersData, themesData]) => {
         setChapters(chaptersData);
@@ -118,124 +107,61 @@ const Page = ({ params }) => {
     );
   }, [selectedBook]);
 
-  // Fetch verses when book or chapter changes
+  // 4. Fetch verses
   useEffect(() => {
     if (!selectedBook || !selectedChapter) return;
-
-    // console.log('Fetching verses for:', selectedBook, selectedChapter);
-
-    // Show loading state
     setLoadingVerses(true);
-
     getVerses(selectedBook, selectedChapter)
-      .then((data) => {
-        setVerses(data);
-      })
-      .finally(() => {
-        setLoadingVerses(false);
-      });
+      .then((data) => setVerses(data))
+      .finally(() => setLoadingVerses(false));
   }, [selectedBook, selectedChapter]);
 
-  // Scroll to hash anchor after verses are loaded
+  // 5. SMART SCROLL (Triggered after verses are loaded and rendered)
   useEffect(() => {
     if (!loaded || loadingVerses || verses.length === 0) return;
 
-    const scrollToHash = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const elementId = hash.substring(1);
-        // Use requestAnimationFrame to ensure DOM is ready
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            scrollToElement(elementId);
-          }, 50);
-        });
-      }
-    };
+    const hash = window.location.hash;
+    if (hash) {
+      const elementId = hash.substring(1);
+      // Wait for a "paint" cycle to ensure DOM is ready
+      const timer = setTimeout(() => {
+        scrollToElement(elementId);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [verses, loadingVerses, loaded, scrollToElement]);
 
-    // Scroll when verses finish loading
-    scrollToHash();
+  const handleBookChange = (e) => {
+    const newBook = e.target.value;
+    router.push(`/${shortBook(newBook)}/1`);
+  };
 
-    // Also listen for hash changes (when clicking menu items on same page)
-    const handleHashChange = () => {
-      scrollToHash();
-    };
+  const handleChapterChange = (e) => {
+    router.push(`/${shortBook(selectedBook)}/${e.target.value}`);
+  };
 
-    window.addEventListener('hashchange', handleHashChange);
+  const navigateChapter = (direction) => {
+    const current = parseInt(selectedChapter);
+    const next = direction === 'next' ? current + 1 : current - 1;
+    if (next < 1 || (direction === 'next' && next > chapters.length)) return;
+    router.push(`/${shortBook(selectedBook)}/${next}`);
+  };
 
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, [loaded, loadingVerses, verses, scrollToElement]);
+  const handleThemeClick = (themeChapter, themeId) => {
+    const isSameChapter = parseInt(themeChapter) === parseInt(selectedChapter);
 
-  const handleBookChange = useCallback(
-    (e) => {
-      const newBook = e.target.value;
-      const shortBookName = shortBook(newBook);
+    if (isSameChapter) {
+      scrollToElement(themeId.toString());
+      // Explicitly update hash in URL without refreshing
+      window.history.pushState(null, '', `#${themeId}`);
+    } else {
+      router.push(`/${shortBook(selectedBook)}/${themeChapter}#${themeId}`);
+    }
 
-      localStorage.setItem('selectedBook', newBook);
-      localStorage.setItem('selectedChapter', '1');
+    const menuCheckbox = document.getElementById('menuCheckbox');
+    if (menuCheckbox) menuCheckbox.checked = false;
+  };
 
-      setSelectedBook(newBook);
-      setSelectedChapter('1');
-      router.push(`/${shortBookName}/1`);
-    },
-    [router, shortBook],
-  );
-
-  const handleChapterChange = useCallback(
-    (e) => {
-      const newChapter = e.target.value;
-      const shortBookName = shortBook(selectedBook);
-
-      localStorage.setItem('selectedChapter', newChapter);
-      setSelectedChapter(newChapter);
-      router.push(`/${shortBookName}/${newChapter}`);
-    },
-    [selectedBook, router, shortBook],
-  );
-
-  const prevChapter = useCallback(() => {
-    const newChapter = parseInt(selectedChapter) - 1;
-    if (newChapter < 1) return;
-
-    const shortBookName = shortBook(selectedBook);
-    localStorage.setItem('selectedChapter', newChapter.toString());
-    setSelectedChapter(newChapter.toString());
-    router.push(`/${shortBookName}/${newChapter}`);
-  }, [selectedChapter, selectedBook, router, shortBook]);
-
-  const nextChapter = useCallback(() => {
-    const newChapter = parseInt(selectedChapter) + 1;
-    if (newChapter > chapters.length) return;
-
-    const shortBookName = shortBook(selectedBook);
-    localStorage.setItem('selectedChapter', newChapter.toString());
-    setSelectedChapter(newChapter.toString());
-    router.push(`/${shortBookName}/${newChapter}`);
-  }, [selectedChapter, selectedBook, chapters.length, router, shortBook]);
-
-  // Handle theme navigation from menu
-  const handleThemeClick = useCallback(
-    (themeChapter, themeId) => {
-      const shortBookName = shortBook(selectedBook);
-
-      // If navigating to same chapter, just scroll
-      if (parseInt(themeChapter) === parseInt(selectedChapter)) {
-        scrollToElement(themeId.toString());
-        // Close the menu
-        const menuCheckbox = document.getElementById('menuCheckbox');
-        if (menuCheckbox) menuCheckbox.checked = false;
-      } else {
-        // Navigate to different chapter with hash
-        console.log(`navigating to: /${shortBookName}/${themeChapter}#${themeId}`);
-        router.push(`/${shortBookName}/${themeChapter}#${themeId}`);
-      }
-    },
-    [selectedBook, selectedChapter, router, shortBook, scrollToElement],
-  );
-
-  // Memoize chapter grouping for themes
   const chaptersForThemes = useMemo(() => {
     const seen = new Set();
     return themes.map((theme) => {
@@ -245,7 +171,6 @@ const Page = ({ params }) => {
     });
   }, [themes]);
 
-  // Memoize topics tracking
   const versesWithTopics = useMemo(() => {
     const topics = new Set();
     return verses.map((verse) => {
@@ -256,193 +181,125 @@ const Page = ({ params }) => {
   }, [verses]);
 
   return (
-    <Suspense>
-      <div className="container">
-        {loaded && (
-          <div className="controls">
-            <nav role="navigation">
-              <div id="menuToggle">
-                <input type="checkbox" id="menuCheckbox" />
-                <span></span>
-                <span></span>
-                <span></span>
-
-                <ul id="menu">
-                  <div className={'book-name ' + bookFontBold.className}>
-                    {selectedBook} (თემები)
-                  </div>
-                  {chaptersForThemes.map((theme) => {
-                    return (
-                      <li className={textFont.className} key={theme.id}>
-                        {theme.showChapter && (
-                          <div className={'menu-chapter ' + bookFontBold.className}>
-                            •- თავი {theme.თავი} -•
-                          </div>
-                        )}
-                        <a
-                          onClick={() => handleThemeClick(theme.თავი, theme.id)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
-                            {theme.თემა}
-                          </label>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </nav>
-
-            <div className="book-selector">
-              <select
-                name="books"
-                value={selectedBook}
-                className={`short-book-name ${bookFontBold.className}`}
-                onChange={handleBookChange}
-              >
-                {BOOKS.map((book) => (
-                  <option key={book.short} value={book.name}>
-                    {book.short}
-                  </option>
+    <div className="container">
+      {loaded && (
+        <div className="controls">
+          <nav role="navigation">
+            <div id="menuToggle">
+              <input type="checkbox" id="menuCheckbox" />
+              <span></span>
+              <span></span>
+              <span></span>
+              <ul id="menu">
+                <div className={'book-name ' + bookFontBold.className}>{selectedBook} (თემები)</div>
+                {chaptersForThemes.map((theme) => (
+                  <li className={textFont.className} key={theme.id}>
+                    {theme.showChapter && (
+                      <div className={'menu-chapter ' + bookFontBold.className}>
+                        •- თავი {theme.თავი} -•
+                      </div>
+                    )}
+                    <a
+                      onClick={() => handleThemeClick(theme.თავი, theme.id)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
+                        {theme.თემა}
+                      </label>
+                    </a>
+                  </li>
                 ))}
-              </select>
-
-              <select
-                name="chapters"
-                value={selectedChapter}
-                className={`chapter-selector ${bookFontBold.className}`}
-                onChange={handleChapterChange}
-              >
-                {chapters.length === 0 ? (
-                  <option value={selectedChapter}>თავი {selectedChapter}</option>
-                ) : (
-                  chapters.map((chapter) => (
-                    <option key={chapter.თავი} value={chapter.თავი}>
-                      თავი {chapter.თავი}
-                    </option>
-                  ))
-                )}
-              </select>
+              </ul>
             </div>
+          </nav>
 
-            <div className="btn-container">
-              <button
-                className={`btn ${textFont.className}`}
-                onClick={() => {
-                  if (!loaded) return;
-                  if (loadingVerses) return;
-                  if (verses.length < 1) return;
-
-                  prevChapter();
-                }}
-              >
-                {'<'}{' '}
-                <span>
-                  წინა <span>თავი</span>
-                </span>
-              </button>
-              <button
-                className={`btn ${textFont.className}`}
-                onClick={() => {
-                  if (!loaded) return;
-                  if (loadingVerses) return;
-                  if (verses.length < 1) return;
-
-                  nextChapter();
-                }}
-              >
-                <span>
-                  შემდეგი <span>თავი</span>
-                </span>{' '}
-                {'>'}
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className="content">
-          <h1 className={`header ${bookFontBold.className}`}>
-            {loaded && (
-              <>
-                <span className="book-name">{selectedBook}</span>
-                <span className="book-chapter">თავი {selectedChapter}</span>
-              </>
-            )}
-          </h1>
-
-          <div className="verses">
-            {/* Initial page load */}
-            {!loaded && (
-              <>
-                <Placeholder />
-                <div className={`loading-text ${textFont.className}`}>
-                  <Image
-                    src="/cross-orthodox.svg"
-                    width={42}
-                    height={42}
-                    alt="ჯვარი"
-                    loading="eager"
-                    priority
-                  />
-                  წმინდა წერილი
-                </div>
-                <Placeholder />
-              </>
-            )}
-
-            {/* Loading verses after navigation */}
-            {loaded && loadingVerses && (
-              <>
-                <Placeholder />
-                <div className={`loading-text ${textFont.className}`}>
-                  <Image
-                    src="/cross-orthodox.svg"
-                    width={42}
-                    height={42}
-                    alt="ჯვარი"
-                    loading="eager"
-                  />
-                  იტვირთება...
-                </div>
-                <Placeholder />
-              </>
-            )}
-
-            {/* Display verses */}
-            {loaded &&
-              !loadingVerses &&
-              versesWithTopics.map((verse, index) => (
-                <div key={verse.id} className={textFont.className}>
-                  {verse.showTopic && (
-                    <div id={verse.id} className="topic">
-                      {verse.თემა}
-                    </div>
-                  )}
-                  <p className="verse">
-                    <span className="index">{index + 1}</span>. {verse.ძველი_ტექსტი}
-                  </p>
-                </div>
-              ))}
-          </div>
-
-          {verses.length > 0 && !loadingVerses && (
-            <button
-              className={`btn bottom-next-page ${textFont.className}`}
-              onClick={() => {
-                if (!loaded) return;
-                if (loadingVerses) return;
-                if (verses.length < 1) return;
-
-                nextChapter();
-              }}
+          <div className="book-selector">
+            <select
+              value={selectedBook}
+              className={`short-book-name ${bookFontBold.className}`}
+              onChange={handleBookChange}
             >
-              შემდეგი თავი {'>'}
+              {BOOKS.map((book) => (
+                <option key={book.short} value={book.name}>
+                  {book.short}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedChapter}
+              className={`chapter-selector ${bookFontBold.className}`}
+              onChange={handleChapterChange}
+            >
+              {chapters.length === 0 ? (
+                <option value={selectedChapter}>თავი {selectedChapter}</option>
+              ) : (
+                chapters.map((ch) => (
+                  <option key={ch.თავი} value={ch.თავი}>
+                    თავი {ch.თავი}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+
+          <div className="btn-container">
+            <button className={`btn ${textFont.className}`} onClick={() => navigateChapter('prev')}>
+              {'<'} <span>წინა თავი</span>
             </button>
+            <button className={`btn ${textFont.className}`} onClick={() => navigateChapter('next')}>
+              <span>შემდეგი თავი</span> {'>'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="content">
+        <h1 className={`header ${bookFontBold.className}`}>
+          {loaded && (
+            <>
+              <span className="book-name">{selectedBook}</span>
+              <span className="book-chapter">თავი {selectedChapter}</span>
+            </>
+          )}
+        </h1>
+
+        <div className="verses">
+          {!loaded || loadingVerses ? (
+            <>
+              <Placeholder />
+              <div className={`loading-text ${textFont.className}`}>
+                <Image src="/cross-orthodox.svg" width={42} height={42} alt="ჯვარი" priority />
+                {loaded ? 'იტვირთება...' : 'წმინდა წერილი'}
+              </div>
+              <Placeholder />
+            </>
+          ) : (
+            versesWithTopics.map((verse, index) => (
+              <div key={verse.id} className={textFont.className}>
+                {verse.showTopic && (
+                  <div id={verse.id} className="topic">
+                    {verse.თემა}
+                  </div>
+                )}
+                <p className="verse">
+                  <span className="index">{index + 1}</span>. {verse.ძველი_ტექსტი}
+                </p>
+              </div>
+            ))
           )}
         </div>
+
+        {verses.length > 0 && !loadingVerses && (
+          <button
+            className={`btn bottom-next-page ${textFont.className}`}
+            onClick={() => navigateChapter('next')}
+          >
+            შემდეგი თავი {'>'}
+          </button>
+        )}
       </div>
-    </Suspense>
+    </div>
   );
 };
 
