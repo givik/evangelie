@@ -105,7 +105,7 @@ const Page = ({ params }) => {
       router.replace(`/${shortBookName}/${storedChapter}`);
     }
 
-    setLoaded(true);
+    // setLoaded(true);
   }, [decodedSlug]); // Only run once on mount
 
   // Fetch chapters and themes when book changes
