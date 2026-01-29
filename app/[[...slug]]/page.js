@@ -82,6 +82,7 @@ const Page = ({ params }) => {
     let chapter = decodedSlug[1];
 
     if (book) {
+      console.log('book exists');
       const bookObj = BOOKS.find((b) => b.short === book);
       book = bookObj ? bookObj.name : book;
 
@@ -91,6 +92,7 @@ const Page = ({ params }) => {
       if (book) localStorage.setItem('selectedBook', book);
       if (chapter) localStorage.setItem('selectedChapter', chapter);
     } else {
+      console.log('book does not exists');
       const storedBook = localStorage.getItem('selectedBook') || 'მათეს სახარება';
       const storedChapter = localStorage.getItem('selectedChapter') || '1';
 
