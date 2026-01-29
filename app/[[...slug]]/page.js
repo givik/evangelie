@@ -240,7 +240,6 @@ const Page = ({ params }) => {
                             •- თავი {theme.თავი} -•
                           </div>
                         )}
-                        {theme.showChapter && <div className="menu-chapter">{theme.თავი}</div>}
                         <a
                           onClick={() => {
                             router.push(`/${book}/${theme.თავი}/#${theme.id}`);
