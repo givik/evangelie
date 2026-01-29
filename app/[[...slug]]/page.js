@@ -36,7 +36,7 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   // Memoize decoded slug to prevent recalculation
-  const decodedSlug = () => {
+  const decodedSlug = useMemo(() => {
     if (!slug) return [];
     return slug.map((s) => {
       let decoded = s;
@@ -51,7 +51,7 @@ const Page = ({ params }) => {
       } while (decoded !== prevDecoded && decoded.includes('%'));
       return decoded;
     });
-  };
+  }, [slug]);
 
   // Memoize book lookup function
   const shortBook = useCallback((bookName) => {
@@ -106,7 +106,7 @@ const Page = ({ params }) => {
     }
 
     setLoaded(true);
-  }, []); // Only run once on mount
+  }, [decodedSlug]); // Only run once on mount
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
