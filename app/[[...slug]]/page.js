@@ -77,7 +77,7 @@ const Page = ({ params }) => {
 
   // Initialize from URL or localStorage only once
   useEffect(() => {
-    console.log('Initialization useEffect');
+    // console.log('Initialization useEffect');
     let book = decodedSlug[0];
     let chapter = decodedSlug[1];
 
@@ -108,7 +108,7 @@ const Page = ({ params }) => {
   useEffect(() => {
     if (!selectedBook) return;
 
-    console.log('Fetching chapters and themes for:', selectedBook);
+    // console.log('Fetching chapters and themes for:', selectedBook);
 
     Promise.all([getChapters(selectedBook), getThemes(selectedBook)]).then(
       ([chaptersData, themesData]) => {
@@ -122,7 +122,7 @@ const Page = ({ params }) => {
   useEffect(() => {
     if (!selectedBook || !selectedChapter) return;
 
-    console.log('Fetching verses for:', selectedBook, selectedChapter);
+    // console.log('Fetching verses for:', selectedBook, selectedChapter);
 
     // Show loading state
     setLoadingVerses(true);
