@@ -229,7 +229,7 @@ const Page = ({ params }) => {
       } else {
         // Navigate to different chapter with hash
         console.log(`navigating to: /${shortBookName}/${themeChapter}#${themeId}`);
-        router.push(`/${shortBookName}/${themeChapter}#${themeId}`);
+        router.replace(`/${shortBookName}/${themeChapter}#${themeId}`);
       }
     },
     [selectedBook, selectedChapter, router, shortBook, scrollToElement],
