@@ -108,6 +108,11 @@ const Page = ({ params }) => {
     // setLoaded(true);
   }, [decodedSlug]); // Only run once on mount
 
+  // Separate initial mount logic
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   // Fetch chapters and themes when book changes
   useEffect(() => {
     console.log('useEffect [selectedBook]');
