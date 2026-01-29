@@ -32,8 +32,7 @@ const Page = ({ params }) => {
   const [selectedChapter, setSelectedChapter] = useState('1');
   const [loadingVerses, setLoadingVerses] = useState(false);
 
-  const resolvedParams = use(params);
-  const slug = resolvedParams?.slug;
+  const { slug } = use(params);
   const router = useRouter();
 
   // Memoize decoded slug to prevent recalculation
@@ -74,13 +73,9 @@ const Page = ({ params }) => {
         behavior: 'smooth',
       });
     }
-    if (!slug) {
-      console.log('slug not yet available');
-      return;
-    }
   }, []);
 
-  console.log('Page render', { slug, decodedSlug });
+  console.log('Page render');
 
   // Initialize from URL or localStorage only once
   useEffect(() => {
@@ -111,7 +106,7 @@ const Page = ({ params }) => {
     }
 
     setLoaded(true);
-  }, [slug, decodedSlug, router]);
+  }, []); // Only run once on mount
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
