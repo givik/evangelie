@@ -325,9 +325,14 @@ body {
   font-size: 22px;
 }
 
+#menu li div {
+  font-size: clamp(1.4rem, calc(1vw + 1rem), 3rem);
+}
+
 #menu li label {
   cursor: pointer;
   color: #000;
+  font-size: clamp(1.4rem, calc(1vw + 1rem), 3.5rem);
 }
 
 /*
