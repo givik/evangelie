@@ -86,24 +86,35 @@ const Page = ({ params }) => {
     if (book) {
       const bookObj = BOOKS.find((b) => b.short === book);
       book = bookObj ? bookObj.name : book;
+      const resolvedBook = book;
+      const resolvedChapter = chapter || '1';
 
-      setSelectedBook(book);
-      setSelectedChapter(chapter || '1');
+      // Store in localStorage first to reflect sync
+      if (resolvedBook) localStorage.setItem('selectedBook', resolvedBook);
+      if (resolvedChapter) localStorage.setItem('selectedChapter', resolvedChapter);
 
-      if (book) localStorage.setItem('selectedBook', book);
-      if (chapter) localStorage.setItem('selectedChapter', chapter);
+      // Schedule state update for next microtask to avoid cascading render
+      Promise.resolve().then(() => {
+        setSelectedBook(resolvedBook);
+        setSelectedChapter(resolvedChapter);
+      });
     } else {
       const storedBook = localStorage.getItem('selectedBook') || 'მათეს სახარება';
       const storedChapter = localStorage.getItem('selectedChapter') || '1';
 
-      setSelectedBook(storedBook);
-      setSelectedChapter(storedChapter);
+      Promise.resolve().then(() => {
+        setSelectedBook(storedBook);
+        setSelectedChapter(storedChapter);
+      });
 
       const shortBookName = BOOKS.find((b) => b.name === storedBook)?.short || 'მათე';
       router.replace(`/${shortBookName}/${storedChapter}`);
     }
 
-    setLoaded(true);
+    // Schedule setLoaded to avoid cascading renders inside effect (see React lint warning)
+    Promise.resolve().then(() => {
+      setLoaded(true);
+    });
   }, [decodedSlug, router]);
 
   // Fetch chapters and themes when book changes
@@ -127,9 +138,8 @@ const Page = ({ params }) => {
     if (!selectedBook || !selectedChapter) return;
 
     // console.log('Fetching verses for:', selectedBook, selectedChapter);
-
-    // Show loading state
-    setLoadingVerses(true);
+    // Show loading state in next microtask to avoid cascading renders inside effect
+    Promise.resolve().then(() => setLoadingVerses(true));
 
     getVerses(selectedBook, selectedChapter)
       .then((data) => {
@@ -261,8 +271,7 @@ const Page = ({ params }) => {
                   </div>
                   {chaptersForThemes.map((theme) => {
                     const shortBookName = shortBook(selectedBook);
-                    const isSameChapter =
-                      parseInt(theme.თავი) === parseInt(selectedChapter);
+                    const isSameChapter = parseInt(theme.თავი) === parseInt(selectedChapter);
                     const href = isSameChapter
                       ? `#${theme.id}`
                       : `/${shortBookName}/${theme.თავი}#${theme.id}`;
