@@ -138,16 +138,13 @@ const Page = ({ params }) => {
     if (!selectedBook || !selectedChapter) return;
 
     // console.log('Fetching verses for:', selectedBook, selectedChapter);
-    // Show loading state in next microtask to avoid cascading renders inside effect
-    Promise.resolve().then(() => setLoadingVerses(true));
-
-    getVerses(selectedBook, selectedChapter)
-      .then((data) => {
-        setVerses(data);
-      })
-      .finally(() => {
-        setLoadingVerses(false);
-      });
+    // Set loading and start fetch in same microtask so loading is true before any fast response runs .finally()
+    Promise.resolve().then(() => {
+      setLoadingVerses(true);
+      getVerses(selectedBook, selectedChapter)
+        .then((data) => setVerses(data))
+        .finally(() => setLoadingVerses(false));
+    });
   }, [selectedBook, selectedChapter]);
 
   // Scroll to hash anchor after verses are loaded
