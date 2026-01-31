@@ -120,7 +120,7 @@ const Page = ({ params }) => {
     Promise.resolve().then(() => {
       setLoaded(true);
     });
-  });
+  }, [router]);
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
@@ -133,7 +133,7 @@ const Page = ({ params }) => {
       ([chaptersData, themesData]) => {
         setChapters(chaptersData);
         setThemes(themesData);
-      },
+      }
     );
   }, [selectedBook]);
 
@@ -142,8 +142,12 @@ const Page = ({ params }) => {
     if (!selectedBook || !selectedChapter) return;
 
     const thisRequestId = ++verseRequestIdRef.current;
-    setVerseLoadError(null);
-    setLoadingVerses(true);
+
+    // Defer setState calls to avoid cascading renders in effect
+    Promise.resolve().then(() => {
+      setVerseLoadError(null);
+      setLoadingVerses(true);
+    });
 
     let timeoutId;
     const timeoutPromise = new Promise((_, reject) => {
@@ -220,7 +224,7 @@ const Page = ({ params }) => {
       setSelectedChapter('1');
       router.push(`/${shortBookName}/1`);
     },
-    [router, shortBook],
+    [router, shortBook]
   );
 
   const handleChapterChange = useCallback(
@@ -232,7 +236,7 @@ const Page = ({ params }) => {
       setSelectedChapter(newChapter);
       router.push(`/${shortBookName}/${newChapter}`);
     },
-    [selectedBook, router, shortBook],
+    [selectedBook, router, shortBook]
   );
 
   const prevChapter = useCallback(() => {
