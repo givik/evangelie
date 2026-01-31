@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, use, Suspense, useMemo, useCallback } from 'react';
+import { useState, useEffect, use, Suspense, useMemo, useCallback, useRef } from 'react';
 import { getChapters, getThemes, getVerses, getBooks } from '../actions';
 import Placeholder from '@/components/Placeholder';
 import { useRouter } from 'next/navigation';
@@ -8,6 +8,8 @@ import localFont from 'next/font/local';
 import Image from 'next/image';
 
 import './page.css';
+
+const VERSE_LOAD_TIMEOUT_MS = 15000;
 
 const bookFontBold = localFont({
   src: '../fonts/gl-lortkipanidze-bold.ttf',
@@ -32,6 +34,9 @@ const Page = ({ params }) => {
   const [selectedBook, setSelectedBook] = useState('');
   const [selectedChapter, setSelectedChapter] = useState('1');
   const [loadingVerses, setLoadingVerses] = useState(false);
+  const [verseLoadError, setVerseLoadError] = useState(null);
+  const [retryKey, setRetryKey] = useState(0);
+  const verseRequestIdRef = useRef(0);
 
   const { slug } = use(params);
   const router = useRouter();
@@ -134,18 +139,38 @@ const Page = ({ params }) => {
 
   // Fetch verses when book or chapter changes
   useEffect(() => {
-    console.log('useEffect [selectedBook, selectedChapter]');
     if (!selectedBook || !selectedChapter) return;
 
-    // console.log('Fetching verses for:', selectedBook, selectedChapter);
-    // Set loading and start fetch in same microtask so loading is true before any fast response runs .finally()
-    Promise.resolve().then(() => {
-      setLoadingVerses(true);
-      getVerses(selectedBook, selectedChapter)
-        .then((data) => setVerses(data))
-        .finally(() => setLoadingVerses(false));
+    const thisRequestId = ++verseRequestIdRef.current;
+    setVerseLoadError(null);
+    setLoadingVerses(true);
+
+    let timeoutId;
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error('timeout')), VERSE_LOAD_TIMEOUT_MS);
     });
-  }, [selectedBook, selectedChapter]);
+
+    const finish = (data, isError = false) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      if (thisRequestId !== verseRequestIdRef.current) return;
+      setLoadingVerses(false);
+      if (isError) {
+        setVerseLoadError(true);
+        setVerses([]);
+      } else {
+        setVerseLoadError(null);
+        setVerses(data ?? []);
+      }
+    };
+
+    Promise.race([getVerses(selectedBook, selectedChapter), timeoutPromise])
+      .then((data) => finish(data, false))
+      .catch(() => finish(null, true));
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [selectedBook, selectedChapter, retryKey]);
 
   // Scroll to hash anchor after verses are loaded
   useEffect(() => {
@@ -411,6 +436,20 @@ const Page = ({ params }) => {
                 </div>
                 <Placeholder />
               </>
+            )}
+
+            {/* Timeout or load error — show retry */}
+            {loaded && !loadingVerses && verseLoadError && (
+              <div className={`loading-text ${textFont.className}`} style={{ flexDirection: 'column', gap: '1rem' }}>
+                <span>ვერ ჩაიტვირთა. სცადეთ თავიდან.</span>
+                <button
+                  type="button"
+                  className={`btn ${textFont.className}`}
+                  onClick={() => setRetryKey((k) => k + 1)}
+                >
+                  თავიდან ცდა
+                </button>
+              </div>
             )}
 
             {/* Display verses */}
