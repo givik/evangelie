@@ -516,7 +516,7 @@ const Page = ({ params }) => {
                     </div>
                   )}
                   <p className="verse">
-                    <span className="index">{index + 1}</span>. {verse.ძველი_ტექსტი}
+                    <span className="index">{index + 1}</span>. {verse.ტექსტი}
                   </p>
                 </div>
               ))}
