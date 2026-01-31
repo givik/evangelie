@@ -203,6 +203,26 @@ const Page = ({ params }) => {
     return () => menuCheckbox.removeEventListener('change', handleMenuToggle);
   }, [selectedChapter]);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const menuCheckbox = document.getElementById('menuCheckbox');
+    const menuToggle = document.getElementById('menuToggle');
+    if (!menuCheckbox || !menuToggle) return;
+
+    const handleClickOutside = (event) => {
+      // Only handle clicks when menu is open
+      if (!menuCheckbox.checked) return;
+
+      // Check if click is outside the menu toggle area
+      if (!menuToggle.contains(event.target)) {
+        menuCheckbox.checked = false;
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   // Fetch chapters and themes when book changes
   useEffect(() => {
     console.log('useEffect [selectedBook]');
