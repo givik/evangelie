@@ -115,7 +115,7 @@ const Page = ({ params }) => {
     Promise.resolve().then(() => {
       setLoaded(true);
     });
-  }, [decodedSlug, router]);
+  }, [router]);
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
