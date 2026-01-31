@@ -74,7 +74,8 @@ const Page = ({ params }) => {
     if (showControls) setControlsVisible(true);
 
     const controlsPanel = document.querySelector('.controls');
-    const offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80;
+    let offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80;
+    if (showControls) offset = 0;
     const elementPosition = element.getBoundingClientRect().top;
     const targetPosition = elementPosition + window.pageYOffset - offset;
     const startPosition = window.pageYOffset;
@@ -89,9 +90,7 @@ const Page = ({ params }) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const ease =
-        progress < 0.5
-          ? 2 * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
       window.scrollTo(0, startPosition + distance * ease);
 
@@ -142,7 +141,7 @@ const Page = ({ params }) => {
     Promise.resolve().then(() => {
       setLoaded(true);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   // Hide controls when scrolling down, show when scrolling up or near top
