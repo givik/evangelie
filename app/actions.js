@@ -21,7 +21,9 @@ export async function getChapters(book) {
     );
     return res.rows;
   } catch (e) {
-    console.log(e);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('getChapters error:', e);
+    }
     return [];
   }
 }
@@ -37,7 +39,9 @@ export async function getVerses(book, chapter) {
     );
     return res.rows;
   } catch (e) {
-    console.log(e);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('getVerses error:', e);
+    }
     return [];
   }
 }
@@ -52,7 +56,9 @@ export async function getVerseID(book, chapter, verse) {
     );
     return res.rows[0]?.id || null;
   } catch (e) {
-    console.log(e);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('getVerseID error:', e);
+    }
     return null;
   }
 }
@@ -64,7 +70,9 @@ export async function getOptions() {
     const res = await query('SELECT id, წიგნი, თავი, მუხლი FROM public.მუხლები ORDER BY id');
     return res.rows;
   } catch (e) {
-    console.log(e);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('getOptions error:', e);
+    }
     return [];
   }
 }
@@ -81,7 +89,9 @@ export async function getData() {
     const data = [[...res1.rows], ...res2.rows];
     return data;
   } catch (e) {
-    console.log(e);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('getData error:', e);
+    }
     return [];
   }
 }
@@ -95,7 +105,9 @@ export async function getThemes(book) {
     ]);
     return res.rows;
   } catch (e) {
-    console.log(e);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('getThemes error:', e);
+    }
     return [];
   }
 }
@@ -105,11 +117,28 @@ export async function addDefinition(formData) {
   const author = formData.get('author');
   const text = formData.get('text');
 
+  // Input validation
+  if (!verseID || !author || !text) {
+    return { message: 'All fields are required', error: true };
+  }
+
+  if (typeof author !== 'string' || author.length > 100) {
+    return { message: 'Author name is too long (max 100 characters)', error: true };
+  }
+
+  if (typeof text !== 'string' || text.length > 5000) {
+    return { message: 'Text is too long (max 5000 characters)', error: true };
+  }
+
+  if (typeof text !== 'string' || text.trim().length === 0) {
+    return { message: 'Text cannot be empty', error: true };
+  }
+
   try {
     await query('INSERT INTO განმარტებები (mukhli_id, ავტორი, ტექსტი) VALUES ($1, $2, $3)', [
       verseID,
-      author,
-      text,
+      author.trim(),
+      text.trim(),
     ]);
 
     // updateTag is like revalidateTag but optimized for Server Actions
@@ -118,9 +147,11 @@ export async function addDefinition(formData) {
 
     // Refresh the page data automatically
     revalidatePath('/');
-    return { message: 'Success!' };
+    return { message: 'Success!', error: false };
   } catch (e) {
-    console.log(e);
-    return { message: 'Database Error' };
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('addDefinition error:', e);
+    }
+    return { message: 'Database Error', error: true };
   }
 }

@@ -6,10 +6,18 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import localFont from 'next/font/local';
 import Image from 'next/image';
+import {
+  BOOKS,
+  VERSE_LOAD_TIMEOUT_MS,
+  SCROLL_OFFSET_PX,
+  CONTROLS_OFFSET_PX,
+  MENU_OPEN_DELAY_MS,
+  HASH_SCROLL_DELAY_MS,
+  SCROLL_THRESHOLD_PX,
+  TOP_THRESHOLD_PX,
+} from '@/lib/constants';
 
 import './page.css';
-
-const VERSE_LOAD_TIMEOUT_MS = 15000;
 
 const bookFontBold = localFont({
   src: '../fonts/gl-lortkipanidze-bold.ttf',
@@ -18,13 +26,6 @@ const bookFontBold = localFont({
 const textFont = localFont({
   src: '../fonts/bpg_nino_elite_round.otf',
 });
-
-const BOOKS = [
-  { short: 'მათე', name: 'მათეს სახარება' },
-  { short: 'მარკოზი', name: 'მარკოზის სახარება' },
-  { short: 'ლუკა', name: 'ლუკას სახარება' },
-  { short: 'იოანე', name: 'იოანეს სახარება' },
-];
 
 const Page = ({ params }) => {
   const [loaded, setLoaded] = useState(false);
@@ -39,6 +40,7 @@ const Page = ({ params }) => {
   const [controlsVisible, setControlsVisible] = useState(true);
   const verseRequestIdRef = useRef(0);
   const lastScrollYRef = useRef(0);
+  const selectedChapterRef = useRef(selectedChapter);
 
   const { slug } = use(params);
   const router = useRouter();
@@ -66,7 +68,7 @@ const Page = ({ params }) => {
     return BOOKS.find((b) => b.name === bookName)?.short || '';
   }, []);
 
-  // Scroll to element with offset (slower duration on mobile)
+  // Scroll to element with offset
   const scrollToElement = useCallback((elementId, showControls = false) => {
     const element = document.getElementById(elementId);
     if (!element) return;
@@ -74,41 +76,17 @@ const Page = ({ params }) => {
     if (showControls) setControlsVisible(true);
 
     const controlsPanel = document.querySelector('.controls');
-    let offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80;
-    if (showControls) offset = 0;
+    const offset = showControls
+      ? 0
+      : (controlsPanel?.offsetHeight ?? SCROLL_OFFSET_PX) + CONTROLS_OFFSET_PX;
+
     const elementPosition = element.getBoundingClientRect().top;
     const targetPosition = elementPosition + window.pageYOffset - offset;
-    const startPosition = window.pageYOffset;
-    const distance = targetPosition - startPosition;
 
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-    //? scroll with animation
-    // const duration = isMobile ? 1000 : 450;
-
-    // const startTime = performance.now();
-
-    // const animateScroll = (currentTime) => {
-    //   const elapsed = currentTime - startTime;
-    //   const progress = Math.min(elapsed / duration, 1);
-    //   const ease =
-    //     progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-    //   window.scrollTo(0, startPosition + distance * ease);
-
-    //   if (progress < 1) {
-    //     requestAnimationFrame(animateScroll);
-    //   }
-    // };
-
-    const animateScroll = (currentTime) => {
-      window.scrollTo(0, startPosition + distance);
-    };
-
-    requestAnimationFrame(animateScroll);
+    window.scrollTo(0, targetPosition);
   }, []);
 
-  console.log('Page render');
+
 
   // Sync state from URL whenever the route (slug) changes (e.g. theme click to another chapter)
   useEffect(() => {
@@ -121,49 +99,44 @@ const Page = ({ params }) => {
       const resolvedBook = book;
       const resolvedChapter = chapter || '1';
 
-      // Store in localStorage first to reflect sync
-      if (resolvedBook) localStorage.setItem('selectedBook', resolvedBook);
-      if (resolvedChapter) localStorage.setItem('selectedChapter', resolvedChapter);
+      // Store in localStorage (check for SSR)
+      if (typeof window !== 'undefined') {
+        if (resolvedBook) localStorage.setItem('selectedBook', resolvedBook);
+        if (resolvedChapter) localStorage.setItem('selectedChapter', resolvedChapter);
+      }
 
-      // Schedule state update for next microtask to avoid cascading render
-      Promise.resolve().then(() => {
-        setSelectedBook(resolvedBook);
-        setSelectedChapter(resolvedChapter);
-      });
+      setSelectedBook(resolvedBook);
+      setSelectedChapter(resolvedChapter);
     } else {
-      const storedBook = localStorage.getItem('selectedBook') || 'მათეს სახარება';
-      const storedChapter = localStorage.getItem('selectedChapter') || '1';
+      const storedBook = typeof window !== 'undefined'
+        ? localStorage.getItem('selectedBook') || 'მათეს სახარება'
+        : 'მათეს სახარება';
+      const storedChapter = typeof window !== 'undefined'
+        ? localStorage.getItem('selectedChapter') || '1'
+        : '1';
 
-      Promise.resolve().then(() => {
-        setSelectedBook(storedBook);
-        setSelectedChapter(storedChapter);
-      });
+      setSelectedBook(storedBook);
+      setSelectedChapter(storedChapter);
 
       const shortBookName = BOOKS.find((b) => b.name === storedBook)?.short || 'მათე';
       router.replace(`/${shortBookName}/${storedChapter}`);
     }
 
-    // Schedule setLoaded to avoid cascading renders inside effect (see React lint warning)
-    Promise.resolve().then(() => {
-      setLoaded(true);
-    });
+    setLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   // Hide controls when scrolling down, show when scrolling up or near top
   useEffect(() => {
-    const SCROLL_THRESHOLD = 2;
-    const TOP_THRESHOLD = 80;
-
     const handleScroll = () => {
       const y = window.scrollY || document.documentElement.scrollTop;
       const lastY = lastScrollYRef.current;
 
-      if (y <= TOP_THRESHOLD) {
+      if (y <= TOP_THRESHOLD_PX) {
         setControlsVisible(true);
-      } else if (y > lastY + SCROLL_THRESHOLD) {
+      } else if (y > lastY + SCROLL_THRESHOLD_PX) {
         setControlsVisible(false);
-      } else if (y < lastY - SCROLL_THRESHOLD) {
+      } else if (y < lastY - SCROLL_THRESHOLD_PX) {
         setControlsVisible(true);
       }
 
@@ -191,7 +164,7 @@ const Page = ({ params }) => {
             (el) => {
               const chapterText = el.textContent;
               const match = chapterText.match(/თავი (\d+)/);
-              return match && match[1] === selectedChapter;
+              return match && match[1] === selectedChapterRef.current;
             }
           );
 
@@ -201,12 +174,17 @@ const Page = ({ params }) => {
               block: 'start',
             });
           }
-        }, 100); // Small delay to ensure menu animation has started
+        }, MENU_OPEN_DELAY_MS);
       }
     };
 
     menuCheckbox.addEventListener('change', handleMenuToggle);
     return () => menuCheckbox.removeEventListener('change', handleMenuToggle);
+  }, []); // No dependencies - using ref instead
+
+  // Keep ref in sync with selectedChapter
+  useEffect(() => {
+    selectedChapterRef.current = selectedChapter;
   }, [selectedChapter]);
 
   // Close menu when clicking outside
@@ -231,10 +209,7 @@ const Page = ({ params }) => {
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
-    console.log('useEffect [selectedBook]');
     if (!selectedBook) return;
-
-    // console.log('Fetching chapters and themes for:', selectedBook);
 
     Promise.all([getChapters(selectedBook), getThemes(selectedBook)]).then(
       ([chaptersData, themesData]) => {
@@ -249,37 +224,41 @@ const Page = ({ params }) => {
     if (!selectedBook || !selectedChapter) return;
 
     const thisRequestId = ++verseRequestIdRef.current;
+    const abortController = new AbortController();
 
-    // Defer setState calls to avoid cascading renders in effect
-    Promise.resolve().then(() => {
-      setVerseLoadError(null);
-      setLoadingVerses(true);
-    });
+    setVerseLoadError(null);
+    setLoadingVerses(true);
 
-    let timeoutId;
-    const timeoutPromise = new Promise((_, reject) => {
-      timeoutId = setTimeout(() => reject(new Error('timeout')), VERSE_LOAD_TIMEOUT_MS);
-    });
+    const timeoutId = setTimeout(() => {
+      abortController.abort();
+    }, VERSE_LOAD_TIMEOUT_MS);
 
-    const finish = (data, isError = false) => {
-      if (timeoutId) clearTimeout(timeoutId);
-      if (thisRequestId !== verseRequestIdRef.current) return;
-      setLoadingVerses(false);
-      if (isError) {
-        setVerseLoadError(true);
-        setVerses([]);
-      } else {
+    getVerses(selectedBook, selectedChapter)
+      .then((data) => {
+        // Only update if this is still the current request
+        if (thisRequestId !== verseRequestIdRef.current) return;
+
+        clearTimeout(timeoutId);
+        setLoadingVerses(false);
         setVerseLoadError(null);
         setVerses(data ?? []);
-      }
-    };
+      })
+      .catch((error) => {
+        // Only update if this is still the current request
+        if (thisRequestId !== verseRequestIdRef.current) return;
 
-    Promise.race([getVerses(selectedBook, selectedChapter), timeoutPromise])
-      .then((data) => finish(data, false))
-      .catch(() => finish(null, true));
+        // Don't show error for aborted requests (user navigated away)
+        if (error.name === 'AbortError') return;
+
+        clearTimeout(timeoutId);
+        setLoadingVerses(false);
+        setVerseLoadError(true);
+        setVerses([]);
+      });
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
+      abortController.abort();
     };
   }, [selectedBook, selectedChapter, retryKey]);
 
@@ -294,7 +273,7 @@ const Page = ({ params }) => {
       requestAnimationFrame(() => {
         setTimeout(() => {
           scrollToElement(elementId, true);
-        }, 100);
+        }, HASH_SCROLL_DELAY_MS);
       });
     }
   }, [loaded, loadingVerses, verses.length, scrollToElement]);
@@ -324,8 +303,10 @@ const Page = ({ params }) => {
       const newBook = e.target.value;
       const shortBookName = shortBook(newBook);
 
-      localStorage.setItem('selectedBook', newBook);
-      localStorage.setItem('selectedChapter', '1');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('selectedBook', newBook);
+        localStorage.setItem('selectedChapter', '1');
+      }
 
       setSelectedBook(newBook);
       setSelectedChapter('1');
@@ -339,7 +320,9 @@ const Page = ({ params }) => {
       const newChapter = e.target.value;
       const shortBookName = shortBook(selectedBook);
 
-      localStorage.setItem('selectedChapter', newChapter);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('selectedChapter', newChapter);
+      }
       setSelectedChapter(newChapter);
       router.push(`/${shortBookName}/${newChapter}`);
     },
@@ -351,7 +334,9 @@ const Page = ({ params }) => {
     if (newChapter < 1) return;
 
     const shortBookName = shortBook(selectedBook);
-    localStorage.setItem('selectedChapter', newChapter.toString());
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedChapter', newChapter.toString());
+    }
     setSelectedChapter(newChapter.toString());
     router.push(`/${shortBookName}/${newChapter}`);
   }, [selectedChapter, selectedBook, router, shortBook]);
@@ -361,7 +346,9 @@ const Page = ({ params }) => {
     if (newChapter > chapters.length) return;
 
     const shortBookName = shortBook(selectedBook);
-    localStorage.setItem('selectedChapter', newChapter.toString());
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedChapter', newChapter.toString());
+    }
     setSelectedChapter(newChapter.toString());
     router.push(`/${shortBookName}/${newChapter}`);
   }, [selectedChapter, selectedBook, chapters.length, router, shortBook]);
@@ -387,12 +374,16 @@ const Page = ({ params }) => {
   }, [verses]);
 
   return (
-    <Suspense>
+    <Suspense fallback={<Placeholder />}>
       <div className="container">
         <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
           <nav role="navigation">
             <div id="menuToggle">
-              <input type="checkbox" id="menuCheckbox" />
+              <input
+                type="checkbox"
+                id="menuCheckbox"
+                aria-label="Toggle navigation menu"
+              />
               <span></span>
               <span></span>
               <span></span>
