@@ -120,7 +120,7 @@ const Page = ({ params }) => {
     Promise.resolve().then(() => {
       setLoaded(true);
     });
-  }, [decodedSlug, router]);
+  });
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
@@ -440,7 +440,10 @@ const Page = ({ params }) => {
 
             {/* Timeout or load error — show retry */}
             {loaded && !loadingVerses && verseLoadError && (
-              <div className={`loading-text ${textFont.className}`} style={{ flexDirection: 'column', gap: '1rem' }}>
+              <div
+                className={`loading-text ${textFont.className}`}
+                style={{ flexDirection: 'column', gap: '1rem' }}
+              >
                 <span>ვერ ჩაიტვირთა. სცადეთ თავიდან.</span>
                 <button
                   type="button"
