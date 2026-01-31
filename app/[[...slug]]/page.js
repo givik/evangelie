@@ -38,6 +38,9 @@ const Page = ({ params }) => {
   const [verseLoadError, setVerseLoadError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [fontSize, setFontSize] = useState(1);
+  const [theme, setTheme] = useState('light');
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
   const verseRequestIdRef = useRef(0);
   const lastScrollYRef = useRef(0);
   const selectedChapterRef = useRef(selectedChapter);
@@ -87,6 +90,41 @@ const Page = ({ params }) => {
   }, []);
 
 
+
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedFontSize = parseFloat(localStorage.getItem('reader_fontSize'));
+      const storedTheme = localStorage.getItem('reader_theme');
+
+      if (!isNaN(storedFontSize)) setFontSize(storedFontSize);
+      if (storedTheme) setTheme(storedTheme);
+      setSettingsLoaded(true);
+    }
+  }, []);
+
+  // Update theme data attribute
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
+
+  const handleFontSizeChange = useCallback((change) => {
+    setFontSize(prev => {
+      const newSize = Math.max(1.0, Math.min(2.0, prev + change));
+      localStorage.setItem('reader_fontSize', newSize);
+      return newSize;
+    });
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => {
+      const newTheme = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('reader_theme', newTheme);
+      return newTheme;
+    });
+  }, []);
 
   // Sync state from URL whenever the route (slug) changes (e.g. theme click to another chapter)
   useEffect(() => {
@@ -492,7 +530,20 @@ const Page = ({ params }) => {
           </div>
         </div>
 
-        <div className="content">
+        {settingsLoaded && (
+          <div className="reader-settings" style={{ '--font-scale': fontSize }}>
+            <div className="font-controls">
+              <button onClick={() => handleFontSizeChange(-0.1)} aria-label="Decrease font size">A-</button>
+              <span>{(fontSize * 100).toFixed(0)}%</span>
+              <button onClick={() => handleFontSizeChange(0.1)} aria-label="Increase font size">A+</button>
+            </div>
+            <button className={`theme-toggle ${textFont.className}`} onClick={toggleTheme}>
+              {theme === 'light' ? 'მუქი რეჟიმი' : 'ნათელი რეჟიმი'}
+            </button>
+          </div>
+        )}
+
+        <div className="content" style={{ '--font-scale': fontSize }}>
           <h1 className={`header ${bookFontBold.className}`}>
             {loaded && !loadingVerses && (
               <>

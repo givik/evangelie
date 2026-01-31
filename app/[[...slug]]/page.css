@@ -1,10 +1,31 @@
+:root {
+  --font-scale: 1;
+  --bg-color: #f6f1e2;
+  --text-color: #333;
+  --controls-bg: #f6f1e2;
+  --controls-shadow: #f6f1e2;
+  --menu-bg: #f6f1e2;
+  --topic-color: grey;
+}
+
+[data-theme='dark'] {
+  --bg-color: #1a1a1a;
+  --text-color: #e0e0e0;
+  --controls-bg: rgba(40, 40, 40, 0.8);
+  --controls-shadow: rgba(0, 0, 0, 0.5);
+  --menu-bg: rgba(40, 40, 40, 0.95);
+  --topic-color: #a0a0a0;
+}
+
 * {
   scroll-behavior: smooth;
 }
 body {
   height: 100%;
-  background: #f6f1e2;
+  background: var(--bg-color);
+  color: var(--text-color);
   overflow-y: scroll; /* Always show scrollbar to prevent layout shift */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 .container {
   margin: 0 auto;
@@ -12,14 +33,49 @@ body {
   display: flex;
   justify-content: center;
   height: 100%;
-  color: #333;
+  color: var(--text-color);
   padding-bottom: 5rem; /* to prevent content being hidden behind controls */
+  flex-direction: column; /* Changed to column to stack controls and content properly if needed, but keeping row for original layout if separate */
+  /* Actually original layout had just .container { display: flex; justify-content: center; } which defaults to row but content inside was likely block. 
+     The .controls is fixed so it doesn't affect flow much. 
+     Wait, original layout: .container { display: flex; justify-content: center; ... } 
+     Inside is .controls (fixed) and .content (flex: 3).
+     If I want to put settings above content, I should probably wrap them together or adjust .content.
+     Let's see: .content has flex: 3.
+     If I put settings before .content in JSX, it will be a sibling.
+     If container is flex-row (default), they will be side-by-side. 
+     I probably want them stacked vertically in the main flow area.
+     The original has .container as flex container. 
+     .controls is position: fixed.
+     .content is the only flow child? No, .controls is a child too but fixed.
+     So currently .container has minimal children affecting layout.
+     If I insert a div *before* .content, and container is row (default), they sit side by side.
+     I should wraps settings and content in a column div, or make container column?
+     Original had `justify-content: center`.
+     Let's check the JSX again.
+     <div className="container"> <div className="controls">...</div> <div className="content">...</div> </div>
+     Controls is fixed. Content is flex: 3.
+     If I add <div className="reader-settings">...</div> <div className="content">...</div>
+     They will be flex items.
+     If I want settings above content, I should wrap them in a Column or make container Flex-Column.
+     However, .content has margin-top: 6rem.
+     I'll stick to making container flex-direction: column? 
+     Let's be careful not to break existing center alignment if it relies on being only child.
+     I will wrap the settings and content in a main-content-wrapper if needed, or simply style .reader-settings to have margin-top.
+     Actually, let's look at .content styles again.
+     .content { flex: 3; margin-top: 6rem; ... }
+     If I add .reader-settings, I want it to be above .content.
+     I'll set .container { flex-direction: column; align-items: center; } 
+     But .controls depends on container? No it's fixed.
+  */
+  flex-direction: column;
+  align-items: center;
 }
 /* align controls and content side by side */
 .controls {
   position: fixed;
-  z-index: 1;
-  color: #fff;
+  z-index: 100;
+  color: var(--text-color);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -30,8 +86,8 @@ body {
   transform: translateY(0);
   transition: transform 0.25s ease-out;
   /* glass effect */
-  background: #f6f1e2;
-  box-shadow: 0 12px 22px 0 #f6f1e2;
+  background: var(--controls-bg);
+  box-shadow: 0 12px 22px 0 var(--controls-shadow);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   width: 96%; /* From https://css.glass */
@@ -57,19 +113,23 @@ body {
   gap: 0.5rem;
   width: 45%;
 }
+[data-theme='dark'] .controls .book-selector select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e0e0e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
 .controls .book-selector select {
   padding: 0.6rem;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 20px;
   border-radius: 0.9rem;
   border: 1px solid #333;
-  color: #000;
+  color: var(--text-color);
   outline: none;
   cursor: pointer;
-  background-color: #f6f1e2;
+  background-color: var(--controls-bg);
+  border-color: var(--text-color);
 }
 .controls .chapter-selector {
   /* font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem); */
@@ -83,12 +143,12 @@ body {
 }
 .btn {
   border-radius: 0.9rem;
-  border: 1px solid #333;
-  color: #333;
+  border: 1px solid var(--text-color);
+  color: var(--text-color);
   outline: none;
   font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem);
   cursor: pointer;
-  background-color: #f6f1e2;
+  background-color: var(--controls-bg);
 }
 .btn:hover {
   transition: all 0.1s;
@@ -107,7 +167,9 @@ body {
 }
 .content {
   flex: 3;
-  margin-top: 6rem;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 2rem;
   height: 100%;
   opacity: 0;
   animation: fadeIn 0.6s ease-in-out 0.1s forwards;
@@ -118,16 +180,16 @@ body {
   align-items: center;
 }
 .content .header .book-name {
-  font-size: clamp(3.1rem, calc(3vw + 1rem), 3.5rem);
+  font-size: calc(clamp(3.1rem, calc(3vw + 1rem), 3.5rem) * var(--font-scale));
 }
 .content .header .book-chapter {
-  color: rgb(33, 33, 33);
-  font-size: clamp(2.1rem, calc(2.6vw + 1rem), 3.5rem);
+  color: var(--text-color);
+  font-size: calc(clamp(2.1rem, calc(2.6vw + 1rem), 3.5rem) * var(--font-scale));
   text-align: right;
 }
 .content h1 {
   margin-bottom: 20px;
-  font-size: clamp(3.1rem, calc(3vw + 1rem), 3.5rem);
+  font-size: calc(clamp(3.1rem, calc(3vw + 1rem), 3.5rem) * var(--font-scale));
   animation: fadeIn 0.6s ease-in-out 0.1s forwards;
   opacity: 0;
 }
@@ -139,16 +201,16 @@ body {
 .verses .topic {
   margin-bottom: 1.3rem;
   margin-left: 0.5rem;
-  font-size: clamp(1.85rem, 1vw + 1rem, 3.5rem);
-  line-height: 2.6rem;
-  color: grey;
+  font-size: calc(clamp(1.85rem, 1vw + 1rem, 3.5rem) * var(--font-scale));
+  line-height: calc(2.6rem * var(--font-scale));
+  color: var(--topic-color);
   /* display: flex;
   justify-content: center; */
   /* text-shadow: 0px 0px 0.5px gold; */
 }
 .verses .verse {
-  font-size: clamp(1.9rem, calc(1vw + 1rem), 3.5rem);
-  line-height: 2.6rem;
+  font-size: calc(clamp(1.9rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
+  line-height: calc(2.6rem * var(--font-scale));
   margin-bottom: 1.3rem;
   margin-left: 0.5rem;
 }
@@ -156,8 +218,9 @@ body {
   font-size: 1.3rem;
 }
 .loading-text {
-  font-size: clamp(3rem, calc(1vw + 1rem), 3.5rem);
-  line-height: 2.4rem;
+  color: var(--text-color);
+  font-size: calc(clamp(3rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
+  line-height: calc(2.4rem * var(--font-scale));
   margin-bottom: 1.3rem;
   margin-left: 0.5rem;
   display: flex;
@@ -168,11 +231,11 @@ body {
   padding: 1rem;
   float: right;
   margin-top: 3rem;
-  border-bottom: 1px solid #333;
-  color: #333;
+  border-bottom: 1px solid var(--text-color);
+  color: var(--text-color);
 }
 .bottom-next-page:hover {
-  border-bottom: 2px solid #333;
+  border-bottom: 2px solid var(--text-color);
 }
 
 #menuToggle {
@@ -185,7 +248,7 @@ body {
 
 #menuToggle a {
   text-decoration: none;
-  color: #232323;
+  color: var(--text-color);
   margin-left: 0rem;
 
   transition: color 0.3s ease, margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -226,7 +289,7 @@ body {
   margin-bottom: 5px;
   position: relative;
 
-  background: #333;
+  background: var(--text-color);
   border-radius: 3px;
 
   z-index: 1;
@@ -252,7 +315,7 @@ body {
 #menuToggle input:checked ~ span {
   opacity: 1;
   transform: rotate(45deg) translate(-2px, -1px);
-  background: #333;
+  background: var(--text-color);
 }
 
 /*
@@ -283,13 +346,12 @@ body {
   padding: 34px 34px 34px;
   box-sizing: border-box;
   overflow-y: auto;
-  background: #ededed;
   list-style-type: none;
   -webkit-font-smoothing: antialiased;
   /* to stop flickering of text in safari */
   /* glass effect */
-  background: #f6f1e2;
-  box-shadow: 0 12px 22px 0 #f6f1e2;
+  background: var(--menu-bg);
+  box-shadow: 0 12px 22px 0 var(--controls-shadow);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   /* background: rgba(255, 255, 255, 0.2); */
@@ -306,14 +368,14 @@ body {
 }
 
 #menu .book-name {
-  color: #333;
+  color: var(--text-color);
   text-align: center;
   margin-bottom: 0.75rem;
   font-size: clamp(2.2rem, calc(1vw + 0.1rem), 3.5rem);
 }
 
 #menu .menu-chapter {
-  color: #333;
+  color: var(--text-color);
   text-align: center;
   margin-bottom: 0.75rem;
   padding-top: 1rem;
@@ -330,7 +392,7 @@ body {
 
 #menu li label {
   cursor: pointer;
-  color: #000;
+  color: var(--text-color);
   font-size: clamp(1.75rem, calc(1vw + 0.53rem), 3.5rem);
 }
 
@@ -434,3 +496,62 @@ body {
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
 }
+
+/* Reader Settings */
+.reader-settings {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 6rem; /* Matches original content top margin */
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  padding: 0 1rem;
+}
+
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--controls-bg);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--text-color);
+  backdrop-filter: blur(5px);
+}
+
+.font-controls button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.font-controls span {
+  font-size: 1rem;
+  min-width: 3ch;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.theme-toggle {
+  background: var(--controls-bg);
+  border: 1px solid var(--text-color);
+  color: var(--text-color);
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+}
+
+@media only screen and (max-width: 600px) {
+  .reader-settings {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 5rem;
+  }
+}
+
