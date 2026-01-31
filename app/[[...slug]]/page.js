@@ -82,21 +82,27 @@ const Page = ({ params }) => {
     const distance = targetPosition - startPosition;
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    const duration = isMobile ? 1000 : 450;
 
-    const startTime = performance.now();
+    //? scroll with animation
+    // const duration = isMobile ? 1000 : 450;
+
+    // const startTime = performance.now();
+
+    // const animateScroll = (currentTime) => {
+    //   const elapsed = currentTime - startTime;
+    //   const progress = Math.min(elapsed / duration, 1);
+    //   const ease =
+    //     progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+    //   window.scrollTo(0, startPosition + distance * ease);
+
+    //   if (progress < 1) {
+    //     requestAnimationFrame(animateScroll);
+    //   }
+    // };
 
     const animateScroll = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease =
-        progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-      window.scrollTo(0, startPosition + distance * ease);
-
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
-      }
+      window.scrollTo(0, startPosition + distance);
     };
 
     requestAnimationFrame(animateScroll);
@@ -191,7 +197,7 @@ const Page = ({ params }) => {
 
           if (activeChapterElement) {
             activeChapterElement.scrollIntoView({
-              behavior: 'smooth',
+              behavior: 'instant',
               block: 'start',
             });
           }
