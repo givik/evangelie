@@ -146,7 +146,7 @@ const Page = ({ params }) => {
 
   // Hide controls when scrolling down, show when scrolling up or near top
   useEffect(() => {
-    const SCROLL_THRESHOLD = 10;
+    const SCROLL_THRESHOLD = 2;
     const TOP_THRESHOLD = 80;
 
     const handleScroll = () => {
