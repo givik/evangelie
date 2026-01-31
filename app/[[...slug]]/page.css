@@ -13,7 +13,7 @@
   --text-color: #e0e0e0;
   --controls-bg: rgba(40, 40, 40, 0.8);
   --controls-shadow: rgba(0, 0, 0, 0.5);
-  --menu-bg: rgba(40, 40, 40, 0.95);
+  --menu-bg: rgba(40, 40, 40, 0.98);
   --topic-color: #a0a0a0;
 }
 
@@ -35,39 +35,7 @@ body {
   height: 100%;
   color: var(--text-color);
   padding-bottom: 5rem; /* to prevent content being hidden behind controls */
-  flex-direction: column; /* Changed to column to stack controls and content properly if needed, but keeping row for original layout if separate */
-  /* Actually original layout had just .container { display: flex; justify-content: center; } which defaults to row but content inside was likely block. 
-     The .controls is fixed so it doesn't affect flow much. 
-     Wait, original layout: .container { display: flex; justify-content: center; ... } 
-     Inside is .controls (fixed) and .content (flex: 3).
-     If I want to put settings above content, I should probably wrap them together or adjust .content.
-     Let's see: .content has flex: 3.
-     If I put settings before .content in JSX, it will be a sibling.
-     If container is flex-row (default), they will be side-by-side. 
-     I probably want them stacked vertically in the main flow area.
-     The original has .container as flex container. 
-     .controls is position: fixed.
-     .content is the only flow child? No, .controls is a child too but fixed.
-     So currently .container has minimal children affecting layout.
-     If I insert a div *before* .content, and container is row (default), they sit side by side.
-     I should wraps settings and content in a column div, or make container column?
-     Original had `justify-content: center`.
-     Let's check the JSX again.
-     <div className="container"> <div className="controls">...</div> <div className="content">...</div> </div>
-     Controls is fixed. Content is flex: 3.
-     If I add <div className="reader-settings">...</div> <div className="content">...</div>
-     They will be flex items.
-     If I want settings above content, I should wrap them in a Column or make container Flex-Column.
-     However, .content has margin-top: 6rem.
-     I'll stick to making container flex-direction: column? 
-     Let's be careful not to break existing center alignment if it relies on being only child.
-     I will wrap the settings and content in a main-content-wrapper if needed, or simply style .reader-settings to have margin-top.
-     Actually, let's look at .content styles again.
-     .content { flex: 3; margin-top: 6rem; ... }
-     If I add .reader-settings, I want it to be above .content.
-     I'll set .container { flex-direction: column; align-items: center; } 
-     But .controls depends on container? No it's fixed.
-  */
+  flex-direction: column; 
   flex-direction: column;
   align-items: center;
 }
@@ -284,8 +252,8 @@ body {
  */
 #menuToggle span {
   display: block;
-  width: 30px;
-  height: 3px;
+  width: 27px;
+  height: 2px;
   margin-bottom: 5px;
   position: relative;
 
@@ -517,7 +485,7 @@ body {
   background: var(--controls-bg);
   padding: 0.5rem;
   border-radius: 1rem;
-  border: 1px solid var(--text-color);
+  border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
   backdrop-filter: blur(5px);
 }
 
@@ -525,13 +493,13 @@ body {
   background: none;
   border: none;
   color: var(--text-color);
-  font-size: 1.2rem;
   cursor: pointer;
   padding: 0 0.5rem;
+  font-size: clamp(2rem, calc(1vw + 0.1rem), 3.5rem);
 }
 
 .font-controls span {
-  font-size: 1rem;
+  font-size: 1.5rem;
   min-width: 3ch;
   text-align: center;
   color: var(--text-color);
@@ -539,10 +507,11 @@ body {
 
 .theme-toggle {
   background: var(--controls-bg);
-  border: 1px solid var(--text-color);
+  border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
   color: var(--text-color);
   border-radius: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1.5rem;
+  font-size: clamp(1.5rem, calc(1vw + 0.1rem), 3.5rem);
   cursor: pointer;
   backdrop-filter: blur(5px);
 }

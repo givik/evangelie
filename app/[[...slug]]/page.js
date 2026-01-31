@@ -531,14 +531,14 @@ const Page = ({ params }) => {
         </div>
 
         {settingsLoaded && (
-          <div className="reader-settings" style={{ '--font-scale': fontSize }}>
+          <div className={`reader-settings ${textFont.className}`} style={{ '--font-scale': fontSize }}>
             <div className="font-controls">
-              <button onClick={() => handleFontSizeChange(-0.1)} aria-label="Decrease font size">A-</button>
+              <button onClick={() => handleFontSizeChange(-0.1)} aria-label="Decrease font size" className={textFont.className}>ა-</button>
               <span>{(fontSize * 100).toFixed(0)}%</span>
-              <button onClick={() => handleFontSizeChange(0.1)} aria-label="Increase font size">A+</button>
+              <button onClick={() => handleFontSizeChange(0.1)} aria-label="Increase font size" className={textFont.className}>ა+</button>
             </div>
-            <button className={`theme-toggle ${textFont.className}`} onClick={toggleTheme}>
-              {theme === 'light' ? 'მუქი რეჟიმი' : 'ნათელი რეჟიმი'}
+            <button className={`theme-toggle ${bookFontBold.className}`} onClick={toggleTheme}>
+              {theme === 'light' ? '🌙' : '☀️'}
             </button>
           </div>
         )}
