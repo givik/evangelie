@@ -36,7 +36,9 @@ const Page = ({ params }) => {
   const [loadingVerses, setLoadingVerses] = useState(false);
   const [verseLoadError, setVerseLoadError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
+  const [controlsVisible, setControlsVisible] = useState(true);
   const verseRequestIdRef = useRef(0);
+  const lastScrollYRef = useRef(0);
 
   const { slug } = use(params);
   const router = useRouter();
@@ -64,21 +66,41 @@ const Page = ({ params }) => {
     return BOOKS.find((b) => b.name === bookName)?.short || '';
   }, []);
 
-  // Scroll to element with offset
-  const scrollToElement = useCallback((elementId) => {
+  // Scroll to element with offset (slower duration on mobile)
+  const scrollToElement = useCallback((elementId, showControls = false) => {
     const element = document.getElementById(elementId);
-    if (element) {
-      const controlsPanel = document.querySelector('.controls');
-      const offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80;
+    if (!element) return;
 
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+    if (showControls) setControlsVisible(true);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
+    const controlsPanel = document.querySelector('.controls');
+    const offset = controlsPanel ? controlsPanel.offsetHeight + 20 : 80;
+    const elementPosition = element.getBoundingClientRect().top;
+    const targetPosition = elementPosition + window.pageYOffset - offset;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const duration = isMobile ? 1000 : 450;
+
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease =
+        progress < 0.5
+          ? 2 * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      window.scrollTo(0, startPosition + distance * ease);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   }, []);
 
   console.log('Page render');
@@ -120,7 +142,32 @@ const Page = ({ params }) => {
     Promise.resolve().then(() => {
       setLoaded(true);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  // Hide controls when scrolling down, show when scrolling up or near top
+  useEffect(() => {
+    const SCROLL_THRESHOLD = 10;
+    const TOP_THRESHOLD = 80;
+
+    const handleScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop;
+      const lastY = lastScrollYRef.current;
+
+      if (y <= TOP_THRESHOLD) {
+        setControlsVisible(true);
+      } else if (y > lastY + SCROLL_THRESHOLD) {
+        setControlsVisible(false);
+      } else if (y < lastY - SCROLL_THRESHOLD) {
+        setControlsVisible(true);
+      }
+
+      lastScrollYRef.current = y;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Fetch chapters and themes when book changes
   useEffect(() => {
@@ -186,7 +233,7 @@ const Page = ({ params }) => {
       // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
         setTimeout(() => {
-          scrollToElement(elementId);
+          scrollToElement(elementId, true);
         }, 100);
       });
     }
@@ -200,7 +247,7 @@ const Page = ({ params }) => {
         const elementId = hash.substring(1);
         requestAnimationFrame(() => {
           setTimeout(() => {
-            scrollToElement(elementId);
+            scrollToElement(elementId, true);
           }, 50);
         });
       }
@@ -282,7 +329,7 @@ const Page = ({ params }) => {
   return (
     <Suspense>
       <div className="container">
-        <div className="controls">
+        <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
           <nav role="navigation">
             <div id="menuToggle">
               <input type="checkbox" id="menuCheckbox" />
@@ -310,7 +357,7 @@ const Page = ({ params }) => {
                         onClick={(e) => {
                           if (isSameChapter) {
                             e.preventDefault();
-                            scrollToElement(theme.id.toString());
+                            scrollToElement(theme.id.toString(), true);
                           }
                           const menuCheckbox = document.getElementById('menuCheckbox');
                           if (menuCheckbox) menuCheckbox.checked = false;

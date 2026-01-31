@@ -27,6 +27,8 @@ body {
   top: 2vh;
   padding: min(1em, 3%);
   border-radius: 2rem;
+  transform: translateY(0);
+  transition: transform 0.25s ease-out;
   /* glass effect */
   background: #f6f1e2;
   box-shadow: 0 12px 22px 0 #f6f1e2;
@@ -39,6 +41,9 @@ body {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.controls.controls--hidden {
+  transform: translateY(calc(-100% - 2vh));
 }
 .controls > nav {
   width: 5%;
