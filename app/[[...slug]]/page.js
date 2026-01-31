@@ -168,6 +168,41 @@ const Page = ({ params }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Auto-scroll to active chapter when menu opens
+  useEffect(() => {
+    const menuCheckbox = document.getElementById('menuCheckbox');
+    if (!menuCheckbox) return;
+
+    const handleMenuToggle = () => {
+      if (menuCheckbox.checked) {
+        // Menu is opening, scroll to active chapter
+        setTimeout(() => {
+          const menu = document.getElementById('menu');
+          if (!menu) return;
+
+          // Find the first theme item that matches the current chapter
+          const activeChapterElement = Array.from(menu.querySelectorAll('.menu-chapter')).find(
+            (el) => {
+              const chapterText = el.textContent;
+              const match = chapterText.match(/თავი (\d+)/);
+              return match && match[1] === selectedChapter;
+            }
+          );
+
+          if (activeChapterElement) {
+            activeChapterElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }
+        }, 100); // Small delay to ensure menu animation has started
+      }
+    };
+
+    menuCheckbox.addEventListener('change', handleMenuToggle);
+    return () => menuCheckbox.removeEventListener('change', handleMenuToggle);
+  }, [selectedChapter]);
+
   // Fetch chapters and themes when book changes
   useEffect(() => {
     console.log('useEffect [selectedBook]');
