@@ -1,5 +1,6 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata = {
   title: 'სახარება',
@@ -14,7 +15,9 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/cross-orthodox.svg" sizes="any" />
       </head>
       <body>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <Analytics debug={false} />
       </body>
     </html>
