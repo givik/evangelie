@@ -181,7 +181,7 @@ body {
 .verses .verse {
   font-size: calc(clamp(1.9rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
   line-height: calc(2.6rem * var(--font-scale));
-  margin-bottom: 1.3rem;
+  margin-bottom: 1.38rem;
   margin-left: 0.5rem;
 }
 .verses p .index {
