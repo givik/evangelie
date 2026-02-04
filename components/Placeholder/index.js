@@ -2,7 +2,7 @@ import './styles.css';
 
 const Placeholder = () => {
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <div className="item">
         <div className="item-body">
           <div className="item-long-line"></div>

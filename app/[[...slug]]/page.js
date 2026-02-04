@@ -376,118 +376,119 @@ const Page = ({ params }) => {
   return (
     <Suspense fallback={<Placeholder />}>
       <div className="container">
-        <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
-          <nav role="navigation">
-            <div id="menuToggle">
-              <input type="checkbox" id="menuCheckbox" aria-label="Toggle navigation menu" />
-              <span></span>
-              <span></span>
-              <span></span>
+        {loaded &&
+          <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
+            <nav role="navigation">
+              <div id="menuToggle">
+                <input type="checkbox" id="menuCheckbox" aria-label="Toggle navigation menu" />
+                <span></span>
+                <span></span>
+                <span></span>
 
-              <ul id="menu">
-                <div className={'book-name ' + bookFontBold.className}>{selectedBook} (თემები)</div>
-                {chaptersForThemes.map((theme) => {
-                  const shortBookName = shortBook(selectedBook);
-                  const isSameChapter = parseInt(theme.თავი) === parseInt(selectedChapter);
-                  const href = isSameChapter
-                    ? `#${theme.id}`
-                    : `/${shortBookName}/${theme.თავი}#${theme.id}`;
-                  return (
-                    <li className={textFont.className} key={theme.id}>
-                      {theme.showChapter && (
-                        <div className={'menu-chapter ' + bookFontBold.className}>
-                          •- თავი {theme.თავი} -•
-                        </div>
-                      )}
-                      <Link
-                        href={href}
-                        onClick={(e) => {
-                          if (isSameChapter) {
-                            e.preventDefault();
-                            scrollToElement(theme.id.toString(), true);
-                          }
-                          const menuCheckbox = document.getElementById('menuCheckbox');
-                          if (menuCheckbox) menuCheckbox.checked = false;
-                        }}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
-                          {theme.თემა}
-                        </label>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </nav>
+                <ul id="menu">
+                  <div className={'book-name ' + bookFontBold.className}>{selectedBook} (თემები)</div>
+                  {chaptersForThemes.map((theme) => {
+                    const shortBookName = shortBook(selectedBook);
+                    const isSameChapter = parseInt(theme.თავი) === parseInt(selectedChapter);
+                    const href = isSameChapter
+                      ? `#${theme.id}`
+                      : `/${shortBookName}/${theme.თავი}#${theme.id}`;
+                    return (
+                      <li className={textFont.className} key={theme.id}>
+                        {theme.showChapter && (
+                          <div className={'menu-chapter ' + bookFontBold.className}>
+                            •- თავი {theme.თავი} -•
+                          </div>
+                        )}
+                        <Link
+                          href={href}
+                          onClick={(e) => {
+                            if (isSameChapter) {
+                              e.preventDefault();
+                              scrollToElement(theme.id.toString(), true);
+                            }
+                            const menuCheckbox = document.getElementById('menuCheckbox');
+                            if (menuCheckbox) menuCheckbox.checked = false;
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
+                            {theme.თემა}
+                          </label>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </nav>
 
-          <div className="book-selector">
-            <select
-              name="books"
-              value={selectedBook}
-              className={`short-book-name ${bookFontBold.className}`}
-              onChange={handleBookChange}
-            >
-              {BOOKS.map((book) => (
-                <option key={book.short} value={book.name}>
-                  {book.short}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name="chapters"
-              value={selectedChapter}
-              className={`chapter-selector ${bookFontBold.className}`}
-              onChange={handleChapterChange}
-            >
-              {chapters.length === 0 ? (
-                <option value={selectedChapter}>თავი {selectedChapter}</option>
-              ) : (
-                chapters.map((chapter) => (
-                  <option key={chapter.თავი} value={chapter.თავი}>
-                    თავი {chapter.თავი}
+            <div className="book-selector">
+              <select
+                name="books"
+                value={selectedBook}
+                className={`short-book-name ${bookFontBold.className}`}
+                onChange={handleBookChange}
+              >
+                {BOOKS.map((book) => (
+                  <option key={book.short} value={book.name}>
+                    {book.short}
                   </option>
-                ))
-              )}
-            </select>
+                ))}
+              </select>
+
+              <select
+                name="chapters"
+                value={selectedChapter}
+                className={`chapter-selector ${bookFontBold.className}`}
+                onChange={handleChapterChange}
+              >
+                {chapters.length === 0 ? (
+                  <option value={selectedChapter}>თავი {selectedChapter}</option>
+                ) : (
+                  chapters.map((chapter) => (
+                    <option key={chapter.თავი} value={chapter.თავი}>
+                      თავი {chapter.თავი}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+
+            <div className="btn-container">
+              <button
+                className={`btn ${textFont.className}`}
+                onClick={() => {
+                  if (!loaded) return;
+                  if (loadingVerses) return;
+                  if (verses.length < 1) return;
+
+                  prevChapter();
+                }}
+              >
+                {'<'}{' '}
+                <span>
+                  წინა <span>თავი</span>
+                </span>
+              </button>
+              <button
+                className={`btn ${textFont.className}`}
+                onClick={() => {
+                  if (!loaded) return;
+                  if (loadingVerses) return;
+                  if (verses.length < 1) return;
+
+                  nextChapter();
+                }}
+              >
+                <span>
+                  შემდეგი <span>თავი</span>
+                </span>{' '}
+                {'>'}
+              </button>
+            </div>
           </div>
-
-          <div className="btn-container">
-            <button
-              className={`btn ${textFont.className}`}
-              onClick={() => {
-                if (!loaded) return;
-                if (loadingVerses) return;
-                if (verses.length < 1) return;
-
-                prevChapter();
-              }}
-            >
-              {'<'}{' '}
-              <span>
-                წინა <span>თავი</span>
-              </span>
-            </button>
-            <button
-              className={`btn ${textFont.className}`}
-              onClick={() => {
-                if (!loaded) return;
-                if (loadingVerses) return;
-                if (verses.length < 1) return;
-
-                nextChapter();
-              }}
-            >
-              <span>
-                შემდეგი <span>თავი</span>
-              </span>{' '}
-              {'>'}
-            </button>
-          </div>
-        </div>
-
+        }
         {settingsLoaded && (
           <div
             className={`reader-settings ${textFont.className}`}
@@ -529,7 +530,7 @@ const Page = ({ params }) => {
           <div className="verses">
             {/* Initial page load */}
             {!loaded && (
-              <>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                 <Placeholder />
                 <div className={`loading-text ${textFont.className}`}>
                   <Image
@@ -543,7 +544,7 @@ const Page = ({ params }) => {
                   წმინდა წერილი
                 </div>
                 <Placeholder />
-              </>
+              </div>
             )}
 
             {/* Loading verses after navigation */}
