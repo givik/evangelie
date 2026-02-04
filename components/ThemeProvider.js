@@ -16,7 +16,11 @@ export function ThemeProvider({ children }) {
             const storedFontSize = parseFloat(localStorage.getItem('reader_fontSize'));
 
             if (storedTheme) setTheme(storedTheme);
-            if (!isNaN(storedFontSize)) setFontSize(storedFontSize);
+            if (!isNaN(storedFontSize)) {
+                setFontSize(storedFontSize);
+            } else if (window.innerWidth <= 768) {
+                setFontSize(1.1);
+            }
             setSettingsLoaded(true);
         }
     }, []);
