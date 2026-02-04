@@ -88,12 +88,6 @@ const Page = ({ params }) => {
     window.scrollTo(0, targetPosition);
   }, []);
 
-
-
-
-
-
-
   // Sync state from URL whenever the route (slug) changes (e.g. theme click to another chapter)
   useEffect(() => {
     let book = decodedSlug[0];
@@ -114,12 +108,12 @@ const Page = ({ params }) => {
       setSelectedBook(resolvedBook);
       setSelectedChapter(resolvedChapter);
     } else {
-      const storedBook = typeof window !== 'undefined'
-        ? localStorage.getItem('selectedBook') || 'მათეს სახარება'
-        : 'მათეს სახარება';
-      const storedChapter = typeof window !== 'undefined'
-        ? localStorage.getItem('selectedChapter') || '1'
-        : '1';
+      const storedBook =
+        typeof window !== 'undefined'
+          ? localStorage.getItem('selectedBook') || 'მათეს სახარება'
+          : 'მათეს სახარება';
+      const storedChapter =
+        typeof window !== 'undefined' ? localStorage.getItem('selectedChapter') || '1' : '1';
 
       setSelectedBook(storedBook);
       setSelectedChapter(storedChapter);
@@ -171,7 +165,7 @@ const Page = ({ params }) => {
               const chapterText = el.textContent;
               const match = chapterText.match(/თავი (\d+)/);
               return match && match[1] === selectedChapterRef.current;
-            }
+            },
           );
 
           if (activeChapterElement) {
@@ -221,7 +215,7 @@ const Page = ({ params }) => {
       ([chaptersData, themesData]) => {
         setChapters(chaptersData);
         setThemes(themesData);
-      }
+      },
     );
   }, [selectedBook]);
 
@@ -318,7 +312,7 @@ const Page = ({ params }) => {
       setSelectedChapter('1');
       router.push(`/${shortBookName}/1`);
     },
-    [router, shortBook]
+    [router, shortBook],
   );
 
   const handleChapterChange = useCallback(
@@ -332,7 +326,7 @@ const Page = ({ params }) => {
       setSelectedChapter(newChapter);
       router.push(`/${shortBookName}/${newChapter}`);
     },
-    [selectedBook, router, shortBook]
+    [selectedBook, router, shortBook],
   );
 
   const prevChapter = useCallback(() => {
@@ -385,11 +379,7 @@ const Page = ({ params }) => {
         <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
           <nav role="navigation">
             <div id="menuToggle">
-              <input
-                type="checkbox"
-                id="menuCheckbox"
-                aria-label="Toggle navigation menu"
-              />
+              <input type="checkbox" id="menuCheckbox" aria-label="Toggle navigation menu" />
               <span></span>
               <span></span>
               <span></span>
@@ -499,11 +489,26 @@ const Page = ({ params }) => {
         </div>
 
         {settingsLoaded && (
-          <div className={`reader-settings ${textFont.className}`} style={{ '--font-scale': fontSize }}>
+          <div
+            className={`reader-settings ${textFont.className}`}
+            style={{ '--font-scale': fontSize }}
+          >
             <div className="font-controls">
-              <button onClick={() => updateFontSize(-0.1)} aria-label="Decrease font size" className={textFont.className}>ა-</button>
+              <button
+                onClick={() => updateFontSize(-0.1)}
+                aria-label="Decrease font size"
+                className={textFont.className}
+              >
+                ა-
+              </button>
               <span>{(fontSize * 100).toFixed(0)}%</span>
-              <button onClick={() => updateFontSize(0.1)} aria-label="Increase font size" className={textFont.className}>ა+</button>
+              <button
+                onClick={() => updateFontSize(0.1)}
+                aria-label="Increase font size"
+                className={textFont.className}
+              >
+                ა+
+              </button>
             </div>
             <button className={`theme-toggle ${bookFontBold.className}`} onClick={toggleTheme}>
               {theme === 'light' ? '🌙' : '☀️'}
@@ -587,7 +592,7 @@ const Page = ({ params }) => {
                     </div>
                   )}
                   <p className="verse">
-                    <span className="index">{index + 1}</span>. {verse.ტექსტი}
+                    <span className="index">{index + 1}.</span> {verse.ტექსტი}
                   </p>
                 </div>
               ))}
