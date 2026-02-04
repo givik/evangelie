@@ -78,7 +78,7 @@ export default function BibleContent({
                         <div key={verse.id} className={textFont.className}>
                             {verse.showTopic && (
                                 <div id={verse.id} className="topic">
-                                    {verse.თემა}
+                                    {verse.თემა && `- ${verse.თემა} -`}
                                 </div>
                             )}
                             <p className="verse">
