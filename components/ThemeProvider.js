@@ -38,7 +38,7 @@ export function ThemeProvider({ children }) {
 
     const updateFontSize = (change) => {
         setFontSize((prev) => {
-            const newSize = Math.max(1.0, Math.min(2.0, prev + change));
+            const newSize = Math.max(0.9, Math.min(1.7, prev + change));
             localStorage.setItem('reader_fontSize', newSize);
             return newSize;
         });
