@@ -26,10 +26,11 @@ export default function BibleNavigation({
     activeBook,
     activeChapter,
     chapters = [],
-    themes = []
+    themes = [],
+    controlsVisible,
+    setControlsVisible
 }) {
     const router = useRouter();
-    const [controlsVisible, setControlsVisible] = useState(true);
     const lastScrollYRef = useRef(0);
     const menuCheckboxRef = useRef(null);
 

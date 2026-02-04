@@ -22,7 +22,8 @@ export default function BibleContent({
     activeChapter,
     verses = [],
     loading = false,
-    chaptersLength = 0
+    chaptersLength = 0,
+    setControlsVisible
 }) {
     const router = useRouter();
     const { fontSize } = useTheme();
@@ -35,7 +36,7 @@ export default function BibleContent({
             // Wait for render
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    scrollToElement(elementId, true);
+                    scrollToElement(elementId, setControlsVisible);
                 }, HASH_SCROLL_DELAY_MS);
             });
         }
