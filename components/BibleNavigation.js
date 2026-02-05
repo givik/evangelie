@@ -181,7 +181,9 @@ export default function BibleNavigation({
     });
 
     return (
-        <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
+        <>
+            <div className={`controls-cover${controlsVisible ? '' : ' cover--hidden'}`}></div>
+            <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
             <nav role="navigation">
                 <div id="menuToggle">
                     <input
@@ -303,5 +305,6 @@ export default function BibleNavigation({
                 </button>
             </div>
         </div>
+        </>
     );
 }

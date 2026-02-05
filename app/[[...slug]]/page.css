@@ -20,15 +20,18 @@
 * {
   scroll-behavior: smooth;
 }
+
 body {
   height: 100%;
   background: var(--bg-color);
   color: var(--text-color);
-  overflow-y: scroll; /* Always show scrollbar to prevent layout shift */
+  overflow-y: scroll;
+  /* Always show scrollbar to prevent layout shift */
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
 }
+
 .container {
   margin: 0 auto;
   padding: 20px;
@@ -36,12 +39,29 @@ body {
   justify-content: center;
   height: 100%;
   color: var(--text-color);
-  padding-bottom: 5rem; /* to prevent content being hidden behind controls */
+  padding-bottom: 5rem;
+  /* to prevent content being hidden behind controls */
   flex-direction: column;
   flex-direction: column;
   align-items: center;
 }
+
 /* align controls and content side by side */
+.controls-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3vh;
+  background: var(--bg-color);
+  z-index: 99;
+  transition: opacity 0.25s ease-out;
+}
+
+.controls-cover.cover--hidden {
+  opacity: 0;
+}
+
 .controls {
   position: fixed;
   z-index: 100;
@@ -60,7 +80,8 @@ body {
   box-shadow: 0 12px 22px 0 var(--controls-shadow);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  width: 96%; /* From https://css.glass */
+  width: 96%;
+  /* From https://css.glass */
   /* background: rgba(255, 255, 255, 0.2); */
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -68,24 +89,29 @@ body {
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
 .controls.controls--hidden {
   transform: translateY(calc(-100% - 2vh));
 }
-.controls > nav {
+
+.controls>nav {
   width: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .controls .book-selector {
   display: flex;
   justify-content: flex-start;
   gap: 0.5rem;
   width: 45%;
 }
+
 [data-theme='dark'] .controls .book-selector select {
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e0e0e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
 }
+
 .controls .book-selector select {
   padding: 0.6rem;
   appearance: none;
@@ -101,16 +127,19 @@ body {
   background-color: var(--controls-bg);
   border-color: var(--text-color);
 }
+
 .controls .chapter-selector {
   /* font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem); */
   min-width: 7rem;
 }
+
 .controls .btn-container {
   width: 48%;
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
 }
+
 .btn {
   border-radius: 0.9rem;
   border: 1px solid var(--text-color);
@@ -120,12 +149,15 @@ body {
   cursor: pointer;
   background-color: var(--controls-bg);
 }
+
 .btn:hover {
   transition: all 0.1s;
 }
+
 .btn:active {
   opacity: 0.9;
 }
+
 .controls .themes {
   display: flex;
   flex-direction: column;
@@ -135,6 +167,7 @@ body {
   display: none;
   cursor: default;
 }
+
 .content {
   flex: 3;
   width: 100%;
@@ -144,30 +177,36 @@ body {
   opacity: 0;
   animation: fadeIn 0.6s ease-in-out 0.1s forwards;
 }
+
 .content .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .content .header .book-name {
   font-size: calc(clamp(3.1rem, calc(3vw + 1rem), 3.5rem) * var(--font-scale));
 }
+
 .content .header .book-chapter {
   color: var(--text-color);
   font-size: calc(clamp(2.1rem, calc(2.6vw + 1rem), 3.5rem) * var(--font-scale));
   text-align: right;
 }
+
 .content h1 {
   margin-bottom: 20px;
   font-size: calc(clamp(3.1rem, calc(3vw + 1rem), 3.5rem) * var(--font-scale));
   animation: fadeIn 0.6s ease-in-out 0.1s forwards;
   opacity: 0;
 }
+
 .verses {
   margin-top: 30px;
   animation: fadeIn 0.6s ease-in-out 0.1s forwards;
   opacity: 0;
 }
+
 .verses .topic {
   margin-bottom: 1.3rem;
   margin-left: 0.5rem;
@@ -178,16 +217,19 @@ body {
   justify-content: center; */
   /* text-shadow: 0px 0px 0.5px gold; */
 }
+
 .verses .verse {
   font-size: calc(clamp(1.9rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
   line-height: calc(2.6rem * var(--font-scale));
   margin-bottom: 1.38rem;
   margin-left: 0.5rem;
 }
+
 .verses p .index {
   font-size: 1.3rem;
   color: var(--topic-color);
 }
+
 .loading-text {
   color: var(--text-color);
   font-size: calc(clamp(3rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
@@ -197,6 +239,7 @@ body {
   display: flex;
   justify-content: center;
 }
+
 .loading-content {
   flex-direction: column;
   justify-content: center;
@@ -205,6 +248,7 @@ body {
   padding: 1.4rem;
   height: 100vh;
 }
+
 .loading-content p {
   margin-bottom: 1rem;
   color: var(--text-color);
@@ -214,6 +258,7 @@ body {
   display: flex;
   justify-content: center;
 }
+
 .bottom-next-page {
   font-size: clamp(1.8rem, calc(1vw + 1rem), 3.5rem);
   padding: 1rem;
@@ -222,6 +267,7 @@ body {
   border-bottom: 1px solid var(--text-color);
   color: var(--text-color);
 }
+
 .bottom-next-page:hover {
   border-bottom: 2px solid var(--text-color);
 }
@@ -266,8 +312,10 @@ body {
 
   cursor: pointer;
 
-  opacity: 0; /* hide this */
-  z-index: 2; /* and place it over the hamburger */
+  opacity: 0;
+  /* hide this */
+  z-index: 2;
+  /* and place it over the hamburger */
 
   -webkit-touch-callout: none;
 }
@@ -307,7 +355,7 @@ body {
  * Transform all the slices of hamburger
  * into a crossmark.
  */
-#menuToggle input:checked ~ span {
+#menuToggle input:checked~span {
   opacity: 1;
   transform: rotate(45deg) translate(-2px, -1px);
   background: var(--text-color);
@@ -316,7 +364,7 @@ body {
 /*
  * But let's hide the middle one.
  */
-#menuToggle input:checked ~ span:nth-last-child(3) {
+#menuToggle input:checked~span:nth-last-child(3) {
   opacity: 0;
   transform: rotate(0deg) scale(0.2, 0.2);
 }
@@ -324,7 +372,7 @@ body {
 /*
  * Ohyeah and the last one should go the other direction
  */
-#menuToggle input:checked ~ span:nth-last-child(2) {
+#menuToggle input:checked~span:nth-last-child(2) {
   transform: rotate(-45deg) translate(0, -1px);
 }
 
@@ -394,7 +442,7 @@ body {
 /*
  * And let's slide it in from the left
  */
-#menuToggle input:checked ~ ul {
+#menuToggle input:checked~ul {
   transform: none;
 }
 
@@ -402,15 +450,18 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 /* Extra extra small devices */
 @media only screen and (max-width: 336px) {
   #menuToggle {
     display: none;
   }
+
   .controls .book-selector {
     justify-content: left;
     width: 100%;
@@ -422,18 +473,22 @@ body {
   .controls .book-selector .long-book-name {
     display: none;
   }
+
   .controls .btn-container {
     display: none;
   }
+
   .controls .book-selector {
     width: 100%;
     justify-content: right;
   }
+
   .controls select {
     font-size: clamp(1.3rem, calc(1vw + 0.1rem), 3.5rem);
     padding-right: 2rem;
     width: 7rem;
   }
+
   #menuToggle {
     margin-left: 3rem;
   }
@@ -444,14 +499,17 @@ body {
   .controls .book-selector .long-book-name {
     display: none;
   }
+
   .controls select {
     font-size: clamp(1.3rem, calc(1vw + 0.1rem), 3.5rem);
     width: 12rem;
   }
+
   .controls .btn {
     font-size: clamp(1.7rem, calc(2vw + 0.1rem), 3.5rem);
     width: 5rem;
   }
+
   .btn span {
     display: none;
   }
@@ -462,17 +520,21 @@ body {
   .controls {
     top: 2vh;
   }
+
   .content {
     padding: 0 2rem;
   }
+
   .controls .btn {
     font-size: clamp(1.2rem, calc(1vw + 0.1rem), 3.5rem);
     width: 7rem;
   }
-  .btn > span {
+
+  .btn>span {
     display: inline;
   }
-  .btn span > span {
+
+  .btn span>span {
     display: none;
   }
 }
@@ -482,6 +544,7 @@ body {
   .controls .btn {
     width: 12rem;
   }
+
   .btn span,
   .btn span span {
     display: inline;
@@ -489,8 +552,7 @@ body {
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {
-}
+@media only screen and (min-width: 1200px) {}
 
 /* Reader Settings */
 .reader-settings {
@@ -498,7 +560,8 @@ body {
   justify-content: flex-end;
   align-items: center;
   gap: 1.5rem;
-  margin-top: 6rem; /* Matches original content top margin */
+  margin-top: 6rem;
+  /* Matches original content top margin */
   margin-bottom: 1rem;
   width: 100%;
   max-width: 800px;
