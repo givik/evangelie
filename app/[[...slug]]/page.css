@@ -197,6 +197,23 @@ body {
   display: flex;
   justify-content: center;
 }
+.loading-content {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 1.4rem;
+  height: 100vh;
+}
+.loading-content p {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  font-size: calc(clamp(3rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
+  line-height: calc(2.4rem * var(--font-scale));
+  margin-left: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
 .bottom-next-page {
   font-size: clamp(1.8rem, calc(1vw + 1rem), 3.5rem);
   padding: 1rem;

@@ -89,7 +89,7 @@ export default function BibleContent({
                 )}
             </div>
 
-            {verses.length > 0 && (
+            {verses.length > 0 && chaptersLength > 0 && parseInt(activeChapter) < chaptersLength && (
                 <button
                     className={`btn bottom-next-page ${textFont.className}`}
                     onClick={nextChapter}
