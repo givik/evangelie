@@ -8,7 +8,8 @@ import {
     BOOKS,
     MENU_OPEN_DELAY_MS,
     TOP_THRESHOLD_PX,
-    SCROLL_THRESHOLD_PX
+    SCROLL_UP_THRESHOLD_PX,
+    SCROLL_DOWN_THRESHOLD_PX
 } from '@/lib/constants';
 import { scrollToElement, getShortBook } from '@/lib/utils';
 
@@ -76,9 +77,9 @@ export default function BibleNavigation({
 
             if (y <= TOP_THRESHOLD_PX) {
                 setControlsVisible(true);
-            } else if (y > lastY + SCROLL_THRESHOLD_PX) {
+            } else if (y > lastY + SCROLL_DOWN_THRESHOLD_PX) {
                 setControlsVisible(false);
-            } else if (y < lastY - SCROLL_THRESHOLD_PX) {
+            } else if (y < lastY - SCROLL_UP_THRESHOLD_PX) {
                 setControlsVisible(true);
             }
 
