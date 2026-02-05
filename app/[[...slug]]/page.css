@@ -126,6 +126,7 @@ body {
   cursor: pointer;
   background-color: var(--controls-bg);
   border-color: var(--text-color);
+  border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
 }
 
 .controls .chapter-selector {
@@ -148,6 +149,7 @@ body {
   font-size: clamp(1rem, calc(1vw + 0.53rem), 3.5rem);
   cursor: pointer;
   background-color: var(--controls-bg);
+  border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
 }
 
 .btn:hover {
