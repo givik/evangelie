@@ -34,6 +34,7 @@ export default function BibleNavigation({
     const router = useRouter();
     const lastScrollYRef = useRef(0);
     const menuCheckboxRef = useRef(null);
+    const disableAutoHideRef = useRef(false);
 
     // -- Handlers --
 
@@ -71,9 +72,16 @@ export default function BibleNavigation({
 
     // Scroll visibility logic
     useEffect(() => {
+        lastScrollYRef.current = window.scrollY || document.documentElement.scrollTop;
+
         const handleScroll = () => {
             const y = window.scrollY || document.documentElement.scrollTop;
             const lastY = lastScrollYRef.current;
+
+            // Skip auto-hide if user clicked a Link or visited with hash
+            if (disableAutoHideRef.current) {
+                return;
+            }
 
             if (y <= TOP_THRESHOLD_PX) {
                 setControlsVisible(true);
@@ -89,6 +97,19 @@ export default function BibleNavigation({
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Check if page was loaded with hash parameter
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.location.hash) {
+            // Disable auto-hide for 3 seconds when page loads with hash
+            disableAutoHideRef.current = true;
+            setControlsVisible(true);
+            
+            setTimeout(() => {
+                disableAutoHideRef.current = false;
+            }, 3000);
+        }
+    }, [setControlsVisible]);
 
     // Menu auto-scroll logic
     useEffect(() => {
@@ -193,7 +214,23 @@ export default function BibleNavigation({
                                         onClick={(e) => {
                                             if (isSameChapter) {
                                                 e.preventDefault();
+                                                // Disable auto-hide when clicking Link
+                                                disableAutoHideRef.current = true;
                                                 scrollToElement(theme.id.toString(), setControlsVisible);
+                                                
+                                                // Re-enable auto-hide after 3 seconds
+                                                setTimeout(() => {
+                                                    disableAutoHideRef.current = false;
+                                                }, 3000);
+                                            } else {
+                                                // Disable auto-hide when clicking Link
+                                                disableAutoHideRef.current = true;
+                                                setControlsVisible(true);
+                                                
+                                                // Re-enable auto-hide after 3 seconds
+                                                setTimeout(() => {
+                                                    disableAutoHideRef.current = false;
+                                                }, 3000);
                                             }
                                             const menuCheckbox = document.getElementById('menuCheckbox');
                                             if (menuCheckbox) menuCheckbox.checked = false;
