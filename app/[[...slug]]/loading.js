@@ -1,4 +1,4 @@
-import Placeholder from '@/components/Placeholder';
+import AnimatedBook from '@/components/AnimatedBook';
 import localFont from 'next/font/local';
 
 const textFont = localFont({
@@ -8,9 +8,8 @@ const textFont = localFont({
 export default function Loading() {
   return (
     <div className="loading-content">
-      <Placeholder />
       <p className={textFont.className}>ბიბლია</p>
-      <Placeholder />
+      <AnimatedBook />
     </div>
   );
 }

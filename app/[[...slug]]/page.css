@@ -232,16 +232,6 @@ body {
   color: var(--topic-color);
 }
 
-.loading-text {
-  color: var(--text-color);
-  font-size: calc(clamp(3rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
-  line-height: calc(2.4rem * var(--font-scale));
-  margin-bottom: 1.3rem;
-  margin-left: 0.5rem;
-  display: flex;
-  justify-content: center;
-}
-
 .loading-content {
   flex-direction: column;
   justify-content: center;
@@ -249,7 +239,6 @@ body {
   display: flex;
   padding: 1.4rem;
   height: 100vh;
-  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
 }
