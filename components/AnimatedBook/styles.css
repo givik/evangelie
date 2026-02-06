@@ -22,11 +22,11 @@ body {
 }
 
 .book {
-    background-color: hsl(223, 90%, 65%);
+    background-color: hsl(45, 60%, 50%);
     border-radius: 0.25em;
     box-shadow:
         0 0.25em 0.5em hsla(0, 0%, 0%, 0.3),
-        0 0 0 0.25em hsl(223, 90%, 55%) inset;
+        0 0 0 0.25em hsl(45, 60%, 40%) inset;
     padding: 0.25em;
     perspective: 37.5em;
     position: relative;
@@ -105,7 +105,7 @@ body {
     95%,
     to {
         animation-timing-function: ease-out;
-        background-color: hsl(223, 90%, 65%);
+        background-color: hsl(45, 60%, 50%);
     }
 
     10%,
@@ -113,7 +113,7 @@ body {
     60%,
     90% {
         animation-timing-function: ease-in;
-        background-color: hsl(223, 90%, 45%);
+        background-color: hsl(45, 60%, 35%);
     }
 }
 
