@@ -250,12 +250,14 @@ body {
   padding: 1.4rem;
   height: 100vh;
   max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .loading-content p {
   margin-bottom: 1rem;
   color: var(--text-color);
-  font-size: calc(clamp(3rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
+  font-size: calc(clamp(3.5rem, calc(3.5vw + 1rem), 4rem) * var(--font-scale));
   line-height: calc(2.4rem * var(--font-scale));
   margin-left: 0.5rem;
   display: flex;
