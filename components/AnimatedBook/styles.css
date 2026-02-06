@@ -28,10 +28,11 @@ body {
         0 0.25em 0.5em hsla(0, 0%, 0%, 0.3),
         0 0 0 0.25em hsl(45, 60%, 40%) inset;
     padding: 0.25em;
-    perspective: 37.5em;
+    perspective: 60em;
     position: relative;
-    width: 8em;
-    height: 6em;
+    width: 16em;
+    height: 12em;
+    font-size: clamp(14px, 4vw, 40px);
     transform: translate3d(0, 0, 0);
     transform-style: preserve-3d;
 }
@@ -48,7 +49,7 @@ body {
     background-image: linear-gradient(-45deg, hsla(0, 0%, 0%, 0) 50%, hsla(0, 0%, 0%, 0.3) 50%);
     filter: blur(0.25em);
     top: calc(100% - 0.25em);
-    height: 3.75em;
+    height: 7.5em;
     transform: scaleY(0);
     transform-origin: 0% 0%;
 }
@@ -69,7 +70,7 @@ body {
         linear-gradient(90deg, hsl(223, 10%, 90%) 0, hsla(223, 10%, 90%, 0) 12.5%);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 2.5em 4.125em, 100% 100%;
+    background-size: 5em 8.25em, 100% 100%;
 }
 
 .book__pg--2 {
