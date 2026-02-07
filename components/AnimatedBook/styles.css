@@ -5,17 +5,18 @@
 }
 
 .book {
-    background-color: hsl(45, 60%, 50%);
+    background-color: white;
     border-radius: 0.25em;
     box-shadow:
         0 0.25em 0.5em hsla(0, 0%, 0%, 0.3),
-        0 0 0 0.25em hsl(45, 60%, 40%) inset;
+        0 0 0 0.25em hsl(39, 90%, 57%) inset;
     padding: 0.25em;
     perspective: 60em;
     position: relative;
     width: 16em;
     height: 12em;
-    font-size: clamp(14px, 4vw, 40px);
+    /* Scales based on the smaller of container width/height */
+    font-size: min(5cqw, 6cqh);
     transform: translate3d(0, 0, 0);
     transform-style: preserve-3d;
 }
@@ -45,11 +46,13 @@
     transform-origin: 0% 50%;
 }
 
+.book__pg,
 .book__pg--2,
 .book__pg--3,
-.book__pg--4 {
+.book__pg--4,
+.book__pg--5 {
     background-image:
-        repeating-linear-gradient(hsl(223, 10%, 10%) 0 0.125em, hsla(223, 10%, 10%, 0) 0.125em 0.5em),
+        repeating-linear-gradient(#333 0 0.125em, hsla(223, 10%, 10%, 0) 0.125em 0.5em),
         linear-gradient(90deg, hsl(223, 10%, 90%) 0, hsla(223, 10%, 90%, 0) 12.5%);
     background-repeat: no-repeat;
     background-position: center;
@@ -89,7 +92,7 @@
     95%,
     to {
         animation-timing-function: ease-out;
-        background-color: hsl(45, 60%, 50%);
+        background-color: white
     }
 
     10%,
@@ -97,7 +100,7 @@
     60%,
     90% {
         animation-timing-function: ease-in;
-        background-color: hsl(45, 60%, 35%);
+        background-color: white;
     }
 }
 

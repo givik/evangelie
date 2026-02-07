@@ -234,23 +234,20 @@ body {
 
 .loading-content {
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   display: flex;
-  padding: 1.4rem;
-  height: 100vh;
+  height: 95vh;
   margin-left: auto;
   margin-right: auto;
+  container-type: size;
+  min-height: 0;
 }
 
 .loading-content p {
-  margin-bottom: 1rem;
+  margin: 0 0 3vh 0;
   color: var(--text-color);
-  font-size: calc(clamp(3.5rem, calc(3.5vw + 1rem), 4rem) * var(--font-scale));
-  line-height: calc(2.4rem * var(--font-scale));
-  margin-left: 0.5rem;
-  display: flex;
-  justify-content: center;
+  font-size: calc(clamp(1.5rem, calc(2vw + 3rem), 5rem) * var(--font-scale));
 }
 
 .bottom-next-page {
