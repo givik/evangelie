@@ -437,6 +437,7 @@ body {
   cursor: pointer;
   color: var(--text-color);
   font-size: clamp(1.75rem, calc(1vw + 0.53rem), 3.5rem);
+  line-height: 1.46;
 }
 
 /*

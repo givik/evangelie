@@ -104,7 +104,7 @@ export default function BibleNavigation({
             // Disable auto-hide for 3 seconds when page loads with hash
             disableAutoHideRef.current = true;
             setControlsVisible(true);
-            
+
             setTimeout(() => {
                 disableAutoHideRef.current = false;
             }, 3000);
@@ -184,127 +184,127 @@ export default function BibleNavigation({
         <>
             <div className={`controls-cover${controlsVisible ? '' : ' cover--hidden'}`}></div>
             <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
-            <nav role="navigation">
-                <div id="menuToggle">
-                    <input
-                        type="checkbox"
-                        id="menuCheckbox"
-                        aria-label="Toggle navigation menu"
-                    />
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <nav role="navigation">
+                    <div id="menuToggle">
+                        <input
+                            type="checkbox"
+                            id="menuCheckbox"
+                            aria-label="Toggle navigation menu"
+                        />
+                        <span></span>
+                        <span></span>
+                        <span></span>
 
-                    <ul id="menu">
-                        <div className={'book-name ' + bookFontBold.className}>{activeBook} (თემები)</div>
-                        {processedThemes.map((theme) => {
-                            const shortBookName = getShortBook(activeBook);
-                            const isSameChapter = parseInt(theme.თავი) === parseInt(activeChapter);
-                            const href = isSameChapter
-                                ? `#${theme.id}`
-                                : `/${shortBookName}/${theme.თავი}#${theme.id}`;
+                        <ul id="menu">
+                            <div className={'book-name ' + bookFontBold.className}>{activeBook} (თემები)</div>
+                            {processedThemes.map((theme) => {
+                                const shortBookName = getShortBook(activeBook);
+                                const isSameChapter = parseInt(theme.თავი) === parseInt(activeChapter);
+                                const href = isSameChapter
+                                    ? `#${theme.id}`
+                                    : `/${shortBookName}/${theme.თავი}#${theme.id}`;
 
-                            return (
-                                <li className={textFont.className} key={theme.id}>
-                                    {theme.showChapter && (
-                                        <div className={'menu-chapter ' + bookFontBold.className}>
-                                            •- თავი {theme.თავი} -•
-                                        </div>
-                                    )}
-                                    <Link
-                                        href={href}
-                                        onClick={(e) => {
-                                            if (isSameChapter) {
-                                                e.preventDefault();
-                                                // Disable auto-hide when clicking Link
-                                                disableAutoHideRef.current = true;
-                                                scrollToElement(theme.id.toString(), setControlsVisible);
-                                                
-                                                // Re-enable auto-hide after 3 seconds
-                                                setTimeout(() => {
-                                                    disableAutoHideRef.current = false;
-                                                }, 3000);
-                                            } else {
-                                                // Disable auto-hide when clicking Link
-                                                disableAutoHideRef.current = true;
-                                                setControlsVisible(true);
-                                                
-                                                // Re-enable auto-hide after 3 seconds
-                                                setTimeout(() => {
-                                                    disableAutoHideRef.current = false;
-                                                }, 3000);
-                                            }
-                                            const menuCheckbox = document.getElementById('menuCheckbox');
-                                            if (menuCheckbox) menuCheckbox.checked = false;
-                                        }}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
-                                            {theme.თემა}
-                                        </label>
-                                    </Link>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
-            </nav>
+                                return (
+                                    <li className={textFont.className} key={theme.id}>
+                                        {theme.showChapter && (
+                                            <div className={'menu-chapter ' + bookFontBold.className}>
+                                                •- თავი {theme.თავი} -•
+                                            </div>
+                                        )}
+                                        <Link
+                                            href={href}
+                                            onClick={(e) => {
+                                                if (isSameChapter) {
+                                                    e.preventDefault();
+                                                    // Disable auto-hide when clicking Link
+                                                    disableAutoHideRef.current = true;
+                                                    scrollToElement(theme.id.toString(), setControlsVisible);
 
-            <div className="book-selector">
-                <select
-                    name="books"
-                    value={activeBook}
-                    className={`short-book-name ${bookFontBold.className}`}
-                    onChange={handleBookChange}
-                >
-                    {BOOKS.map((book) => (
-                        <option key={book.short} value={book.name}>
-                            {book.short}
-                        </option>
-                    ))}
-                </select>
+                                                    // Re-enable auto-hide after 3 seconds
+                                                    setTimeout(() => {
+                                                        disableAutoHideRef.current = false;
+                                                    }, 3000);
+                                                } else {
+                                                    // Disable auto-hide when clicking Link
+                                                    disableAutoHideRef.current = true;
+                                                    setControlsVisible(true);
 
-                <select
-                    name="chapters"
-                    value={activeChapter}
-                    className={`chapter-selector ${bookFontBold.className}`}
-                    onChange={handleChapterChange}
-                >
-                    {chapters.length === 0 ? (
-                        <option value={activeChapter}>თავი {activeChapter}</option>
-                    ) : (
-                        chapters.map((chapter) => (
-                            <option key={chapter.თავი} value={chapter.თავი}>
-                                თავი {chapter.თავი}
+                                                    // Re-enable auto-hide after 3 seconds
+                                                    setTimeout(() => {
+                                                        disableAutoHideRef.current = false;
+                                                    }, 3000);
+                                                }
+                                                const menuCheckbox = document.getElementById('menuCheckbox');
+                                                if (menuCheckbox) menuCheckbox.checked = false;
+                                            }}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
+                                                - {theme.თემა}
+                                            </label>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </nav>
+
+                <div className="book-selector">
+                    <select
+                        name="books"
+                        value={activeBook}
+                        className={`short-book-name ${bookFontBold.className}`}
+                        onChange={handleBookChange}
+                    >
+                        {BOOKS.map((book) => (
+                            <option key={book.short} value={book.name}>
+                                {book.short}
                             </option>
-                        ))
-                    )}
-                </select>
-            </div>
+                        ))}
+                    </select>
 
-            <div className="btn-container">
-                <button
-                    className={`btn ${textFont.className}`}
-                    onClick={prevChapter}
-                    disabled={parseInt(activeChapter) <= 1}
-                >
-                    {'<'}{' '}
-                    <span>
-                        წინა <span>თავი</span>
-                    </span>
-                </button>
-                <button
-                    className={`btn ${textFont.className}`}
-                    onClick={nextChapter}
-                    disabled={chapters.length > 0 && parseInt(activeChapter) >= chapters.length}
-                >
-                    <span>
-                        შემდეგი <span>თავი</span>
-                    </span>{' '}
-                    {'>'}
-                </button>
+                    <select
+                        name="chapters"
+                        value={activeChapter}
+                        className={`chapter-selector ${bookFontBold.className}`}
+                        onChange={handleChapterChange}
+                    >
+                        {chapters.length === 0 ? (
+                            <option value={activeChapter}>თავი {activeChapter}</option>
+                        ) : (
+                            chapters.map((chapter) => (
+                                <option key={chapter.თავი} value={chapter.თავი}>
+                                    თავი {chapter.თავი}
+                                </option>
+                            ))
+                        )}
+                    </select>
+                </div>
+
+                <div className="btn-container">
+                    <button
+                        className={`btn ${textFont.className}`}
+                        onClick={prevChapter}
+                        disabled={parseInt(activeChapter) <= 1}
+                    >
+                        {'<'}{' '}
+                        <span>
+                            წინა <span>თავი</span>
+                        </span>
+                    </button>
+                    <button
+                        className={`btn ${textFont.className}`}
+                        onClick={nextChapter}
+                        disabled={chapters.length > 0 && parseInt(activeChapter) >= chapters.length}
+                    >
+                        <span>
+                            შემდეგი <span>თავი</span>
+                        </span>{' '}
+                        {'>'}
+                    </button>
+                </div>
             </div>
-        </div>
         </>
     );
 }
