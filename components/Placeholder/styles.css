@@ -8,7 +8,7 @@
 .item-long-line,
 .item-short-line,
 .item-image {
-  background-color: rgba(0, 0, 0, 0.1);
+  /* background-color: rgba(0, 0, 0, 0.1); */
   position: relative;
 }
 
