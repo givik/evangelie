@@ -39,7 +39,7 @@ export default function ReaderSettings() {
                 </button>
             </div>
             <button className={`theme-toggle ${bookFontBold.className}`} onClick={toggleTheme}>
-                {theme === 'light' ? '🌙' : '☀️'}
+                {theme === 'light' ? <img width={30} src="/candle-2-svgrepo-com.svg" alt="candle" /> : <img width={30} src="/candle-2-off-svgrepo-com.svg" alt="candle-off" />}
             </button>
         </div>
     );
