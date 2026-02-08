@@ -63,15 +63,15 @@ export default function BibleContent({
 
     return (
         <div className={`content ${loading ? 'content--loading' : ''}`} style={{ '--font-scale': fontSize }}>
-            <h1 className={`header ${bookFontBold.className}`}>
-                <span className="book-name">{activeBook}</span>
-                <span className="book-chapter">თავი {activeChapter}</span>
-            </h1>
-
+            {!loading && (
+                <h1 className={`header ${bookFontBold.className}`}>
+                    <span className="book-name">{activeBook}</span>
+                    <span className="book-chapter">თავი {activeChapter}</span>
+                </h1>
+            )}
             {loading && (
                 <div className="loading-overlay">
                     <Placeholder />
-
                     <Placeholder />
                 </div>
             )}

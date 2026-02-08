@@ -219,14 +219,14 @@ body {
 .content h1 {
   margin-bottom: 20px;
   font-size: calc(clamp(3.1rem, calc(3vw + 1rem), 3.5rem) * var(--font-scale));
-  animation: fadeIn 0.6s ease-in-out 0.1s forwards;
-  opacity: 0;
+  /* animation: fadeIn 0.6s ease-in-out 0.1s forwards;
+  opacity: 0; */
 }
 
 .verses {
   margin-top: 30px;
-  animation: fadeIn 0.6s ease-in-out 0.1s forwards;
-  opacity: 0;
+  /* animation: fadeIn 0.6s ease-in-out 0.1s forwards;
+  opacity: 0; */
 }
 
 .verses .topic {
