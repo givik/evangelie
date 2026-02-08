@@ -20,6 +20,7 @@ export default function RootLayout({ children }) {
           {children}
         </ThemeProvider>
         <Analytics debug={false} />
+        <SpeedInsights />
       </body>
     </html>
   );
