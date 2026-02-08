@@ -598,6 +598,7 @@ body {
   width: 100%;
   max-width: 800px;
   padding: 0 1rem;
+  min-height: 52px;
 }
 
 .font-controls {
