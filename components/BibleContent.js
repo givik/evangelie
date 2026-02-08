@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
-import Image from 'next/image';
 import Placeholder from '@/components/Placeholder';
 import { getShortBook, scrollToElement } from '@/lib/utils';
 import { HASH_SCROLL_DELAY_MS } from '@/lib/constants';
@@ -23,7 +22,8 @@ export default function BibleContent({
     verses = [],
     loading = false,
     chaptersLength = 0,
-    setControlsVisible
+    setControlsVisible,
+    startTransition
 }) {
     const router = useRouter();
     const { fontSize } = useTheme();
@@ -56,17 +56,27 @@ export default function BibleContent({
         if (chaptersLength > 0 && curr >= chaptersLength) return;
 
         const short = getShortBook(activeBook);
-        router.push(`/${short}/${curr + 1}`);
+        startTransition(() => {
+            router.push(`/${short}/${curr + 1}`);
+        });
     };
 
     return (
-        <div className="content" style={{ '--font-scale': fontSize }}>
+        <div className={`content ${loading ? 'content--loading' : ''}`} style={{ '--font-scale': fontSize }}>
             <h1 className={`header ${bookFontBold.className}`}>
                 <span className="book-name">{activeBook}</span>
                 <span className="book-chapter">თავი {activeChapter}</span>
             </h1>
 
-            <div className="verses">
+            {loading && (
+                <div className="loading-overlay">
+                    <Placeholder />
+
+                    <Placeholder />
+                </div>
+            )}
+
+            <div className={`verses ${loading ? 'verses--hidden' : ''}`}>
                 {verses.length === 0 && !loading ? (
                     <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Placeholder />
@@ -89,7 +99,7 @@ export default function BibleContent({
                 )}
             </div>
 
-            {verses.length > 0 && chaptersLength > 0 && parseInt(activeChapter) < chaptersLength && (
+            {!loading && verses.length > 0 && chaptersLength > 0 && parseInt(activeChapter) < chaptersLength && (
                 <button
                     className={`btn bottom-next-page ${textFont.className}`}
                     onClick={nextChapter}

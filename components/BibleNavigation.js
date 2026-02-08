@@ -29,12 +29,22 @@ export default function BibleNavigation({
     chapters = [],
     themes = [],
     controlsVisible,
-    setControlsVisible
+    setControlsVisible,
+    startTransition
 }) {
     const router = useRouter();
+    const [currentHash, setCurrentHash] = useState('');
     const lastScrollYRef = useRef(0);
     const menuCheckboxRef = useRef(null);
     const disableAutoHideRef = useRef(false);
+
+    // Update currentHash on mount and hashchange
+    useEffect(() => {
+        const updateHash = () => setCurrentHash(window.location.hash);
+        updateHash();
+        window.addEventListener('hashchange', updateHash);
+        return () => window.removeEventListener('hashchange', updateHash);
+    }, []);
 
     // -- Handlers --
 
@@ -42,20 +52,26 @@ export default function BibleNavigation({
         const newBook = e.target.value;
         const short = getShortBook(newBook);
         // Navigate to chapter 1 of new book
-        router.push(`/${short}/1`);
+        startTransition(() => {
+            router.push(`/${short}/1`);
+        });
     };
 
     const handleChapterChange = (e) => {
         const newChapter = e.target.value;
         const short = getShortBook(activeBook);
-        router.push(`/${short}/${newChapter}`);
+        startTransition(() => {
+            router.push(`/${short}/${newChapter}`);
+        });
     };
 
     const prevChapter = () => {
         const curr = parseInt(activeChapter);
         if (curr <= 1) return;
         const short = getShortBook(activeBook);
-        router.push(`/${short}/${curr - 1}`);
+        startTransition(() => {
+            router.push(`/${short}/${curr - 1}`);
+        });
     };
 
     const nextChapter = () => {
@@ -65,7 +81,9 @@ export default function BibleNavigation({
         if (chapters.length > 0 && curr >= chapters.length) return;
 
         const short = getShortBook(activeBook);
-        router.push(`/${short}/${curr + 1}`);
+        startTransition(() => {
+            router.push(`/${short}/${curr + 1}`);
+        });
     };
 
     // -- Effects --
@@ -125,8 +143,22 @@ export default function BibleNavigation({
                 setTimeout(() => {
                     const menu = document.getElementById('menu');
                     if (!menu) return;
-                    // Find active chapter
-                    // Note: The logic searches for text "თავი X".
+
+                    // Prioritize scrolling to the active theme if hash exists
+                    const hash = window.location.hash;
+                    if (hash) {
+                        const elementId = hash.substring(1);
+                        // Search for a link that has this hash as href or contains the theme ID
+                        const activeThemeElement = Array.from(menu.querySelectorAll('a')).find(
+                            (el) => el.getAttribute('href')?.includes(`#${elementId}`)
+                        );
+                        if (activeThemeElement) {
+                            activeThemeElement.scrollIntoView({ behavior: 'instant', block: 'center' });
+                            return; // Found theme, no need to scroll to chapter
+                        }
+                    }
+
+                    // Fallback: Find active chapter
                     const activeChapterElement = Array.from(menu.querySelectorAll('.menu-chapter')).find(
                         (el) => {
                             const match = el.textContent.match(/თავი (\d+)/);
@@ -134,7 +166,7 @@ export default function BibleNavigation({
                         }
                     );
                     if (activeChapterElement) {
-                        activeChapterElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+                        activeChapterElement.scrollIntoView({ behavior: 'instant', block: 'center' });
                     }
                 }, MENU_OPEN_DELAY_MS);
             }
@@ -200,12 +232,13 @@ export default function BibleNavigation({
                             {processedThemes.map((theme) => {
                                 const shortBookName = getShortBook(activeBook);
                                 const isSameChapter = parseInt(theme.თავი) === parseInt(activeChapter);
+                                const isActiveTheme = currentHash === `#${theme.id}`;
                                 const href = isSameChapter
                                     ? `#${theme.id}`
                                     : `/${shortBookName}/${theme.თავი}#${theme.id}`;
 
                                 return (
-                                    <li className={textFont.className} key={theme.id}>
+                                    <li className={`${textFont.className} ${isActiveTheme ? 'active-theme' : ''}`} key={theme.id}>
                                         {theme.showChapter && (
                                             <div className={'menu-chapter ' + bookFontBold.className}>
                                                 •- თავი {theme.თავი} -•
@@ -225,9 +258,15 @@ export default function BibleNavigation({
                                                         disableAutoHideRef.current = false;
                                                     }, 3000);
                                                 } else {
+                                                    e.preventDefault();
                                                     // Disable auto-hide when clicking Link
                                                     disableAutoHideRef.current = true;
                                                     setControlsVisible(true);
+
+                                                    startTransition(() => {
+                                                        const shortBookName = getShortBook(activeBook);
+                                                        router.push(`/${shortBookName}/${theme.თავი}#${theme.id}`);
+                                                    });
 
                                                     // Re-enable auto-hide after 3 seconds
                                                     setTimeout(() => {

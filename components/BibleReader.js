@@ -3,7 +3,7 @@
 import BibleNavigation from './BibleNavigation';
 import ReaderSettings from './ReaderSettings';
 import BibleContent from './BibleContent';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { getShortBook } from '@/lib/utils';
 import { BOOKS } from '@/lib/constants';
@@ -11,6 +11,7 @@ import { BOOKS } from '@/lib/constants';
 export default function BibleReader({ activeBook, activeChapter, chapters, themes, verses, isRoot }) {
     const router = useRouter();
     const [controlsVisible, setControlsVisible] = useState(true);
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         if (isRoot) {
@@ -41,6 +42,7 @@ export default function BibleReader({ activeBook, activeChapter, chapters, theme
                 themes={themes}
                 controlsVisible={controlsVisible}
                 setControlsVisible={setControlsVisible}
+                startTransition={startTransition}
             />
             <ReaderSettings />
             <BibleContent
@@ -49,6 +51,8 @@ export default function BibleReader({ activeBook, activeChapter, chapters, theme
                 verses={verses}
                 chaptersLength={chapters?.length || 0}
                 setControlsVisible={setControlsVisible}
+                loading={isPending}
+                startTransition={startTransition}
             />
         </div>
     );
