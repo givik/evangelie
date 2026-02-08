@@ -2,6 +2,7 @@
 
 import { useTheme } from '@/components/ThemeProvider';
 import localFont from 'next/font/local';
+import Image from 'next/image';
 
 const bookFontBold = localFont({
     src: '../app/fonts/gl-lortkipanidze-bold.ttf',
@@ -39,7 +40,11 @@ export default function ReaderSettings() {
                         </button>
                     </div>
                     <button className={`theme-toggle ${bookFontBold.className}`} onClick={toggleTheme}>
-                        {theme === 'light' ? <img width={30} src="/candle-2-svgrepo-com.svg" alt="candle" /> : <img width={30} src="/candle-2-off-svgrepo-com.svg" alt="candle-off" />}
+                        {theme === 'light' ? (
+                            <Image src="/candle-2-svgrepo-com.svg" alt="candle" width={30} height={30} />
+                        ) : (
+                            <Image src="/candle-2-off-svgrepo-com.svg" alt="candle-off" width={30} height={30} />
+                        )}
                     </button>
                 </>
             )}
