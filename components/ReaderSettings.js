@@ -13,12 +13,24 @@ const textFont = localFont({
 });
 
 export default function ReaderSettings() {
-    const { theme, toggleTheme, fontSize, updateFontSize, settingsLoaded } = useTheme();
+    const { theme, toggleTheme, fontSize, updateFontSize, settingsLoaded, updateLanguage, language } = useTheme();
 
     return (
         <div
             className={`reader-settings ${textFont.className} ${!settingsLoaded ? 'settings-loading' : ''}`}
         >
+            {settingsLoaded && (
+                <button
+                    onClick={() => updateLanguage()}
+                    aria-label="Change language"
+                    className={textFont.className}
+                    disabled={!settingsLoaded}
+                >
+                    {language === 'new'
+                        ? 'თანამედროვე ქართულ ენაზე'
+                        : 'გ. მთაწმინდელის რედაქციით'}
+                </button>
+            )}
             <div className="font-controls">
                 <button
                     onClick={() => updateFontSize(-0.1)}

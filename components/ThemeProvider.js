@@ -8,6 +8,7 @@ export function ThemeProvider({ children }) {
     const [theme, setTheme] = useState('light');
     const [fontSize, setFontSize] = useState(1);
     const [settingsLoaded, setSettingsLoaded] = useState(false);
+    const [language, setLanguage] = useState('new');
 
     // Load settings from localStorage on mount
     useEffect(() => {
@@ -48,6 +49,14 @@ export function ThemeProvider({ children }) {
         });
     };
 
+    const updateLanguage = (change) => {
+        setLanguage((prev) => {
+            const newLanguage = prev === 'new' ? 'old' : 'new';
+            localStorage.setItem('reader_language', newLanguage);
+            return newLanguage;
+        });
+    };
+
     return (
         <ThemeContext.Provider
             value={{
@@ -56,6 +65,8 @@ export function ThemeProvider({ children }) {
                 fontSize,
                 updateFontSize,
                 settingsLoaded,
+                language,
+                updateLanguage,
             }}
         >
             {children}

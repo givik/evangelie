@@ -314,7 +314,7 @@ body {
 
 #menuToggle a:hover {
   /* color: tomato; */
-  margin-left: 0.5rem;
+  margin-left: 0.3rem;
   text-decoration: underline;
   transition:
     margin-left 0.3s ease-in-out,
@@ -451,7 +451,7 @@ body {
 }
 
 #menu li.active-theme a label {
-  color: #fff;
+  color: var(--text-color);
 }
 
 #menu li.active-theme a {

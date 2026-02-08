@@ -26,7 +26,7 @@ export default function BibleContent({
     startTransition
 }) {
     const router = useRouter();
-    const { fontSize } = useTheme();
+    const { fontSize, language } = useTheme();
 
     // Scroll to hash on mount
     useEffect(() => {
@@ -88,11 +88,12 @@ export default function BibleContent({
                         <div key={verse.id} className={textFont.className}>
                             {verse.showTopic && (
                                 <div id={verse.id} className="topic">
-                                    {verse.თემა && `- ${verse.თემა} -`}
+                                    {verse.თემა && `- ${verse.თემა}`}
                                 </div>
                             )}
                             <p className="verse">
-                                <span className="index">{index + 1}.</span> {verse.ტექსტი}
+                                <span className="index">{index + 1}.</span>
+                                {language === 'new' ? verse.ტექსტი : verse.ძველი_ტექსტი}
                             </p>
                         </div>
                     ))
