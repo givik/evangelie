@@ -598,7 +598,13 @@ body {
   width: 100%;
   max-width: 800px;
   padding: 0 1rem;
-  min-height: 52px;
+  min-height: 56px;
+  /* Slightly increased to ensure it covers the buttons comfortably */
+}
+
+.settings-loading {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .font-controls {

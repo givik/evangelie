@@ -17,37 +17,42 @@ export default function ReaderSettings() {
 
     return (
         <div
-            className={`reader-settings ${textFont.className}`}
-        // style={{ '--font-scale': fontSize }} // Moved to parent wrapper
+            className={`reader-settings ${textFont.className} ${!settingsLoaded ? 'settings-loading' : ''}`}
         >
-            {settingsLoaded && (
-                <>
-                    <div className="font-controls">
-                        <button
-                            onClick={() => updateFontSize(-0.1)}
-                            aria-label="Decrease font size"
-                            className={textFont.className}
-                        >
-                            ა-
-                        </button>
-                        <span>{(fontSize * 100).toFixed(0)}%</span>
-                        <button
-                            onClick={() => updateFontSize(0.1)}
-                            aria-label="Increase font size"
-                            className={textFont.className}
-                        >
-                            ა+
-                        </button>
-                    </div>
-                    <button className={`theme-toggle ${bookFontBold.className}`} onClick={toggleTheme}>
-                        {theme === 'light' ? (
-                            <Image src="/candle-2-svgrepo-com.svg" alt="candle" width={30} height={30} />
-                        ) : (
-                            <Image src="/candle-2-off-svgrepo-com.svg" alt="candle-off" width={30} height={30} />
-                        )}
-                    </button>
-                </>
-            )}
+            <div className="font-controls">
+                <button
+                    onClick={() => updateFontSize(-0.1)}
+                    aria-label="Decrease font size"
+                    className={textFont.className}
+                    disabled={!settingsLoaded}
+                >
+                    ა-
+                </button>
+                <span>{settingsLoaded ? `${(fontSize * 100).toFixed(0)}%` : '100%'}</span>
+                <button
+                    onClick={() => updateFontSize(0.1)}
+                    aria-label="Increase font size"
+                    className={textFont.className}
+                    disabled={!settingsLoaded}
+                >
+                    ა+
+                </button>
+            </div>
+            <button
+                className={`theme-toggle ${bookFontBold.className}`}
+                onClick={toggleTheme}
+                disabled={!settingsLoaded}
+            >
+                {settingsLoaded ? (
+                    theme === 'light' ? (
+                        <Image src="/candle-2-svgrepo-com.svg" alt="candle" width={30} height={30} />
+                    ) : (
+                        <Image src="/candle-2-off-svgrepo-com.svg" alt="candle-off" width={30} height={30} />
+                    )
+                ) : (
+                    <div style={{ width: 30, height: 30 }} /> // Placeholder for the icon
+                )}
+            </button>
         </div>
     );
 }
