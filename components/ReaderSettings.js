@@ -23,12 +23,12 @@ export default function ReaderSettings() {
                 <button
                     onClick={() => updateLanguage()}
                     aria-label="Change language"
-                    className={textFont.className}
+                    className={"change-language-btn " + textFont.className}
                     disabled={!settingsLoaded}
                 >
                     {language === 'new'
-                        ? 'თანამედროვე ქართულ ენაზე'
-                        : 'გ. მთაწმინდელის რედაქციით'}
+                        ? 'თანამედროვე ქართულზე'
+                        : 'მთაწმინდელის რედაქციით'}
                 </button>
             )}
             <div className="font-controls">

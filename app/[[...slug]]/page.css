@@ -660,6 +660,24 @@ body {
   background-color: rgba(128, 128, 128, 0.2);
 }
 
+.change-language-btn {
+  background: var(--controls-bg);
+  border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
+  color: var(--text-color);
+  border-radius: 1rem;
+  padding: 0.7rem 1.5rem;
+  font-size: clamp(1.5rem, calc(1vw + 0.1rem), 3.5rem);
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.2s ease;
+  width: 30rem;
+}
+
+.change-language-btn:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-bottom: 1px solid var(--text-color);
+}
+
 @media only screen and (max-width: 600px) {
   .reader-settings {
     flex-wrap: wrap;
