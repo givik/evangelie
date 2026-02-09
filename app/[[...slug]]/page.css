@@ -131,7 +131,7 @@ body {
 
 .controls .chapter-selector {
   /* font-size: clamp(1.5rem, calc(1vw + 0.53rem), 3.5rem); */
-  min-width: 7rem;
+  width: 6rem;
 }
 
 .controls .btn-container {
@@ -191,7 +191,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
   width: 100%;
   animation: fadeIn 0.3s ease-in-out forwards;
 }
@@ -616,6 +615,7 @@ body {
   border-radius: 1rem;
   border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
   backdrop-filter: blur(5px);
+  height: 3rem;
 }
 
 .font-controls button {
@@ -639,7 +639,7 @@ body {
 
 .font-controls span {
   font-size: 1.5rem;
-  min-width: 3ch;
+  width: 3rem;
   text-align: center;
   color: var(--text-color);
 }
@@ -649,7 +649,8 @@ body {
   border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
   color: var(--text-color);
   border-radius: 1rem;
-  padding: 0.7rem 1.5rem;
+  padding: .4rem .8rem;
+  height: 3rem;
   font-size: clamp(1.5rem, calc(1vw + 0.1rem), 3.5rem);
   cursor: pointer;
   backdrop-filter: blur(5px);
@@ -665,16 +666,16 @@ body {
   border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
   color: var(--text-color);
   border-radius: 1rem;
-  padding: 0.7rem 1.5rem;
+  padding: 0.3rem 0.7rem;
   font-size: clamp(1.5rem, calc(1vw + 0.1rem), 3.5rem);
   cursor: pointer;
   backdrop-filter: blur(5px);
   transition: all 0.2s ease;
   width: 30rem;
+  min-height: 3rem;
 }
 
 .change-language-btn:hover {
-  background-color: rgba(128, 128, 128, 0.2);
   border-bottom: 1px solid var(--text-color);
 }
 

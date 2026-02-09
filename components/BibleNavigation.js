@@ -314,7 +314,7 @@ export default function BibleNavigation({
                         ) : (
                             chapters.map((chapter) => (
                                 <option key={chapter.თავი} value={chapter.თავი}>
-                                    თავი {chapter.თავი}
+                                   {chapter.თავი}
                                 </option>
                             ))
                         )}
