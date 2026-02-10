@@ -25,7 +25,7 @@ body {
   height: 100%;
   background: var(--bg-color);
   color: var(--text-color);
-  overflow-y: scroll;
+  overflow-y: hidden;
   /* Always show scrollbar to prevent layout shift */
   transition:
     background-color 0.3s ease,
@@ -104,8 +104,6 @@ body {
 /* Foldable Search Styles */
 .search-container {
   position: relative;
-  width: 40px;
-  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,18 +120,18 @@ body {
   opacity: 0;
   cursor: pointer;
   z-index: 2;
-  border-radius: 100px;
+  border-radius: 20px;
   outline: none;
   padding: 0 10px 0 0;
   font-size: 1.2rem;
-  transition: all .5s cubic-bezier(.77, .2, .05, 1);
+  transition: all .1s cubic-bezier(.77, .2, .05, 1);
   position: absolute;
   top: -0.1rem;
   left: 0;
 }
 
 .search-container input:focus {
-  width: 30rem;
+  width: 82vw;
   opacity: 1;
   padding: 0 20px 0 45px;
   cursor: text;
@@ -150,7 +148,7 @@ body {
   background: var(--controls-bg);
   border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
   border-radius: 50%;
-  transition: all 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+  transition: all 0.1s cubic-bezier(0.77, 0.2, 0.05, 1);
   z-index: 3;
   pointer-events: none;
   display: flex;
@@ -165,7 +163,7 @@ body {
   height: 2px;
   background: var(--text-color);
   transform: rotate(45deg)translate(10px, 0px);
-  transition: all 0.3s ease;
+  transition: all 0.01s ease;
 }
 
 .search-icon-circle::after {
@@ -176,7 +174,7 @@ body {
   border-radius: 50%;
   border: 2px solid var(--text-color);
   transform: translate(-2px, -2px);
-  transition: all 0.3s ease;
+  transition: all 0.01s ease;
 }
 
 .search-container input:focus~.search-icon-circle {
@@ -530,7 +528,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   /* border: 1px solid #333; */
   transform-origin: 0% 0%;
-  transform: translate(-110%, 0);
+  transform: translate(-150%, 0);
 
   transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
 }

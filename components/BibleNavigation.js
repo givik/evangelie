@@ -289,7 +289,7 @@ export default function BibleNavigation({
         </nav>
 
         <div className="search-container">
-          <input type="text" placeholder="ძებნა" className={textFont.className} />
+          <input type="text" placeholder="ბიბლიაში ძებნა" className={textFont.className} />
           <div className="search-icon-circle"></div>
         </div>
 
