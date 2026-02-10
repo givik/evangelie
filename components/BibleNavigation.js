@@ -34,12 +34,9 @@ export default function BibleNavigation({
 }) {
   const router = useRouter();
   const [currentHash, setCurrentHash] = useState('');
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const lastScrollYRef = useRef(0);
   const menuCheckboxRef = useRef(null);
   const disableAutoHideRef = useRef(false);
-  const searchInputRef = useRef(null);
-  const searchContainerRef = useRef(null);
 
   // Update currentHash on mount and hashchange
   useEffect(() => {
@@ -196,28 +193,6 @@ export default function BibleNavigation({
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Search focus and click outside
-  useEffect(() => {
-    if (isSearchExpanded && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-
-    const handleClickOutsideSearch = (event) => {
-      if (
-        isSearchExpanded &&
-        searchContainerRef.current &&
-        !searchContainerRef.current.contains(event.target)
-      ) {
-        setIsSearchExpanded(false);
-      }
-    };
-
-    if (isSearchExpanded) {
-      document.addEventListener('mousedown', handleClickOutsideSearch);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutsideSearch);
-  }, [isSearchExpanded]);
-
   // Prepare themes grouping
   // (Logic from page.js)
   const chaptersForThemes = themes.map((theme, i, arr) => {
@@ -313,38 +288,9 @@ export default function BibleNavigation({
           </div>
         </nav>
 
-        <div
-          ref={searchContainerRef}
-          className={`search-container ${isSearchExpanded ? 'expanded' : ''}`}
-          onClick={() => !isSearchExpanded && setIsSearchExpanded(true)}
-        >
-          <div className="search-icon-wrapper">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="search-icon"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </div>
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder="ძებნა"
-            className="search-input"
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                setIsSearchExpanded(false);
-                searchInputRef.current?.blur();
-              }
-            }}
-          />
+        <div className="search-container">
+          <input type="text" placeholder="ძებნა" className={textFont.className} />
+          <div className="search-icon-circle"></div>
         </div>
 
         <div className="book-selector">
