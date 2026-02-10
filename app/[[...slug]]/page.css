@@ -167,10 +167,10 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  height: 3rem;
-  width: 3rem;
+  height: 3.2rem;
+  width: 3.2rem;
   /* background: var(--search-icon-bg); */
-  /* border: 1px solid color-mix(in srgb, var(--text-color), transparent 80%); */
+  border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
   border-radius: 15px;
   transition: all 0.1s cubic-bezier(0.77, 0.2, 0.05, 1);
   z-index: 3;
@@ -204,25 +204,6 @@ body {
 .search-container input:focus ~ .search-icon-circle {
   background: transparent;
   border-color: transparent;
-  transform: rotate(180deg);
-}
-
-.search-container input:focus ~ .search-icon-circle::before {
-  width: 20px;
-  transform: rotate(45deg) translate(0, 0);
-  top: 1.36rem;
-  left: 0.8rem;
-}
-
-.search-container input:focus ~ .search-icon-circle::after {
-  width: 20px;
-  height: 2px;
-  border: none;
-  background: var(--text-color);
-  border-radius: 0;
-  transform: rotate(-45deg) translate(0, 0);
-  top: 1.36rem;
-  left: 0.8rem;
 }
 
 /* Ensure the search covers selectors when expanded */
