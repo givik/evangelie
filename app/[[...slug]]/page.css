@@ -109,6 +109,7 @@ body {
   justify-content: center;
   z-index: 10;
   transition: all 0.5s ease;
+  margin-right: 2.5rem;
 }
 
 .search-container input {
@@ -625,6 +626,10 @@ body {
 
   #menuToggle {
     margin-left: 3rem;
+  }
+
+  .search-container {
+    margin-left: 2.5rem;
   }
 }
 
