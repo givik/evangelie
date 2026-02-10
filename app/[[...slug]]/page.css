@@ -88,6 +88,8 @@ body {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  min-height: 5rem;
+  align-items: center;
 }
 
 .controls.controls--hidden {
@@ -99,6 +101,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 }
 
 /* Foldable Search Styles */
@@ -110,6 +113,8 @@ body {
   z-index: 10;
   transition: all 0.5s ease;
   margin-right: 2.5rem;
+  width: 3.2rem;
+  height: 3.2rem;
 }
 
 .search-container input {
@@ -129,15 +134,31 @@ body {
   position: absolute;
   top: -0.1rem;
   left: 0;
+  box-sizing: border-box;
 }
 
 .search-container input:focus {
-  width: 82vw;
+  width: 100%;
   opacity: 1;
   padding: 0 20px 0 45px;
   cursor: text;
   background: var(--bg-color);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.controls:has(.search-container input:focus) {
+  justify-content: flex-start;
+}
+
+.controls:has(.search-container input:focus) .search-container {
+  flex-grow: 1;
+  margin-right: 0;
+  justify-content: flex-start;
+}
+
+.controls:has(.search-container input:focus) .book-selector,
+.controls:has(.search-container input:focus) .btn-container {
+  display: none;
 }
 
 .search-icon-circle {
@@ -243,6 +264,10 @@ body {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+}
+
+.controls .btn-container {
+  height: 3rem;
 }
 
 .btn {
