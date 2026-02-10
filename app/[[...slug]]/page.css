@@ -6,6 +6,7 @@
   --controls-shadow: #f6f1e2;
   --menu-bg: #f6f1e2;
   --topic-color: grey;
+  --search-icon-bg: rgba(40, 40, 40, 0.1);
 }
 
 [data-theme='dark'] {
@@ -15,6 +16,7 @@
   --controls-shadow: rgba(0, 0, 0, 0.5);
   --menu-bg: rgba(40, 40, 40, 0.98);
   --topic-color: #a0a0a0;
+  --search-icon-bg: rgba(246, 241, 226, 0.1);
 }
 
 * {
@@ -167,7 +169,7 @@ body {
   top: 0;
   height: 3rem;
   width: 3rem;
-  background: var(--controls-bg);
+  /* background: var(--search-icon-bg); */
   /* border: 1px solid color-mix(in srgb, var(--text-color), transparent 80%); */
   border-radius: 15px;
   transition: all 0.1s cubic-bezier(0.77, 0.2, 0.05, 1);
