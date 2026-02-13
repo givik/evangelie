@@ -1,7 +1,7 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
   title: 'სახარება',
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
-          {children}
+          <main>{children}</main>
         </ThemeProvider>
         <Analytics debug={false} />
         <SpeedInsights />

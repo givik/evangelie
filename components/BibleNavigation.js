@@ -34,8 +34,10 @@ export default function BibleNavigation({
 }) {
   const router = useRouter();
   const [currentHash, setCurrentHash] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
   const lastScrollYRef = useRef(0);
-  const menuCheckboxRef = useRef(null);
+  const menuRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const disableAutoHideRef = useRef(false);
 
   // Update currentHash on mount and hashchange
@@ -131,67 +133,60 @@ export default function BibleNavigation({
 
   // Menu auto-scroll logic
   useEffect(() => {
-    const menuCheckbox = document.getElementById('menuCheckbox'); // Keeping ID usage for now as logic relies on it?
-    // Actually we can use Ref if we attach it.
-    // The original code used IDs. To ensure styles match (if CSS uses #menuCheckbox), we must keep IDs.
-    // But we can attach ref to the input for easier access.
+    if (!menuOpen) return;
 
-    if (!menuCheckbox) return;
+    const handleMenuScroll = () => {
+      setTimeout(() => {
+        const menu = menuRef.current;
+        if (!menu) return;
 
-    const handleMenuToggle = () => {
-      if (menuCheckbox.checked) {
-        setTimeout(() => {
-          const menu = document.getElementById('menu');
-          if (!menu) return;
-
-          // Prioritize scrolling to the active theme if hash exists
-          const hash = window.location.hash;
-          if (hash) {
-            const elementId = hash.substring(1);
-            // Search for a link that has this hash as href or contains the theme ID
-            const activeThemeElement = Array.from(menu.querySelectorAll('a')).find((el) =>
-              el.getAttribute('href')?.includes(`#${elementId}`),
-            );
-            if (activeThemeElement) {
-              activeThemeElement.scrollIntoView({ behavior: 'instant', block: 'center' });
-              return; // Found theme, no need to scroll to chapter
-            }
-          }
-
-          // Fallback: Find active chapter
-          const activeChapterElement = Array.from(menu.querySelectorAll('.menu-chapter')).find(
-            (el) => {
-              const match = el.textContent.match(/თავი (\d+)/);
-              return match && match[1] === activeChapter.toString();
-            },
+        // Prioritize scrolling to the active theme if hash exists
+        const hash = window.location.hash;
+        if (hash) {
+          const elementId = hash.substring(1);
+          // Search for a link that has this hash as href or contains the theme ID
+          const activeThemeElement = Array.from(menu.querySelectorAll('a')).find((el) =>
+            el.getAttribute('href')?.includes(`#${elementId}`),
           );
-          if (activeChapterElement) {
-            activeChapterElement.scrollIntoView({ behavior: 'instant', block: 'center' });
+          if (activeThemeElement) {
+            activeThemeElement.scrollIntoView({ behavior: 'instant', block: 'center' });
+            return; // Found theme, no need to scroll to chapter
           }
-        }, MENU_OPEN_DELAY_MS);
-      }
+        }
+
+        // Fallback: Find active chapter
+        const activeChapterElement = Array.from(menu.querySelectorAll('.menu-chapter')).find(
+          (el) => {
+            const match = el.textContent.match(/თავი (\d+)/);
+            return match && match[1] === activeChapter.toString();
+          },
+        );
+        if (activeChapterElement) {
+          activeChapterElement.scrollIntoView({ behavior: 'instant', block: 'center' });
+        }
+      }, MENU_OPEN_DELAY_MS);
     };
 
-    menuCheckbox.addEventListener('change', handleMenuToggle);
-    return () => menuCheckbox.removeEventListener('change', handleMenuToggle);
-  }, [activeChapter]);
+    handleMenuScroll();
+  }, [menuOpen, activeChapter]);
 
   // Click outside menu
   useEffect(() => {
-    const menuCheckbox = document.getElementById('menuCheckbox');
-    const menuToggle = document.getElementById('menuToggle');
-    if (!menuCheckbox || !menuToggle) return;
-
     const handleClickOutside = (event) => {
-      if (!menuCheckbox.checked) return;
-      if (!menuToggle.contains(event.target)) {
-        menuCheckbox.checked = false;
+      if (!menuOpen) return;
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(event.target)
+      ) {
+        setMenuOpen(false);
       }
     };
 
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+  }, [menuOpen]);
 
   // Prepare themes grouping
   // (Logic from page.js)
@@ -217,13 +212,21 @@ export default function BibleNavigation({
       <div className={`controls-cover${controlsVisible ? '' : ' cover--hidden'}`}></div>
       <div className={`controls${controlsVisible ? '' : ' controls--hidden'}`}>
         <nav role="navigation">
-          <div id="menuToggle">
-            <input type="checkbox" id="menuCheckbox" aria-label="Toggle navigation menu" />
-            <span></span>
-            <span></span>
-            <span></span>
+          <div id="menuToggle" className={menuOpen ? 'open' : ''}>
+            <button
+              ref={menuButtonRef}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? 'მენიუს დახურვა' : 'მენიუს გახსნა'}
+              aria-expanded={menuOpen}
+              aria-controls="menu"
+              className="menu-button"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
 
-            <ul id="menu">
+            <ul id="menu" ref={menuRef} aria-hidden={!menuOpen} className={menuOpen ? 'open' : ''}>
               <div className={'book-name ' + bookFontBold.className}>{activeBook} (თემები)</div>
               {processedThemes.map((theme) => {
                 const shortBookName = getShortBook(activeBook);
@@ -272,14 +275,11 @@ export default function BibleNavigation({
                             disableAutoHideRef.current = false;
                           }, 3000);
                         }
-                        const menuCheckbox = document.getElementById('menuCheckbox');
-                        if (menuCheckbox) menuCheckbox.checked = false;
+                        setMenuOpen(false);
                       }}
                       style={{ cursor: 'pointer' }}
                     >
-                      <label htmlFor="menuCheckbox" style={{ cursor: 'pointer' }}>
-                        - {theme.თემა}
-                      </label>
+                      <span>- {theme.თემა}</span>
                     </Link>
                   </li>
                 );
@@ -289,7 +289,12 @@ export default function BibleNavigation({
         </nav>
 
         <div className="search-container">
-          <input type="text" placeholder="ბიბლიაში ძებნა" className={textFont.className} />
+          <input
+            type="text"
+            placeholder="ბიბლიაში ძებნა"
+            className={textFont.className}
+            aria-label="ბიბლიაში ძებნა"
+          />
           <div className="search-icon-circle"></div>
         </div>
 
@@ -299,6 +304,7 @@ export default function BibleNavigation({
             value={activeBook}
             className={`short-book-name ${bookFontBold.className}`}
             onChange={handleBookChange}
+            aria-label="აირჩიეთ წიგნი"
           >
             {BOOKS.map((book) => (
               <option key={book.short} value={book.name}>
@@ -312,6 +318,7 @@ export default function BibleNavigation({
             value={activeChapter}
             className={`chapter-selector ${bookFontBold.className}`}
             onChange={handleChapterChange}
+            aria-label="აირჩიეთ თავი"
           >
             {chapters.length === 0 ? (
               <option value={activeChapter}>თავი {activeChapter}</option>
@@ -330,9 +337,10 @@ export default function BibleNavigation({
             className={`btn ${textFont.className}`}
             onClick={prevChapter}
             disabled={parseInt(activeChapter) <= 1}
+            aria-label="წინა თავი"
           >
             {'<'}{' '}
-            <span>
+            <span aria-hidden="true">
               წინა <span>თავი</span>
             </span>
           </button>
@@ -340,8 +348,9 @@ export default function BibleNavigation({
             className={`btn ${textFont.className}`}
             onClick={nextChapter}
             disabled={chapters.length > 0 && parseInt(activeChapter) >= chapters.length}
+            aria-label="შემდეგი თავი"
           >
-            <span>
+            <span aria-hidden="true">
               შემდეგი <span>თავი</span>
             </span>{' '}
             {'>'}
