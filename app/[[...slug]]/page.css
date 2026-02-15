@@ -119,9 +119,8 @@ body {
   justify-content: center;
   z-index: 10;
   transition: all 0.5s ease;
-  margin-right: 2.5rem;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 3rem;
+  height: 3rem;
 }
 
 .search-container input {
@@ -512,10 +511,10 @@ body {
  */
 #menu {
   position: absolute;
-  max-width: min(90vw, 400px);
+  max-width: min(90vw, 500px);
   width: 100vw;
   max-height: calc(100vh - 34px - 80px);
-  margin: 34px 0 0 -18px;
+  margin: 40px 0 0 -30px;
   padding: 34px 34px 34px;
   box-sizing: border-box;
   overflow-y: auto;
@@ -642,7 +641,13 @@ body {
   }
 
   .search-container {
-    margin-left: 2.5rem;
+    margin-top: 0.4rem;
+    margin-left: 10vw;
+  }
+
+  .search-icon-circle {
+    width: 2.8rem;
+    height: 2.8rem;
   }
 }
 
