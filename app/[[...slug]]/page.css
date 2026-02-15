@@ -188,6 +188,8 @@ body {
 .search-icon-circle::before {
   content: '';
   position: absolute;
+  width: 10px;
+  height: 2px;
   background: var(--text-color);
   transform: rotate(45deg) translate(10px, 0px);
   transition: all 0.01s ease;
