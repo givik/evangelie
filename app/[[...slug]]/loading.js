@@ -9,12 +9,12 @@ const textFont = localFont({
 export default function Loading() {
   return (
     <div className="loading-content">
-      {/* <p className={textFont.className}>ბიბლია</p>
-      <AnimatedBook /> */}
-
-      <Placeholder />
       <p className={textFont.className}>ბიბლია</p>
-      <Placeholder />
+      <AnimatedBook />
+
+      {/* <Placeholder />
+      <p className={textFont.className}>ბიბლია</p>
+      <Placeholder /> */}
     </div>
   );
 }
