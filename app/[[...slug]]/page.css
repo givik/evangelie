@@ -514,7 +514,7 @@ body {
   max-width: min(90vw, 500px);
   width: 100vw;
   max-height: calc(100vh - 34px - 80px);
-  margin: 40px 0 0 -30px;
+  margin: 40px 0 0 -40px;
   padding: 34px 34px 34px;
   box-sizing: border-box;
   overflow-y: auto;
