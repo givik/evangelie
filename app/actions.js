@@ -155,3 +155,22 @@ export async function addDefinition(formData) {
     return { message: 'Database Error', error: true };
   }
 }
+
+export async function searchBible(queryText) {
+  if (!queryText || queryText.trim().length < 2) {
+    return [];
+  }
+
+  try {
+    const res = await query(
+      'SELECT id, წიგნი, თავი, მუხლი, ტექსტი FROM public.მუხლები WHERE ტექსტი ILIKE $1 OR თემა ILIKE $1 LIMIT 50',
+      [`%${queryText}%`],
+    );
+    return res.rows;
+  } catch (e) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('searchBible error:', e);
+    }
+    return [];
+  }
+}

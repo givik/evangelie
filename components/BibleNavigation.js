@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
+import { searchBible } from '@/app/actions';
 import {
   BOOKS,
   MENU_OPEN_DELAY_MS,
@@ -35,6 +36,10 @@ export default function BibleNavigation({
   const router = useRouter();
   const [currentHash, setCurrentHash] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const lastScrollYRef = useRef(0);
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -87,6 +92,36 @@ export default function BibleNavigation({
       router.push(`/${short}/${curr + 1}`);
     });
   };
+
+  const handleSearch = useCallback(async (q) => {
+    if (!q || q.trim().length < 2) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const results = await searchBible(q);
+      setSearchResults(results);
+    } catch (e) {
+      console.error('Search error:', e);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery) {
+        handleSearch(searchQuery);
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, handleSearch]);
 
   // -- Effects --
 
@@ -299,8 +334,45 @@ export default function BibleNavigation({
             placeholder="ბიბლიაში ძებნა"
             className={textFont.className}
             aria-label="ბიბლიაში ძებნა"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setShowResults(true)}
+            onBlur={() => {
+              // Delay hide to allow clicking results
+              setTimeout(() => setShowResults(false), 200);
+            }}
           />
           <div className="search-icon-circle"></div>
+          {showResults && (searchQuery.length >= 2 || isSearching) && (
+            <div className="search-results">
+              {isSearching ? (
+                <div className="search-loading">
+                  <div className="search-loading-spinner"></div>
+                </div>
+              ) : searchResults.length > 0 ? (
+                searchResults.map((result) => (
+                  <Link
+                    key={result.id}
+                    href={`/${getShortBook(result.წიგნი)}/${result.თავი}#${result.id}`}
+                    className="search-result-item"
+                    onClick={() => {
+                      setShowResults(false);
+                      setSearchQuery('');
+                    }}
+                  >
+                    <div className={`search-result-title ${bookFontBold.className}`}>
+                      {result.წიგნი} {result.თავი}:{result.მუხლი}
+                    </div>
+                    <div className={`search-result-text ${textFont.className}`}>
+                      {result.ტექსტი}
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="search-no-results">შედეგები ვერ მოიძებნა</div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="book-selector">
