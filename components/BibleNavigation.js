@@ -255,6 +255,11 @@ export default function BibleNavigation({
                           disableAutoHideRef.current = true;
                           scrollToElement(theme.id.toString(), setControlsVisible);
 
+                          // Update hash manually without triggering jump
+                          const newHash = `#${theme.id}`;
+                          window.history.pushState(null, null, newHash);
+                          setCurrentHash(newHash);
+
                           // Re-enable auto-hide after 3 seconds
                           setTimeout(() => {
                             disableAutoHideRef.current = false;
