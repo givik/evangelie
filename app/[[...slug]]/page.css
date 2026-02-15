@@ -188,8 +188,6 @@ body {
 .search-icon-circle::before {
   content: '';
   position: absolute;
-  width: 10px;
-  height: 2px;
   background: var(--text-color);
   transform: rotate(45deg) translate(10px, 0px);
   transition: all 0.01s ease;
@@ -628,9 +626,13 @@ body {
   }
 
   .controls select {
-    font-size: clamp(1.5rem, calc(1vw + 0.1rem), 3.5rem);
+    font-size: clamp(1.3rem, calc(1vw + 0.1rem), 3.5rem);
     padding-right: 2rem;
-    width: 8rem;
+    width: 7rem;
+  }
+
+  .controls .book-selector .chapter-selector {
+    width: 5rem;
   }
 
   #menuToggle {
