@@ -694,6 +694,10 @@ body {
     display: none;
   }
 
+  .search-container {
+    margin-left: 0 !important;
+  }
+
   .controls .book-selector {
     justify-content: left;
     width: 100%;
