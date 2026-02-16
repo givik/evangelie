@@ -28,19 +28,24 @@ export default function BibleContent({
   const router = useRouter();
   const { fontSize, language } = useTheme();
 
-  // Scroll to hash on mount
+  // Scroll to hash on mount and hash change
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const elementId = hash.substring(1);
-      // Wait for render
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          scrollToElement(elementId, setControlsVisible);
-        }, HASH_SCROLL_DELAY_MS);
-      });
-    }
-  }, [verses]);
+    const handleHashScroll = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const elementId = hash.substring(1);
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            scrollToElement(elementId, setControlsVisible);
+          }, HASH_SCROLL_DELAY_MS);
+        });
+      }
+    };
+
+    handleHashScroll();
+    window.addEventListener('hashchange', handleHashScroll);
+    return () => window.removeEventListener('hashchange', handleHashScroll);
+  }, [verses, setControlsVisible]);
 
   // Topic grouping logic
   const versesWithTopics = [];
@@ -97,12 +102,8 @@ export default function BibleContent({
           </div>
         ) : (
           versesWithTopics.map((verse, index) => (
-            <div key={verse.id} className={textFont.className}>
-              {verse.showTopic && (
-                <div id={verse.id} className="topic">
-                  {verse.თემა && `- ${verse.თემა}`}
-                </div>
-              )}
+            <div key={verse.id} id={verse.id.toString()} className={textFont.className}>
+              {verse.showTopic && <div className="topic">{verse.თემა && `- ${verse.თემა}`}</div>}
               <p className="verse">
                 <span className="index">{index + 1}.</span>
                 {language === 'new' ? verse.ტექსტი : verse.ძველი_ტექსტი}

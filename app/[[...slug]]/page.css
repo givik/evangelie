@@ -152,18 +152,23 @@ body {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-.controls:has(.search-container input:focus) {
+.controls:has(.search-container input:focus),
+.controls:has(.search-results) {
   justify-content: flex-start;
 }
 
-.controls:has(.search-container input:focus) .search-container {
+.controls:has(.search-container input:focus) .search-container,
+.controls:has(.search-results) .search-container {
   flex-grow: 1;
   margin-right: 0;
   justify-content: flex-start;
+  min-width: 300px;
 }
 
 .controls:has(.search-container input:focus) .book-selector,
-.controls:has(.search-container input:focus) .btn-container {
+.controls:has(.search-container input:focus) .btn-container,
+.controls:has(.search-results) .book-selector,
+.controls:has(.search-results) .btn-container {
   display: none;
 }
 
@@ -215,6 +220,7 @@ body {
   top: 100%;
   left: 0;
   width: 100%;
+  min-width: 300px;
   max-width: 600px;
   max-height: 400px;
   overflow-y: auto;

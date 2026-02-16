@@ -40,6 +40,7 @@ export default function BibleNavigation({
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [isMouseOverResults, setIsMouseOverResults] = useState(false);
   const lastScrollYRef = useRef(0);
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -338,13 +339,24 @@ export default function BibleNavigation({
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setShowResults(true)}
             onBlur={() => {
-              // Delay hide to allow clicking results
-              setTimeout(() => setShowResults(false), 200);
+              if (!isMouseOverResults) {
+                setTimeout(() => setShowResults(false), 300);
+              }
+            }}
+            onMouseDown={(e) => {
+              if (showResults && searchResults.length > 0) {
+                e.preventDefault();
+              }
             }}
           />
           <div className="search-icon-circle"></div>
           {showResults && (searchQuery.length >= 2 || isSearching) && (
-            <div className="search-results">
+            <div
+              className="search-results"
+              onMouseEnter={() => setIsMouseOverResults(true)}
+              onMouseLeave={() => setIsMouseOverResults(false)}
+              onMouseDown={(e) => e.preventDefault()}
+            >
               {isSearching ? (
                 <div className="search-loading">
                   <div className="search-loading-spinner"></div>
@@ -355,9 +367,40 @@ export default function BibleNavigation({
                     key={result.id}
                     href={`/${getShortBook(result.წიგნი)}/${result.თავი}#${result.id}`}
                     className="search-result-item"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const resultChapter = result.თავი.toString();
+                      const resultBook = result.წიგნი;
+
+                      const currentShort = getShortBook(activeBook);
+                      const resultShort = getShortBook(resultBook);
+
+                      const isSameChapter =
+                        resultChapter === activeChapter.toString() &&
+                        (resultBook === activeBook ||
+                          (resultShort && resultShort === currentShort));
+
+                      disableAutoHideRef.current = true;
+                      setControlsVisible(true);
+
+                      if (isSameChapter) {
+                        setTimeout(() => {
+                          scrollToElement(result.id.toString(), setControlsVisible);
+                          const newHash = `#${result.id}`;
+                          window.history.pushState(null, null, newHash);
+                        }, 0);
+                      } else {
+                        startTransition(() => {
+                          router.push(`/${resultShort || 'მათე'}/${result.თავი}#${result.id}`);
+                        });
+                      }
+
                       setShowResults(false);
                       setSearchQuery('');
+
+                      setTimeout(() => {
+                        disableAutoHideRef.current = false;
+                      }, 3000);
                     }}
                   >
                     <div className={`search-result-title ${bookFontBold.className}`}>
