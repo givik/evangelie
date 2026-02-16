@@ -332,7 +332,7 @@ body {
 .controls .chapter-selector {
   /* font-size: clamp(1.5rem, calc(1vw + 0.53rem), 3.5rem); */
   width: 6.5rem;
-  text-align: center;
+  text-align: left;
 }
 
 .controls .btn-container {
