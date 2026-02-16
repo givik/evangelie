@@ -67,15 +67,17 @@ export default function BibleContent({
   };
 
   return (
-    <div
+    <article
       className={`content ${loading ? 'content--loading' : ''}`}
       style={{ '--font-scale': fontSize }}
     >
       {!loading && (
-        <h1 className={`header ${bookFontBold.className}`}>
-          <span className="book-name">{activeBook}</span>
-          <span className="book-chapter">თავი {activeChapter}</span>
-        </h1>
+        <header>
+          <h1 className={`header ${bookFontBold.className}`}>
+            <span className="book-name">{activeBook}</span>
+            <span className="book-chapter">თავი {activeChapter}</span>
+          </h1>
+        </header>
       )}
       {loading && (
         <div className="loading-overlay">
@@ -84,7 +86,7 @@ export default function BibleContent({
         </div>
       )}
 
-      <div className={`verses ${loading ? 'verses--hidden' : ''}`}>
+      <section className={`verses ${loading ? 'verses--hidden' : ''}`}>
         {verses.length === 0 && !loading ? (
           <div
             style={{
@@ -103,7 +105,7 @@ export default function BibleContent({
         ) : (
           versesWithTopics.map((verse, index) => (
             <div key={verse.id} id={verse.id.toString()} className={textFont.className}>
-              {verse.showTopic && <div className="topic">{verse.თემა && `- ${verse.თემა}`}</div>}
+              {verse.showTopic && <h2 className="topic">{verse.თემა && `- ${verse.თემა}`}</h2>}
               <p className="verse">
                 <span className="index">{index + 1}.</span>
                 {language === 'new' ? verse.ტექსტი : verse.ძველი_ტექსტი}
@@ -111,7 +113,7 @@ export default function BibleContent({
             </div>
           ))
         )}
-      </div>
+      </section>
 
       {!loading &&
         verses.length > 0 &&
@@ -126,6 +128,6 @@ export default function BibleContent({
             შემდეგი თავი {'>'}
           </button>
         )}
-    </div>
+    </article>
   );
 }

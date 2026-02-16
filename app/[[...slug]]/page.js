@@ -17,9 +17,13 @@ export async function generateMetadata({ params }) {
 
   const bookObj = BOOKS.find((b) => b.short === shortBook);
   const title = bookObj ? `${bookObj.name} - თავი ${chapter}` : 'სახარება';
+  const description = bookObj
+    ? `${bookObj.name}, თავი ${chapter}. წაიკითხეთ სახარება ონლაინ ქართულად.`
+    : 'წაიკითხეთ სახარება ონლაინ ქართულად.';
 
   return {
     title,
+    description,
   };
 }
 
@@ -49,7 +53,7 @@ export default async function Page({ params }) {
   const [chapters, themes, verses] = await Promise.all([
     getChapters(activeBookName),
     getThemes(activeBookName),
-    getVerses(activeBookName, activeChapter)
+    getVerses(activeBookName, activeChapter),
   ]);
 
   return (
