@@ -163,7 +163,7 @@ export async function searchBible(queryText) {
 
   try {
     const res = await query(
-      'SELECT id, წიგნი, თავი, მუხლი, ტექსტი FROM public.მუხლები WHERE ტექსტი ILIKE $1 OR თემა ILIKE $1 LIMIT 50',
+      'SELECT id, წიგნი, თავი, მუხლი, ტექსტი FROM public.მუხლები WHERE ტექსტი ILIKE $1 LIMIT 50',
       [`%${queryText}%`],
     );
     return res.rows;
