@@ -708,6 +708,7 @@ body {
 @media only screen and (max-width: 600px) {
   .controls {
     overflow: visible;
+    gap: 0;
   }
 
   .controls .book-selector .long-book-name {
@@ -734,7 +735,7 @@ body {
   }
 
   #menuToggle {
-    margin-left: 3rem;
+    margin-left: 1rem;
   }
 
   .search-container {
