@@ -439,6 +439,7 @@ body {
   font-size: calc(clamp(1.85rem, 1vw + 1rem, 3.5rem) * var(--font-scale));
   line-height: calc(2.6rem * var(--font-scale));
   color: var(--topic-color);
+  font-weight: normal;
   /* display: flex;
   justify-content: center; */
   /* text-shadow: 0px 0px 0.5px gold; */
