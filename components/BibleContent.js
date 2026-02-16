@@ -105,9 +105,9 @@ export default function BibleContent({
         ) : (
           versesWithTopics.map((verse, index) => (
             <div key={verse.id} id={verse.id.toString()} className={textFont.className}>
-              {verse.showTopic && <h2 className="topic">{verse.თემა && `- ${verse.თემა}`}</h2>}
+              {verse.showTopic && <h2 className="topic">{verse.თემა && `- ${verse.თემა} -`}</h2>}
               <p className="verse">
-                <span className="index">{index + 1}.</span>
+                <span className="index">{index + 1}. </span>
                 {language === 'new' ? verse.ტექსტი : verse.ძველი_ტექსტი}
               </p>
             </div>
