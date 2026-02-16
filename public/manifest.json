@@ -1,0 +1,17 @@
+{
+  "name": "სახარება",
+  "short_name": "სახარება",
+  "description": "A Georgian Bible reader.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/cross-orthodox.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
