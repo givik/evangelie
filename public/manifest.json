@@ -8,7 +8,7 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/cross-orthodox.svg",
+      "src": "/cross-orthodox-2.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
