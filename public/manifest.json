@@ -1,14 +1,14 @@
 {
-  "name": "სახარება",
-  "short_name": "სახარება",
-  "description": "A Georgian Bible reader.",
+  "name": "ბიბლია.გე",
+  "short_name": "ბიბლია.გე",
+  "description": "წმინდა წერილი - საკითხავი",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/cross-orthodox.svg",
+      "src": "/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
