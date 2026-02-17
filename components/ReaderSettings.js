@@ -27,7 +27,7 @@ export default function ReaderSettings() {
           className={'change-language-btn ' + textFont.className}
           disabled={!settingsLoaded}
         >
-          {language === 'new' ? 'თანამედროვე ქართულზე' : 'მთაწმინდელის რედაქციით'}
+          {language === 'new' ? 'მთაწმინდელის რედაქციით' : 'თანამედროვე ქართულზე'}
         </button>
       )}
       <div className="font-controls">
