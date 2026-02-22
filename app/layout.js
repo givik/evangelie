@@ -5,7 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
   title: 'სახარება',
-  description: 'A Georgian Bible reader.',
+  description: 'წმინდა წერილი - საკითხავი',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
