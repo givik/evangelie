@@ -13,7 +13,7 @@ export const metadata = {
     title: 'ბიბლია',
   },
   icons: {
-    icon: '/cross-orthodox.svg',
+    icon: '/icon.png',
     apple: '/icon.png',
   },
 };

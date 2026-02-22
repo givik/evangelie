@@ -1,5 +1,5 @@
 const CACHE_NAME = 'bible-cache-v1';
-const ASSETS_TO_CACHE = ['/', '/manifest.json', '/icon.svg', '/cross-orthodox.svg'];
+const ASSETS_TO_CACHE = ['/', '/manifest.json', '/icon.svg', '/icon.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
