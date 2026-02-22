@@ -130,12 +130,19 @@ export default function BibleNavigation({
     const parts = text.split(regex);
     return parts.map((part, i) =>
       regex.test(part) ? (
-        <mark key={i} style={{ backgroundColor: 'rgba(255, 230, 0, 0.4)', padding: '0 2px', borderRadius: '2px' }}>
+        <mark
+          key={i}
+          style={{
+            backgroundColor: 'rgba(255, 230, 0, 0.4)',
+            padding: '0 2px',
+            borderRadius: '2px',
+          }}
+        >
           {part}
         </mark>
       ) : (
         part
-      )
+      ),
     );
   };
 
@@ -348,6 +355,7 @@ export default function BibleNavigation({
           <input
             type="text"
             placeholder="ბიბლიაში ძებნა"
+            name="search"
             className={textFont.className}
             aria-label="ბიბლიაში ძებნა"
             value={searchQuery}
@@ -417,14 +425,14 @@ export default function BibleNavigation({
                         disableAutoHideRef.current = false;
                       }, 3000);
                     }}
-                    >
-                      <div className={`search-result-title ${bookFontBold.className}`}>
-                        {result.წიგნი} {result.თავი}:{result.მუხლი}
-                      </div>
-                      <div className={`search-result-text ${textFont.className}`}>
-                        {highlightText(result.ტექსტი, searchQuery)}
-                      </div>
-                    </Link>
+                  >
+                    <div className={`search-result-title ${bookFontBold.className}`}>
+                      {result.წიგნი} {result.თავი}:{result.მუხლი}
+                    </div>
+                    <div className={`search-result-text ${textFont.className}`}>
+                      {highlightText(result.ტექსტი, searchQuery)}
+                    </div>
+                  </Link>
                 ))
               ) : (
                 <div className="search-no-results">შედეგები ვერ მოიძებნა</div>
