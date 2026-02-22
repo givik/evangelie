@@ -32,10 +32,16 @@ export async function getVerses(book, chapter) {
   'use cache';
   // Use a unique tag for this specific chapter
   cacheTag('bible-data', `verses-${book}-${chapter}`);
+
+  const chapterInt = parseInt(chapter, 10);
+  if (isNaN(chapterInt)) {
+    return [];
+  }
+
   try {
     const res = await query(
       'SELECT id, თემა, მუხლი, ტექსტი, ძველი_ტექსტი FROM public.მუხლები WHERE წიგნი = $1 AND თავი = $2 ORDER BY მუხლი',
-      [book, chapter],
+      [book, chapterInt],
     );
     return res.rows;
   } catch (e) {
@@ -49,10 +55,17 @@ export async function getVerses(book, chapter) {
 export async function getVerseID(book, chapter, verse) {
   'use cache';
   cacheTag('bible-data', 'verse-id');
+  const chapterInt = parseInt(chapter, 10);
+  const verseInt = parseInt(verse, 10);
+
+  if (isNaN(chapterInt) || isNaN(verseInt)) {
+    return null;
+  }
+
   try {
     const res = await query(
       'SELECT id FROM public.მუხლები WHERE წიგნი = $1 AND თავი = $2 AND მუხლი = $3',
-      [book, chapter, verse],
+      [book, chapterInt, verseInt],
     );
     return res.rows[0]?.id || null;
   } catch (e) {
@@ -113,12 +126,12 @@ export async function getThemes(book) {
 }
 
 export async function addDefinition(formData) {
-  const verseID = formData.get('verseID');
+  const verseID = parseInt(formData.get('verseID'), 10);
   const author = formData.get('author');
   const text = formData.get('text');
 
   // Input validation
-  if (!verseID || !author || !text) {
+  if (isNaN(verseID) || !author || !text) {
     return { message: 'All fields are required', error: true };
   }
 
