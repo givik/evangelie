@@ -4,13 +4,13 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
-  title: 'სახარება',
+  title: 'ბიბლია',
   description: 'წმინდა წერილი - საკითხავი',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'ბიბლია.გე',
+    title: 'ბიბლია',
   },
   icons: {
     icon: '/cross-orthodox.svg',

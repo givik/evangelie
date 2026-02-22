@@ -8,7 +8,7 @@ export async function generateMetadata({ params }) {
 
   if (!slug || slug.length === 0) {
     return {
-      title: 'სახარება',
+      title: 'ბიბლია',
     };
   }
 
@@ -16,10 +16,10 @@ export async function generateMetadata({ params }) {
   const chapter = slug[1] || '1';
 
   const bookObj = BOOKS.find((b) => b.short === shortBook);
-  const title = bookObj ? `${bookObj.name} - თავი ${chapter}` : 'სახარება';
+  const title = bookObj ? `ბიბლია` : 'ბიბლია';
   const description = bookObj
-    ? `${bookObj.name}, თავი ${chapter}. წაიკითხეთ სახარება ონლაინ ქართულად.`
-    : 'წაიკითხეთ სახარება ონლაინ ქართულად.';
+    ? `${bookObj.name}, თავი ${chapter}. წაიკითხეთ ბიბლია ონლაინ ქართულად.`
+    : 'წაიკითხეთ ბიბლია ონლაინ ქართულად.';
 
   return {
     title,
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
     appleWebApp: {
       capable: true,
       statusBarStyle: 'default',
-      title: 'ბიბლია.გე',
+      title: 'ბიბლია',
     },
   };
 }
