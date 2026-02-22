@@ -10,7 +10,11 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'სახარება',
+    title: 'ბიბლია.გე',
+  },
+  icons: {
+    icon: '/cross-orthodox.svg',
+    apple: '/cross-orthodox.png',
   },
 };
 
