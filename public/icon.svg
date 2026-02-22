@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    width="766.52454"
-   height="766.52454"
-   viewBox="-370 -370 766.52454 766.52454"
+   height="765.4245"
+   viewBox="-370 -370 766.52454 765.4245"
    version="1.1"
    id="svg1"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,19 +23,20 @@
          format="svg" />
     </bx:export>
   </defs>
+  <rect
+     style="fill:#2e2e2e;fill-opacity:1;stroke:#f7b239;stroke-width:31.6545;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+     id="rect2"
+     width="734.87006"
+     height="733.77002"
+     x="-354.17276"
+     y="-354.17276"
+     rx="500" />
   <path
-     style="fill-opacity:0;stroke:#f7b239;stroke-width:24;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
-     d="m -142.24366,313.65137 c 104.975004,-76.937 207.018004,-76.937 311.986,0 -194.903996,-201.713 -194.903996,-398.458996 0,-600.165 -104.967996,76.94 -207.010996,76.94 -311.986,0 194.911004,201.706004 194.911004,398.452 0,600.165 z"
+     style="fill-opacity:0;stroke:#f7b239;stroke-width:19.8323;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
+     d="m -115.87825,259.54095 c 86.745699,-63.57661 171.068553,-63.57661 257.80847,0 -161.058196,-166.684788 -161.058196,-329.26511 0,-495.94412 -86.739917,63.57909 -171.062771,63.57909 -257.80847,0 161.063978,166.67901 161.063978,329.259332 0,495.94412 z"
      id="Main" />
   <path
-     style="fill-opacity:0;stroke:#f7b239;stroke-width:24;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
-     d="m -290.49868,-142.24358 c 76.937,104.974999 76.937,207.017999 0,311.986 201.713004,-194.904001 398.459,-194.904001 600.165,0 -76.94,-104.968001 -76.94,-207.011001 0,-311.986 -201.706,194.910999 -398.451996,194.910999 -600.165,0 z"
+     style="fill-opacity:0;stroke:#f7b239;stroke-width:19.8323;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
+     d="m -238.38824,-117.18615 c 63.57661,86.745703 63.57661,171.068556 0,257.80847 166.684792,-161.058193 329.265113,-161.058193 495.94412,0 -63.57909,-86.739914 -63.57909,-171.062767 0,-257.80847 -166.679007,161.063982 -329.259328,161.063982 -495.94412,0 z"
      id="path1" />
-  <rect
-     style="fill:#000000;fill-opacity:0;stroke:#f7b239;stroke-width:29.8964;stroke-dasharray:none;stroke-opacity:1"
-     id="rect1"
-     width="736.62811"
-     height="736.62817"
-     x="-355.05179"
-     y="-355.05179" />
 </svg>
