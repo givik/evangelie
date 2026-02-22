@@ -5,9 +5,30 @@
    viewBox="-370 -370 766.52454 765.4245"
    version="1.1"
    id="svg1"
+   sodipodi:docname="icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns:bx="https://boxy-svg.com">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="766.52454"
+       height="765.4245"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
   <defs
      id="defs1">
     <bx:guide
@@ -24,7 +45,7 @@
     </bx:export>
   </defs>
   <rect
-     style="fill:#2e2e2e;fill-opacity:1;stroke:#f7b239;stroke-width:31.6545;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+     style="fill:#ffffff;fill-opacity:1;stroke:#f7b239;stroke-width:31.6545;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect2"
      width="734.87006"
      height="733.77002"
