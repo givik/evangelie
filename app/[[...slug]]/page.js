@@ -18,8 +18,8 @@ export async function generateMetadata({ params }) {
   const bookObj = BOOKS.find((b) => b.short === shortBook);
   const title = bookObj ? `ბიბლია` : 'ბიბლია';
   const description = bookObj
-    ? `${bookObj.name}, თავი ${chapter}. წაიკითხეთ ბიბლია ონლაინ ქართულად.`
-    : 'წაიკითხეთ ბიბლია ონლაინ ქართულად.';
+    ? `${bookObj.name}, თავი ${chapter}. წაიკითხეთ ბიბლია ონლაინ.`
+    : 'წაიკითხეთ ბიბლია ონლაინ.';
 
   return {
     title,

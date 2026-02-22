@@ -14,7 +14,7 @@ export const metadata = {
   },
   icons: {
     icon: '/cross-orthodox.svg',
-    apple: '/cross-orthodox.png',
+    apple: '/icon.png',
   },
 };
 
