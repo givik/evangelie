@@ -1,6 +1,6 @@
 {
-  "name": "ბიბლია.გე",
-  "short_name": "ბიბლია.გე",
+  "name": "ბიბლია",
+  "short_name": "ბიბლია",
   "description": "წმინდა წერილი - საკითხავი",
   "start_url": "/",
   "display": "standalone",
