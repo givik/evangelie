@@ -93,7 +93,7 @@ export default function Form({ options, defaults }) {
   const currentChapters = useMemo(() => getChapters(selectedBook), [options, selectedBook]);
   const currentVerses = useMemo(
     () => getVerses(selectedBook, selectedChapter),
-    [options, selectedBook, selectedChapter]
+    [options, selectedBook, selectedChapter],
   );
   1;
 
