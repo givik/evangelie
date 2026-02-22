@@ -24,6 +24,11 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: 'ბიბლია.გე',
+    },
   };
 }
 
