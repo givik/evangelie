@@ -97,8 +97,8 @@ export default function BibleContent({
             }}
           >
             <Placeholder />
-            <p className={textFont.className} style={{ marginTop: '1rem' }}>
-              იტვირთება...
+            <p className={textFont.className} style={{ marginTop: '1rem', fontSize: '1.5rem' }}>
+              {/* იტვირთება... */}
             </p>
             <Placeholder />
           </div>
