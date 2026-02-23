@@ -67,7 +67,7 @@ export default function VersePopup({ verseId, verseIndex, onClose }) {
           <button className="verse-popup-close" onClick={onClose} aria-label="დახურვა">
             ✕
           </button>
-          <span className="verse-popup-title">მუხლი {verseIndex}</span>
+          <span className="verse-popup-title">მუხლი {verseIndex} - განმარტება</span>
         </div>
 
         <div className="verse-popup-body">
