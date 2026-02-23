@@ -9,7 +9,14 @@ const textFont = localFont({
   src: '../app/fonts/bpg_nino_elite_round.otf',
 });
 
-export default function VersePopup({ verseId, verseIndex, onClose }) {
+export default function VersePopup({
+  verseId,
+  verseIndex,
+  verseText,
+  activeBook,
+  activeChapter,
+  onClose,
+}) {
   const [commentaries, setCommentaries] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -68,10 +75,16 @@ export default function VersePopup({ verseId, verseIndex, onClose }) {
           <button className="verse-popup-close" onClick={onClose} aria-label="დახურვა">
             ✕
           </button>
-          <span className="verse-popup-title">მუხლი {verseIndex} - განმარტება</span>
+          <span className="verse-popup-title">{verseText}</span>
         </div>
 
         <div className="verse-popup-body">
+          <div
+            className="verse-popup-title"
+            style={{ textAlign: 'center', fontSize: '1.4rem', marginBottom: '1rem' }}
+          >
+            განმარტებანი ({activeBook} {activeChapter}:{verseIndex})
+          </div>
           {loading ? (
             <div className="verse-popup-loading">
               <div className="search-loading-spinner" />

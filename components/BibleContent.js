@@ -174,6 +174,13 @@ export default function BibleContent({
         <VersePopup
           verseId={selectedVerse.id}
           verseIndex={selectedVerse.index}
+          verseText={
+            language === 'new'
+              ? verses[selectedVerse.index - 1].ტექსტი
+              : verses[selectedVerse.index - 1].ძველი_ტექსტი
+          }
+          activeBook={activeBook}
+          activeChapter={activeChapter}
           onClose={handlePopupClose}
         />
       )}
