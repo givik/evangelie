@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
 import Placeholder from '@/components/Placeholder';
+import VersePopup from '@/components/VersePopup';
 import { getbookSlug, scrollToElement } from '@/lib/utils';
 import { HASH_SCROLL_DELAY_MS } from '@/lib/constants';
 import { useTheme } from '@/components/ThemeProvider';
@@ -27,6 +28,15 @@ export default function BibleContent({
 }) {
   const router = useRouter();
   const { fontSize, language } = useTheme();
+  const [selectedVerse, setSelectedVerse] = useState(null);
+
+  const handleVerseClick = useCallback((verseId, verseIndex) => {
+    setSelectedVerse({ id: verseId, index: verseIndex });
+  }, []);
+
+  const handlePopupClose = useCallback(() => {
+    setSelectedVerse(null);
+  }, []);
 
   // Scroll to hash on mount and hash change
   useEffect(() => {
@@ -106,7 +116,18 @@ export default function BibleContent({
           versesWithTopics.map((verse, index) => (
             <div key={verse.id} id={verse.id.toString()} className={textFont.className}>
               {verse.showTopic && <h2 className="topic">{verse.თემა && `- ${verse.თემა} -`}</h2>}
-              <p className="verse">
+              <p
+                className="verse verse--clickable"
+                onClick={() => handleVerseClick(verse.id, index + 1)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleVerseClick(verse.id, index + 1);
+                  }
+                }}
+              >
                 <span className="index">{index + 1}. </span>
                 {language === 'new' ? verse.ტექსტი : verse.ძველი_ტექსტი}
               </p>
@@ -128,6 +149,13 @@ export default function BibleContent({
             შემდეგი თავი {'>'}
           </button>
         )}
+      {selectedVerse && (
+        <VersePopup
+          verseId={selectedVerse.id}
+          verseIndex={selectedVerse.index}
+          onClose={handlePopupClose}
+        />
+      )}
     </article>
   );
 }

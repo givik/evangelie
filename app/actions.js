@@ -169,6 +169,26 @@ export async function addDefinition(formData) {
   }
 }
 
+export async function getVerseCommentary(verseId) {
+  const id = parseInt(verseId, 10);
+  if (isNaN(id)) {
+    return [];
+  }
+
+  try {
+    const res = await query(
+      'SELECT id, ავტორი, ტექსტი FROM public.განმარტებები WHERE mukhli_id = $1 ORDER BY id',
+      [id],
+    );
+    return res.rows;
+  } catch (e) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('getVerseCommentary error:', e);
+    }
+    return [];
+  }
+}
+
 export async function searchBible(queryText) {
   if (!queryText || queryText.trim().length < 2) {
     return [];
