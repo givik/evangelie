@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en" data-scroll-behavior="smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="/cross-orthodox.svg" sizes="any" />
+        <link rel="icon" href="/icon.png" sizes="any" />
         <meta name="theme-color" content="#000000" />
       </head>
       <body>
