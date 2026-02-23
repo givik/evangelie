@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="766.52454"
-   height="765.4245"
-   viewBox="-370 -370 766.52454 765.4245"
+   width="740"
+   height="740"
+   viewBox="-370 -370 740 740"
    version="1.1"
    id="svg1"
-   sodipodi:docname="icon.svg"
+   sodipodi:docname="cross-orthodox.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:bx="https://boxy-svg.com">
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs1" />
   <sodipodi:namedview
      id="namedview1"
      pagecolor="#ffffff"
@@ -23,41 +28,37 @@
     <inkscape:page
        x="0"
        y="0"
-       width="766.52454"
-       height="765.4245"
+       width="740"
+       height="740"
        id="page2"
        margin="0"
        bleed="0" />
   </sodipodi:namedview>
-  <defs
-     id="defs1">
-    <bx:guide
-       x="2.192"
-       y="154.351"
-       angle="0" />
-    <bx:guide
-       x="73.416"
-       y="0.579"
-       angle="90" />
-    <bx:export>
-      <bx:file
-         format="svg" />
-    </bx:export>
-  </defs>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>bOLNURI</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <rect
-     style="fill:#ffffff;fill-opacity:1;stroke:#f7b239;stroke-width:31.6545;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
-     id="rect2"
-     width="734.87006"
-     height="733.77002"
-     x="-354.17276"
-     y="-354.17276"
-     rx="500" />
+     style="fill:#ffffff;stroke:#ffffff;stroke-width:31.1807"
+     id="rect1"
+     width="708.81927"
+     height="708.81927"
+     x="-354.40964"
+     y="-354.40964" />
   <path
-     style="fill-opacity:0;stroke:#f7b239;stroke-width:19.8323;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
-     d="m -115.87825,259.54095 c 86.745699,-63.57661 171.068553,-63.57661 257.80847,0 -161.058196,-166.684788 -161.058196,-329.26511 0,-495.94412 -86.739917,63.57909 -171.062771,63.57909 -257.80847,0 161.063978,166.67901 161.063978,329.259332 0,495.94412 z"
+     style="fill-opacity:0;stroke:#f7b239;stroke-width:24;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
+     d="m -178.24551,342.90199 c 119.944198,-87.914 236.546798,-87.914 356.491,0 -222.712702,-230.493 -222.712702,-455.311 0,-685.804 -119.944202,87.914 -236.546802,87.914 -356.491,0 222.712698,230.493 222.712698,455.311 0,685.804 z"
      id="Main" />
-  <path
-     style="fill-opacity:0;stroke:#f7b239;stroke-width:19.8323;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
-     d="m -238.38824,-117.18615 c 63.57661,86.745703 63.57661,171.068556 0,257.80847 166.684792,-161.058193 329.265113,-161.058193 495.94412,0 -63.57909,-86.739914 -63.57909,-171.062767 0,-257.80847 -166.679007,161.063982 -329.259328,161.063982 -495.94412,0 z"
-     id="path1" />
+  <use
+     xlink:href="#Main"
+     transform="rotate(90,-1.2397766e-5,-1.2397766e-5)"
+     id="use1" />
 </svg>
