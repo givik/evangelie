@@ -75,9 +75,11 @@ export default function VersePopup({
           <button className="verse-popup-close" onClick={onClose} aria-label="დახურვა">
             ✕
           </button>
-          <div className="verse-popup-title" style={{ textAlign: 'center', width: '74%' }}>
+          <div className="verse-popup-title" style={{ textAlign: 'center', width: '100%' }}>
             განმარტებანი
-            {/* - {activeBook} {activeChapter}:{verseIndex} */}
+            <div style={{ fontSize: '1rem', marginTop: '0.5rem' }}>
+              {activeBook} {activeChapter}:{verseIndex}
+            </div>
           </div>
         </div>
 
