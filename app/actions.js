@@ -170,6 +170,8 @@ export async function addDefinition(formData) {
 }
 
 export async function getVerseCommentary(verseId) {
+  'use cache';
+  cacheTag('bible-data', 'commentary');
   const id = parseInt(verseId, 10);
   if (isNaN(id)) {
     return [];
