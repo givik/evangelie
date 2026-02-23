@@ -948,7 +948,6 @@ body {
   justify-content: center;
   animation: popupFadeIn 0.2s ease-out;
   padding: 1rem;
-  padding-top: 70px;
 }
 
 @keyframes popupFadeIn {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import localFont from 'next/font/local';
 import { getVerseCommentary } from '@/app/actions';
 
@@ -54,7 +55,7 @@ export default function VersePopup({ verseId, verseIndex, onClose }) {
     [onClose],
   );
 
-  return (
+  return createPortal(
     <div
       className="verse-popup-overlay"
       onClick={handleOverlayClick}
@@ -87,6 +88,7 @@ export default function VersePopup({ verseId, verseIndex, onClose }) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
