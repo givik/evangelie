@@ -20,6 +20,7 @@ const textFont = localFont({
 export default function BibleContent({
   activeBook,
   activeChapter,
+  activeVerse,
   verses = [],
   loading = false,
   chaptersLength = 0,
@@ -30,13 +31,33 @@ export default function BibleContent({
   const { fontSize, language } = useTheme();
   const [selectedVerse, setSelectedVerse] = useState(null);
 
-  const handleVerseClick = useCallback((verseId, verseIndex) => {
-    setSelectedVerse({ id: verseId, index: verseIndex });
-  }, []);
+  // Auto-open popup when URL contains a verse number
+  useEffect(() => {
+    if (activeVerse && verses.length > 0) {
+      const verseNum = parseInt(activeVerse, 10);
+      if (!isNaN(verseNum) && verseNum >= 1 && verseNum <= verses.length) {
+        const verse = verses[verseNum - 1];
+        setSelectedVerse({ id: verse.id, index: verseNum });
+      }
+    }
+  }, [activeVerse, verses]);
+
+  const handleVerseClick = useCallback(
+    (verseId, verseIndex) => {
+      setSelectedVerse({ id: verseId, index: verseIndex });
+      // Update URL to include verse number (shallow — no page reload)
+      const bookSlug = getbookSlug(activeBook);
+      window.history.pushState(null, '', `/${bookSlug}/${activeChapter}/${verseIndex}`);
+    },
+    [activeBook, activeChapter],
+  );
 
   const handlePopupClose = useCallback(() => {
     setSelectedVerse(null);
-  }, []);
+    // Revert URL back to chapter level
+    const bookSlug = getbookSlug(activeBook);
+    window.history.pushState(null, '', `/${bookSlug}/${activeChapter}`);
+  }, [activeBook, activeChapter]);
 
   // Scroll to hash on mount and hash change
   useEffect(() => {

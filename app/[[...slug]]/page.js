@@ -37,6 +37,7 @@ export default async function Page({ params }) {
 
   let activeBookName = BOOKS[0].name; // Default: Matthew
   let activeChapter = '1';
+  let activeVerse = null;
   let isRoot = true;
 
   if (slug && slug.length > 0) {
@@ -50,6 +51,10 @@ export default async function Page({ params }) {
 
     if (slug.length > 1) {
       activeChapter = slug[1];
+    }
+
+    if (slug.length > 2) {
+      activeVerse = slug[2];
     }
   }
 
@@ -65,6 +70,7 @@ export default async function Page({ params }) {
     <BibleReader
       activeBook={activeBookName}
       activeChapter={activeChapter}
+      activeVerse={activeVerse}
       chapters={chapters}
       themes={themes}
       verses={verses}

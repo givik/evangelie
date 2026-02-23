@@ -11,6 +11,7 @@ import { BOOKS } from '@/lib/constants';
 export default function BibleReader({
   activeBook,
   activeChapter,
+  activeVerse,
   chapters,
   themes,
   verses,
@@ -57,6 +58,7 @@ export default function BibleReader({
       <BibleContent
         activeBook={activeBook}
         activeChapter={activeChapter}
+        activeVerse={activeVerse}
         verses={verses}
         chaptersLength={chapters?.length || 0}
         setControlsVisible={setControlsVisible}
