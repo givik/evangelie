@@ -50,18 +50,28 @@
     </rdf:RDF>
   </metadata>
   <rect
-     style="fill:#ffffff;stroke:#ffffff;stroke-width:31.1807"
+     style="display:none;fill:#ffffff;stroke:#ffffff;stroke-width:31.1807"
      id="rect1"
      width="708.81927"
      height="708.81927"
      x="-354.40964"
-     y="-354.40964" />
+     y="-354.40964"
+     rx="400"
+     inkscape:label="rect1" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-dasharray:none"
+     id="rect2"
+     width="740"
+     height="740"
+     x="-370"
+     y="-370"
+     rx="200" />
   <path
      style="fill-opacity:0;stroke:#f7b239;stroke-width:20.7253;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1"
-     d="m -153.92502,296.11514 c 103.578558,-75.91868 204.271458,-75.91868 307.85002,0 -192.324939,-199.043661 -192.324939,-393.186643 0,-592.2303 -103.578562,75.91868 -204.271462,75.91868 -307.85002,0 192.324935,199.043657 192.324935,393.186639 0,592.2303 z"
+     d="m -153.92501,296.11515 c 103.57856,-75.91868 204.27146,-75.91868 307.85002,0 -192.324937,-199.043659 -192.324937,-393.186641 0,-592.2303 -103.57856,75.91868 -204.27146,75.91868 -307.85002,0 192.324937,199.043659 192.324937,393.186641 0,592.2303 z"
      id="Main" />
   <use
      xlink:href="#Main"
-     transform="rotate(90,-1.2397766e-5,-1.2397766e-5)"
+     transform="rotate(90)"
      id="use1" />
 </svg>
