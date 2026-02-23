@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
 import Placeholder from '@/components/Placeholder';
-import { getShortBook, scrollToElement } from '@/lib/utils';
+import { getbookSlug, scrollToElement } from '@/lib/utils';
 import { HASH_SCROLL_DELAY_MS } from '@/lib/constants';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -60,7 +60,7 @@ export default function BibleContent({
     const curr = parseInt(activeChapter);
     if (chaptersLength > 0 && curr >= chaptersLength) return;
 
-    const short = getShortBook(activeBook);
+    const short = getbookSlug(activeBook);
     startTransition(() => {
       router.push(`/${short}/${curr + 1}`);
     });

@@ -12,7 +12,7 @@ import {
   SCROLL_UP_THRESHOLD_PX,
   SCROLL_DOWN_THRESHOLD_PX,
 } from '@/lib/constants';
-import { scrollToElement, getShortBook } from '@/lib/utils';
+import { scrollToElement, getbookSlug } from '@/lib/utils';
 
 // Fonts configuration
 // Adjust paths relative to this file (components/BibleNavigation.js -> ../app/fonts/...)
@@ -58,7 +58,7 @@ export default function BibleNavigation({
 
   const handleBookChange = (e) => {
     const newBook = e.target.value;
-    const short = getShortBook(newBook);
+    const short = getbookSlug(newBook);
     // Navigate to chapter 1 of new book
     startTransition(() => {
       router.push(`/${short}/1`);
@@ -67,7 +67,7 @@ export default function BibleNavigation({
 
   const handleChapterChange = (e) => {
     const newChapter = e.target.value;
-    const short = getShortBook(activeBook);
+    const short = getbookSlug(activeBook);
     startTransition(() => {
       router.push(`/${short}/${newChapter}`);
     });
@@ -76,7 +76,7 @@ export default function BibleNavigation({
   const prevChapter = () => {
     const curr = parseInt(activeChapter);
     if (curr <= 1) return;
-    const short = getShortBook(activeBook);
+    const short = getbookSlug(activeBook);
     startTransition(() => {
       router.push(`/${short}/${curr - 1}`);
     });
@@ -88,7 +88,7 @@ export default function BibleNavigation({
     // Usually chapters array is passed.
     if (chapters.length > 0 && curr >= chapters.length) return;
 
-    const short = getShortBook(activeBook);
+    const short = getbookSlug(activeBook);
     startTransition(() => {
       router.push(`/${short}/${curr + 1}`);
     });
@@ -287,12 +287,12 @@ export default function BibleNavigation({
             <ul id="menu" ref={menuRef} aria-hidden={!menuOpen} className={menuOpen ? 'open' : ''}>
               <div className={'book-name ' + bookFontBold.className}>{activeBook} (თემები)</div>
               {processedThemes.map((theme) => {
-                const shortBookName = getShortBook(activeBook);
+                const bookSlugName = getbookSlug(activeBook);
                 const isSameChapter = parseInt(theme.თავი) === parseInt(activeChapter);
                 const isActiveTheme = currentHash === `#${theme.id}`;
                 const href = isSameChapter
                   ? `#${theme.id}`
-                  : `/${shortBookName}/${theme.თავი}#${theme.id}`;
+                  : `/${bookSlugName}/${theme.თავი}#${theme.id}`;
 
                 return (
                   <li
@@ -329,8 +329,8 @@ export default function BibleNavigation({
                           setControlsVisible(true);
 
                           startTransition(() => {
-                            const shortBookName = getShortBook(activeBook);
-                            router.push(`/${shortBookName}/${theme.თავი}#${theme.id}`);
+                            const bookSlugName = getbookSlug(activeBook);
+                            router.push(`/${bookSlugName}/${theme.თავი}#${theme.id}`);
                           });
 
                           // Re-enable auto-hide after 3 seconds
@@ -388,15 +388,15 @@ export default function BibleNavigation({
                 searchResults.map((result) => (
                   <Link
                     key={result.id}
-                    href={`/${getShortBook(result.წიგნი)}/${result.თავი}#${result.id}`}
+                    href={`/${getbookSlug(result.წიგნი)}/${result.თავი}#${result.id}`}
                     className="search-result-item"
                     onClick={(e) => {
                       e.preventDefault();
                       const resultChapter = result.თავი.toString();
                       const resultBook = result.წიგნი;
 
-                      const currentShort = getShortBook(activeBook);
-                      const resultShort = getShortBook(resultBook);
+                      const currentShort = getbookSlug(activeBook);
+                      const resultShort = getbookSlug(resultBook);
 
                       const isSameChapter =
                         resultChapter === activeChapter.toString() &&
@@ -450,8 +450,8 @@ export default function BibleNavigation({
             aria-label="აირჩიეთ წიგნი"
           >
             {BOOKS.map((book) => (
-              <option key={book.short} value={book.name}>
-                {book.short}
+              <option key={book.slug} value={book.name}>
+                {book.name}
               </option>
             ))}
           </select>

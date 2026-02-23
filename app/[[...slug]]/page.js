@@ -12,10 +12,10 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const shortBook = decodeURIComponent(slug[0]);
+  const bookSlug = decodeURIComponent(slug[0]);
   const chapter = slug[1] || '1';
 
-  const bookObj = BOOKS.find((b) => b.short === shortBook);
+  const bookObj = BOOKS.find((b) => b.slug === bookSlug);
   const title = bookObj ? `ბიბლია` : 'ბიბლია';
   const description = bookObj
     ? `${bookObj.name}, თავი ${chapter}. წაიკითხეთ ბიბლია ონლაინ.`
@@ -41,8 +41,8 @@ export default async function Page({ params }) {
 
   if (slug && slug.length > 0) {
     isRoot = false;
-    const shortBook = decodeURIComponent(slug[0]);
-    const bookObj = BOOKS.find((b) => b.short === shortBook);
+    const bookSlug = decodeURIComponent(slug[0]);
+    const bookObj = BOOKS.find((b) => b.slug === bookSlug);
 
     if (bookObj) {
       activeBookName = bookObj.name;

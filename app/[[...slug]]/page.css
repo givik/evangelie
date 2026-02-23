@@ -327,12 +327,13 @@ body {
   background-color: var(--controls-bg);
   border-color: var(--text-color);
   border: 1px solid color-mix(in srgb, var(--text-color), transparent 50%);
+  padding-right: 2rem;
 }
 
 .controls .chapter-selector {
   /* font-size: clamp(1.5rem, calc(1vw + 0.53rem), 3.5rem); */
   width: 6.5rem;
-  text-align: left;
+  text-align: center;
 }
 
 .controls .btn-container {
