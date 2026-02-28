@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
-import { searchBible } from '@/app/actions';
 import {
   BOOKS,
   MENU_OPEN_DELAY_MS,
@@ -32,6 +31,7 @@ export default function BibleNavigation({
   controlsVisible,
   setControlsVisible,
   startTransition,
+  search,
 }) {
   const router = useRouter();
   const [currentHash, setCurrentHash] = useState('');
@@ -94,23 +94,26 @@ export default function BibleNavigation({
     });
   };
 
-  const handleSearch = useCallback(async (q) => {
-    if (!q || q.trim().length < 2) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
+  const handleSearch = useCallback(
+    async (q) => {
+      if (!q || q.trim().length < 2) {
+        setSearchResults([]);
+        setIsSearching(false);
+        return;
+      }
 
-    setIsSearching(true);
-    try {
-      const results = await searchBible(q);
-      setSearchResults(results);
-    } catch (e) {
-      console.error('Search error:', e);
-    } finally {
-      setIsSearching(false);
-    }
-  }, []);
+      setIsSearching(true);
+      try {
+        const results = await search(q);
+        setSearchResults(results);
+      } catch (e) {
+        console.error('Search error:', e);
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [search],
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {

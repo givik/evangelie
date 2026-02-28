@@ -7,19 +7,27 @@ import { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { getbookSlug } from '@/lib/utils';
 import { BOOKS } from '@/lib/constants';
+import { useBibleData } from '@/hooks/useBibleData';
 
 export default function BibleReader({
   activeBook,
   activeChapter,
   activeVerse,
   chapters,
-  themes,
-  verses,
+  themes: initialThemes,
+  verses: initialVerses,
   isRoot,
 }) {
   const router = useRouter();
   const [controlsVisible, setControlsVisible] = useState(true);
   const [isPending, startTransition] = useTransition();
+
+  const { verses, themes, search } = useBibleData(
+    activeBook,
+    activeChapter,
+    initialVerses,
+    initialThemes,
+  );
 
   useEffect(() => {
     if (isRoot) {
@@ -53,6 +61,7 @@ export default function BibleReader({
         controlsVisible={controlsVisible}
         setControlsVisible={setControlsVisible}
         startTransition={startTransition}
+        search={search}
       />
       <ReaderSettings />
       <BibleContent
