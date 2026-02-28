@@ -2,6 +2,7 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import OfflineSync from '@/components/OfflineSync';
 
 export const metadata = {
   title: 'ბიბლია',
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
+          <OfflineSync />
           <main>{children}</main>
         </ThemeProvider>
         <Analytics debug={false} />

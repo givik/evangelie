@@ -209,3 +209,26 @@ export async function searchBible(queryText) {
     return [];
   }
 }
+
+export async function getSyncData() {
+  'use cache';
+  cacheTag('bible-data', 'sync');
+  try {
+    const [verses, commentaries, themes] = await Promise.all([
+      query(
+        'SELECT id, წიგნი, თავი, მუხლი, ტექსტი, ძველი_ტექსტი, თემა FROM public.მუხლები ORDER BY id',
+      ),
+      query('SELECT id, mukhli_id, ავტორი, ტექსტი FROM public.განმარტებები ORDER BY id'),
+      query('SELECT id, თემა, წიგნი, თავი FROM public.თემები ORDER BY id'),
+    ]);
+
+    return {
+      verses: verses.rows,
+      commentaries: commentaries.rows,
+      themes: themes.rows,
+    };
+  } catch (error) {
+    console.error('Failed to fetch data for sync:', error);
+    return { error: 'Failed to fetch data' };
+  }
+}
