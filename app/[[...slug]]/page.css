@@ -949,6 +949,7 @@ body {
   animation: popupFadeIn 0.2s ease-out;
   overscroll-behavior: contain;
   overflow: hidden;
+  touch-action: none;
 }
 
 @keyframes popupFadeIn {
@@ -1031,6 +1032,7 @@ body {
   flex: 1;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 .verse-popup-loading {
