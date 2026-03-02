@@ -1,12 +1,21 @@
-const CACHE_NAME = 'bible-cache-v2';
+const CACHE_NAME = 'bible-cache-v3';
 
-const PRECACHE_ASSETS = ['/', '/manifest.json', '/icon.png', '/icon.svg'];
+const ASSETS_TO_CACHE = [
+  '/',
+  '/manifest.json',
+  '/icon.png',
+  '/icon.svg',
+  '/candle-2-svgrepo-com.svg',
+  '/candle-2-off-svgrepo-com.svg',
+  '/cross-orthodox.svg',
+  '/cross-orthodox-2.svg',
+];
 
 // Install: precache essential assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_ASSETS);
+      return cache.addAll(ASSETS_TO_CACHE);
     }),
   );
   // Activate new SW immediately

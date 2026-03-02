@@ -2,7 +2,6 @@
 
 import { useTheme } from '@/components/ThemeProvider';
 import localFont from 'next/font/local';
-import Image from 'next/image';
 
 const bookFontBold = localFont({
   src: '../app/fonts/gl-lortkipanidze-bold.ttf',
@@ -20,16 +19,14 @@ export default function ReaderSettings() {
     <div
       className={`reader-settings ${textFont.className} ${!settingsLoaded ? 'settings-loading' : ''}`}
     >
-      {settingsLoaded && (
-        <button
-          onClick={() => updateLanguage()}
-          aria-label={language === 'new' ? 'თანამედროვე ქართულზე' : 'მთაწმინდელის რედაქციით'}
-          className={'change-language-btn ' + textFont.className}
-          disabled={!settingsLoaded}
-        >
-          {language === 'new' ? 'მთაწმინდელის რედაქციით' : 'თანამედროვე ქართულზე'}
-        </button>
-      )}
+      <button
+        onClick={() => updateLanguage()}
+        aria-label={language === 'new' ? 'თანამედროვე ქართულზე' : 'მთაწმინდელის რედაქციით'}
+        className={'change-language-btn ' + textFont.className}
+        disabled={!settingsLoaded}
+      >
+        {language === 'new' ? 'მთაწმინდელის რედაქციით' : 'თანამედროვე ქართულზე'}
+      </button>
       <div className="font-controls">
         <button
           onClick={() => updateFontSize(-0.1)}
@@ -57,12 +54,12 @@ export default function ReaderSettings() {
       >
         {settingsLoaded ? (
           theme === 'light' ? (
-            <Image src="/candle-2-svgrepo-com.svg" alt="candle" width={30} height={30} />
+            <img src="/candle-2-svgrepo-com.svg" alt="candle" width={30} height={30} />
           ) : (
-            <Image src="/candle-2-off-svgrepo-com.svg" alt="candle-off" width={30} height={30} />
+            <img src="/candle-2-off-svgrepo-com.svg" alt="candle-off" width={30} height={30} />
           )
         ) : (
-          <div style={{ width: 30, height: 30 }} /> // Placeholder for the icon
+          <div style={{ width: 30, height: 30 }} />
         )}
       </button>
     </div>
