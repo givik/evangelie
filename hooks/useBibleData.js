@@ -1,27 +1,43 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { isSynced, getVersesFromDB, getThemesFromDB, searchBibleInDB } from '@/lib/bibleDB';
-import { searchBible } from '@/app/actions';
+import {
+  isSynced,
+  getVersesFromDB,
+  getThemesFromDB,
+  getChaptersFromDB,
+  getCommentaryFromDB,
+  searchBibleInDB,
+} from '@/lib/bibleDB';
+import { searchBible, getVerseCommentary } from '@/app/actions';
 
-export function useBibleData(activeBook, activeChapter, initialVerses, initialThemes) {
+export function useBibleData(
+  activeBook,
+  activeChapter,
+  initialVerses,
+  initialThemes,
+  initialChapters,
+) {
   const [verses, setVerses] = useState(initialVerses);
   const [themes, setThemes] = useState(initialThemes);
-  const [isOffline, setIsOffline] = useState(false);
+  const [chapters, setChapters] = useState(initialChapters);
+  const [synced, setSyncedState] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      const synced = await isSynced();
-      setIsOffline(synced);
+      const isSyncComplete = await isSynced();
+      setSyncedState(isSyncComplete);
 
-      if (synced) {
+      if (isSyncComplete) {
         try {
-          const [dbVerses, dbThemes] = await Promise.all([
+          const [dbVerses, dbThemes, dbChapters] = await Promise.all([
             getVersesFromDB(activeBook, activeChapter),
             getThemesFromDB(activeBook),
+            getChaptersFromDB(activeBook),
           ]);
           setVerses(dbVerses);
           setThemes(dbThemes);
+          setChapters(dbChapters);
         } catch (error) {
           console.error('Failed to fetch from IndexedDB:', error);
           // Fallback to initial props already set
@@ -29,20 +45,30 @@ export function useBibleData(activeBook, activeChapter, initialVerses, initialTh
       } else {
         setVerses(initialVerses);
         setThemes(initialThemes);
+        setChapters(initialChapters);
       }
     }
 
     fetchData();
-  }, [activeBook, activeChapter, initialVerses, initialThemes]);
+  }, [activeBook, activeChapter, initialVerses, initialThemes, initialChapters]);
 
   const search = useCallback(async (query) => {
-    const synced = await isSynced();
-    if (synced) {
+    const isSyncComplete = await isSynced();
+    if (isSyncComplete) {
       return await searchBibleInDB(query);
     } else {
       return await searchBible(query);
     }
   }, []);
 
-  return { verses, themes, isOffline, search };
+  const getCommentary = useCallback(async (verseId) => {
+    const isSyncComplete = await isSynced();
+    if (isSyncComplete) {
+      return await getCommentaryFromDB(verseId);
+    } else {
+      return await getVerseCommentary(verseId);
+    }
+  }, []);
+
+  return { verses, themes, chapters, synced, search, getCommentary };
 }

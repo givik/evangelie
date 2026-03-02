@@ -13,7 +13,7 @@ export default function BibleReader({
   activeBook,
   activeChapter,
   activeVerse,
-  chapters,
+  chapters: initialChapters,
   themes: initialThemes,
   verses: initialVerses,
   isRoot,
@@ -22,11 +22,12 @@ export default function BibleReader({
   const [controlsVisible, setControlsVisible] = useState(true);
   const [isPending, startTransition] = useTransition();
 
-  const { verses, themes, search } = useBibleData(
+  const { verses, themes, chapters, search, getCommentary } = useBibleData(
     activeBook,
     activeChapter,
     initialVerses,
     initialThemes,
+    initialChapters,
   );
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export default function BibleReader({
         setControlsVisible={setControlsVisible}
         loading={isPending}
         startTransition={startTransition}
+        getCommentary={getCommentary}
       />
     </div>
   );

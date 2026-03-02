@@ -26,6 +26,7 @@ export default function BibleContent({
   chaptersLength = 0,
   setControlsVisible,
   startTransition,
+  getCommentary,
 }) {
   const router = useRouter();
   const { fontSize, language } = useTheme();
@@ -182,6 +183,7 @@ export default function BibleContent({
           activeBook={activeBook}
           activeChapter={activeChapter}
           onClose={handlePopupClose}
+          getCommentary={getCommentary}
         />
       )}
     </article>

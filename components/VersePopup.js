@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import localFont from 'next/font/local';
-import { getVerseCommentary } from '@/app/actions';
 
 const textFont = localFont({
   src: '../app/fonts/bpg_nino_elite_round.otf',
@@ -16,6 +15,7 @@ export default function VersePopup({
   activeBook,
   activeChapter,
   onClose,
+  getCommentary,
 }) {
   const [commentaries, setCommentaries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,10 +25,18 @@ export default function VersePopup({
 
     async function fetchCommentary() {
       setLoading(true);
-      const data = await getVerseCommentary(verseId);
-      if (!cancelled) {
-        setCommentaries(data);
-        setLoading(false);
+      try {
+        const data = await getCommentary(verseId);
+        if (!cancelled) {
+          setCommentaries(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Failed to fetch commentary:', error);
+        if (!cancelled) {
+          setCommentaries([]);
+          setLoading(false);
+        }
       }
     }
 
@@ -36,7 +44,7 @@ export default function VersePopup({
     return () => {
       cancelled = true;
     };
-  }, [verseId]);
+  }, [verseId, getCommentary]);
 
   // Close on Escape key
   useEffect(() => {
