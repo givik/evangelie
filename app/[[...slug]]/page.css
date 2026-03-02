@@ -1021,7 +1021,7 @@ body {
 }
 
 .verse-popup-title {
-  font-size: clamp(1.6rem, calc(1vw + 0.8rem), 2.2rem);
+  font-size: clamp(2rem, calc(1vw + 0.8rem), 2.2rem);
   color: var(--text-color);
   font-weight: 600;
 }

@@ -85,7 +85,7 @@ export default function VersePopup({
           </button>
           <div className="verse-popup-title" style={{ textAlign: 'center', width: '100%' }}>
             განმარტებანი
-            <div style={{ fontSize: '1rem', marginTop: '0.5rem' }}>
+            <div style={{ fontSize: '1.5rem', marginTop: '0.5rem', color: 'grey' }}>
               {activeBook} {activeChapter}:{verseIndex}
             </div>
           </div>
