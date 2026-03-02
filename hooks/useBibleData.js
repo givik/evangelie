@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   isSynced,
   getVersesFromDB,
@@ -23,9 +23,24 @@ export function useBibleData(
   const [chapters, setChapters] = useState(initialChapters);
   const [synced, setSyncedState] = useState(false);
 
+  // Store initial props in refs so they don't cause re-renders
+  const initialVersesRef = useRef(initialVerses);
+  const initialThemesRef = useRef(initialThemes);
+  const initialChaptersRef = useRef(initialChapters);
+
+  // Keep refs up to date when server props change
   useEffect(() => {
+    initialVersesRef.current = initialVerses;
+    initialThemesRef.current = initialThemes;
+    initialChaptersRef.current = initialChapters;
+  }, [initialVerses, initialThemes, initialChapters]);
+
+  useEffect(() => {
+    let cancelled = false;
+
     async function fetchData() {
       const isSyncComplete = await isSynced();
+      if (cancelled) return;
       setSyncedState(isSyncComplete);
 
       if (isSyncComplete) {
@@ -35,22 +50,26 @@ export function useBibleData(
             getThemesFromDB(activeBook),
             getChaptersFromDB(activeBook),
           ]);
+          if (cancelled) return;
           setVerses(dbVerses);
           setThemes(dbThemes);
           setChapters(dbChapters);
         } catch (error) {
           console.error('Failed to fetch from IndexedDB:', error);
-          // Fallback to initial props already set
         }
       } else {
-        setVerses(initialVerses);
-        setThemes(initialThemes);
-        setChapters(initialChapters);
+        if (cancelled) return;
+        setVerses(initialVersesRef.current);
+        setThemes(initialThemesRef.current);
+        setChapters(initialChaptersRef.current);
       }
     }
 
     fetchData();
-  }, [activeBook, activeChapter, initialVerses, initialThemes, initialChapters]);
+    return () => {
+      cancelled = true;
+    };
+  }, [activeBook, activeChapter]); // Only depend on book/chapter, not array props
 
   const search = useCallback(async (query) => {
     const isSyncComplete = await isSynced();

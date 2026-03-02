@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
 import Placeholder from '@/components/Placeholder';
 import VersePopup from '@/components/VersePopup';
@@ -27,8 +26,8 @@ export default function BibleContent({
   setControlsVisible,
   startTransition,
   getCommentary,
+  navigate,
 }) {
-  const router = useRouter();
   const { fontSize, language } = useTheme();
   const [selectedVerse, setSelectedVerse] = useState(null);
 
@@ -91,11 +90,7 @@ export default function BibleContent({
   const nextChapter = () => {
     const curr = parseInt(activeChapter);
     if (chaptersLength > 0 && curr >= chaptersLength) return;
-
-    const short = getbookSlug(activeBook);
-    startTransition(() => {
-      router.push(`/${short}/${curr + 1}`);
-    });
+    navigate(activeBook, curr + 1);
   };
 
   return (

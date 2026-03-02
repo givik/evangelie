@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bible-cache-v3';
+const CACHE_NAME = 'bible-cache-v4';
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -64,30 +64,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For Next.js RSC requests (data fetches): network-first
+  // For Next.js RSC requests: do NOT intercept.
+  // Let them pass through naturally so Next.js handles errors gracefully.
+  // Returning fake responses causes infinite re-render loops.
   if (request.headers.get('RSC') === '1' || request.url.includes('_next/data')) {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, clone);
-          });
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request).then((cached) => {
-            // If no cached RSC response, return empty to let client-side handle it
-            return (
-              cached ||
-              new Response('', {
-                status: 200,
-                headers: { 'Content-Type': 'text/x-component' },
-              })
-            );
-          });
-        }),
-    );
     return;
   }
 

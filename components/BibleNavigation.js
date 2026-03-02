@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import localFont from 'next/font/local';
 import {
   BOOKS,
@@ -32,8 +31,8 @@ export default function BibleNavigation({
   setControlsVisible,
   startTransition,
   search,
+  navigate,
 }) {
-  const router = useRouter();
   const [currentHash, setCurrentHash] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,40 +57,24 @@ export default function BibleNavigation({
 
   const handleBookChange = (e) => {
     const newBook = e.target.value;
-    const short = getbookSlug(newBook);
-    // Navigate to chapter 1 of new book
-    startTransition(() => {
-      router.push(`/${short}/1`);
-    });
+    navigate(newBook, 1);
   };
 
   const handleChapterChange = (e) => {
     const newChapter = e.target.value;
-    const short = getbookSlug(activeBook);
-    startTransition(() => {
-      router.push(`/${short}/${newChapter}`);
-    });
+    navigate(activeBook, newChapter);
   };
 
   const prevChapter = () => {
     const curr = parseInt(activeChapter);
     if (curr <= 1) return;
-    const short = getbookSlug(activeBook);
-    startTransition(() => {
-      router.push(`/${short}/${curr - 1}`);
-    });
+    navigate(activeBook, curr - 1);
   };
 
   const nextChapter = () => {
     const curr = parseInt(activeChapter);
-    // Safe check if chapters array is populated, otherwise just assume unlimited?
-    // Usually chapters array is passed.
     if (chapters.length > 0 && curr >= chapters.length) return;
-
-    const short = getbookSlug(activeBook);
-    startTransition(() => {
-      router.push(`/${short}/${curr + 1}`);
-    });
+    navigate(activeBook, curr + 1);
   };
 
   const handleSearch = useCallback(
@@ -331,10 +314,7 @@ export default function BibleNavigation({
                           disableAutoHideRef.current = true;
                           setControlsVisible(true);
 
-                          startTransition(() => {
-                            const bookSlugName = getbookSlug(activeBook);
-                            router.push(`/${bookSlugName}/${theme.თავი}#${theme.id}`);
-                          });
+                          navigate(activeBook, theme.თავი, `#${theme.id}`);
 
                           // Re-enable auto-hide after 3 seconds
                           setTimeout(() => {
@@ -416,9 +396,9 @@ export default function BibleNavigation({
                           window.history.pushState(null, null, newHash);
                         }, 0);
                       } else {
-                        startTransition(() => {
-                          router.push(`/${resultShort || 'მათე'}/${result.თავი}#${result.id}`);
-                        });
+                        const bookObj = BOOKS.find((b) => b.slug === resultShort);
+                        const bookName = bookObj ? bookObj.name : result.წიგნი;
+                        navigate(bookName, result.თავი, `#${result.id}`);
                       }
 
                       setShowResults(false);
