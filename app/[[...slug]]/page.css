@@ -450,7 +450,7 @@ body {
 .verses .verse {
   font-size: calc(clamp(1.9rem, calc(1vw + 1rem), 3.5rem) * var(--font-scale));
   line-height: calc(2.6rem * var(--font-scale));
-  margin-bottom: 1.38rem;
+  margin-bottom: 1.1rem;
   margin-left: 0.5rem;
 }
 
@@ -931,11 +931,11 @@ body {
 }
 
 .verse--clickable:hover {
-  background-color: color-mix(in srgb, var(--text-color), transparent 88%);
+  background-color: color-mix(in srgb, var(--text-color), transparent 95%);
 }
 
 .verse--clickable:active {
-  background-color: color-mix(in srgb, var(--text-color), transparent 80%);
+  background-color: color-mix(in srgb, var(--text-color), transparent 91%);
 }
 
 .verse-popup-overlay {
