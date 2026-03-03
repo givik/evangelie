@@ -1,10 +1,11 @@
-const CACHE_NAME = 'bible-cache-v4';
+const CACHE_NAME = 'bible-cache-v5';
 
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
   '/icon.png',
   '/icon.svg',
+  '/book.svg',
   '/candle-2-svgrepo-com.svg',
   '/candle-2-off-svgrepo-com.svg',
   '/cross-orthodox.svg',
