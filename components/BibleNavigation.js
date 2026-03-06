@@ -355,7 +355,9 @@ export default function BibleNavigation({
               }
             }}
           />
-          <div className={`search-icon-circle`}></div>
+          <div className="search-icon-circle">
+            <span className={`search-label ${textFont.className}`}>ძებნა</span>
+          </div>
           {showResults && (searchQuery.length >= 2 || isSearching) && (
             <div
               className="search-results"
