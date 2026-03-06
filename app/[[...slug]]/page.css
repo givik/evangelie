@@ -283,7 +283,7 @@ body {
 }
 
 .search-result-text {
-  font-size: 0.95rem;
+  font-size: 1.35rem;
   color: var(--text-color);
   opacity: 0.8;
   display: -webkit-box;
