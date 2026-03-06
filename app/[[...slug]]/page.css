@@ -779,6 +779,10 @@ body {
     width: 2.8rem;
     height: 2.8rem;
   }
+
+  .search-label {
+    display: none;
+  }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
