@@ -118,7 +118,8 @@ body {
   align-items: center;
   justify-content: flex-start;
   z-index: 10;
-  width: 9rem;
+  width: 20%;
+  max-width: 200px;
   height: 3.2rem;
   transition: width 0.3s ease;
 }
@@ -184,13 +185,13 @@ body {
   pointer-events: none;
   display: flex;
   align-items: center;
-  padding-left: 0.8rem;
+  padding-left: 15px;
   background: var(--controls-bg);
   box-sizing: border-box;
 }
 
 .search-label {
-  margin-left: 2.22rem;
+  margin-left: 30%;
   font-size: 1.12rem;
   color: var(--text-color);
   /* opacity: 0.8; */
@@ -327,7 +328,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  width: 48%;
+  width: 70%;
 }
 
 [data-theme='dark'] .controls .book-selector select {
@@ -727,6 +728,13 @@ body {
     justify-content: left;
     width: 100%;
   }
+
+}
+
+@media only screen and (max-width: 385px) {
+  .search-label {
+    display: none;
+  }
 }
 
 /* Extra small devices (phones, 600px and down) */
@@ -736,16 +744,13 @@ body {
     gap: 0;
   }
 
-  .controls .book-selector .long-book-name {
-    display: none;
-  }
-
-  .controls .btn-container {
-    display: none;
+  .reader-settings {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 5rem;
   }
 
   .controls .book-selector {
-    width: 100%;
     justify-content: right;
   }
 
@@ -764,23 +769,31 @@ body {
   }
 
   .search-container {
-    margin-top: 0.2rem;
-    margin-left: 10vw;
-    width: 2.8rem;
-    min-width: 2.8rem;
-  }
-
-  .search-container input:focus {
-    width: calc(100vw - 120px);
-    max-width: 400px;
+    margin-left: 10%;
+    width: 30%;
   }
 
   .search-icon-circle {
-    width: 2.8rem;
-    height: 2.8rem;
+    padding-left: 0.9rem;
   }
 
-  .search-label {
+  /* 
+  .search-container input:focus {
+    width: calc(100vw - 120px);
+    max-width: 400px;
+  }*/
+
+
+}
+
+@media only screen and (max-width: 700px) {
+
+
+  .controls .book-selector .long-book-name {
+    display: none;
+  }
+
+  .controls .btn-container {
     display: none;
   }
 }
@@ -939,13 +952,6 @@ body {
   border-bottom: 1px solid var(--text-color);
 }
 
-@media only screen and (max-width: 600px) {
-  .reader-settings {
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 5rem;
-  }
-}
 
 /* ── Verse Popup ── */
 .verse--clickable {
