@@ -150,6 +150,7 @@ export default function RootLayout({ children }) {
         <meta property="og:title" content="ბიბლია განმარტებებით" />
         <meta property="og:description" content="ბიბლია განმარტებებით" />
         <meta property="og:url" content="https://ბიბლია.გე" />
+        <meta property="og:type" content="website" />
       </head>
       <body>
         <ThemeProvider>
