@@ -145,12 +145,11 @@ export default function RootLayout({ children }) {
           media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
         />
 
-        <meta property="og:image" content="/og-image.png">
-        <meta property="og:site_name" content="ბიბლია.გე">
-        <meta property="og:title" content="ბიბლია განმარტებებით">
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:site_name" content="ბიბლია.გე" />
+        <meta property="og:title" content="ბიბლია განმარტებებით" />
         <meta property="og:description" content="ბიბლია განმარტებებით" />
-        <meta property="og:url" content="https://ბიბლია.გე">
-
+        <meta property="og:url" content="https://ბიბლია.გე" />
       </head>
       <body>
         <ThemeProvider>
