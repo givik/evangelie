@@ -193,7 +193,7 @@ body {
   margin-left: 2.22rem;
   font-size: 1.12rem;
   color: var(--text-color);
-  opacity: 0.8;
+  /* opacity: 0.8; */
   white-space: nowrap;
   letter-spacing: 0.02em;
   font-weight: 500;
