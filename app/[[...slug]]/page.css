@@ -714,6 +714,12 @@ body {
   }
 }
 
+@media only screen and (max-width: 300px) {
+  .search-container {
+    display: none;
+  }
+}
+
 /* Extra extra small devices */
 @media only screen and (max-width: 336px) {
   #menuToggle {
@@ -732,6 +738,10 @@ body {
 }
 
 @media only screen and (max-width: 385px) {
+  .search-container {
+    max-width: 50px !important;
+  }
+
   .search-label {
     display: none;
   }
@@ -777,12 +787,10 @@ body {
     padding-left: 0.9rem;
   }
 
-  /* 
-  .search-container input:focus {
-    width: calc(100vw - 120px);
-    max-width: 400px;
-  }*/
 
+  .search-container input:focus {
+    width: calc(100vw - 100px);
+  }
 
 }
 
