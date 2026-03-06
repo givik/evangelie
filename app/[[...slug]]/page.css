@@ -938,6 +938,13 @@ body {
   background-color: color-mix(in srgb, var(--text-color), transparent 91%);
 }
 
+.verse--active {
+  background-color: color-mix(in srgb, var(--text-color), transparent 93%);
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--text-color), transparent 60%);
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 /* ── Overlay ── */
 .verse-popup-overlay {
   position: fixed;
@@ -1109,7 +1116,7 @@ body {
 
 /* ── Commentary body ── */
 .verse-popup-body {
-  padding: 1.25rem 1.5rem 2rem;
+  padding: 1.25rem 1rem 2rem;
   overflow-y: auto;
   flex: 1;
   -webkit-overflow-scrolling: touch;

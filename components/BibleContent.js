@@ -30,6 +30,7 @@ export default function BibleContent({
 }) {
   const { fontSize, language } = useTheme();
   const [selectedVerse, setSelectedVerse] = useState(null);
+  const [highlightedVerseId, setHighlightedVerseId] = useState(null);
 
   // Auto-open popup when URL contains a verse number
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function BibleContent({
       if (!isNaN(verseNum) && verseNum >= 1 && verseNum <= verses.length) {
         const verse = verses[verseNum - 1];
         setSelectedVerse({ id: verse.id, index: verseNum });
+        setHighlightedVerseId(verse.id);
       }
     }
   }, [activeVerse, verses]);
@@ -45,6 +47,7 @@ export default function BibleContent({
   const handleVerseClick = useCallback(
     (verseId, verseIndex) => {
       setSelectedVerse({ id: verseId, index: verseIndex });
+      setHighlightedVerseId(verseId);
       // Update URL to include verse number (shallow — no page reload)
       const bookSlug = getbookSlug(activeBook);
       window.history.pushState(null, '', `/${bookSlug}/${activeChapter}/${verseIndex}`);
@@ -134,8 +137,12 @@ export default function BibleContent({
             <div key={verse.id} id={verse.id.toString()} className={textFont.className}>
               {verse.showTopic && <h2 className="topic">{verse.თემა && `- ${verse.თემა} -`}</h2>}
               <p
-                className="verse verse--clickable"
-                onClick={() => handleVerseClick(verse.id, index + 1)}
+                className={`verse verse--clickable ${highlightedVerseId == verse.id ? 'verse--active' : ''}`}
+                data-verse-id={verse.id}
+                onClick={() => {
+                  console.log('Verse Clicked:', verse.id);
+                  handleVerseClick(verse.id, index + 1);
+                }}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
