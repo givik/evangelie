@@ -228,12 +228,12 @@ export default function VersePopup({
                 >
                   {item.ავტორი && (
                     <div className="verse-popup-card-author">
-                      <span
+                      {/* <span
                         className="verse-popup-author-avatar"
                         style={{ backgroundColor: getAccentColor(index) }}
                       >
                         {getInitial(item.ავტორი)}
-                      </span>
+                      </span> */}
                       <span className="verse-popup-author-name">{item.ავტორი}</span>
                     </div>
                   )}
