@@ -930,9 +930,9 @@ body {
   margin-left: 0.1rem;
 }
 
-.verse--clickable:hover {
+/* .verse--clickable:hover {
   background-color: color-mix(in srgb, var(--text-color), transparent 95%);
-}
+} */
 
 .verse--clickable:active {
   background-color: color-mix(in srgb, var(--text-color), transparent 91%);
