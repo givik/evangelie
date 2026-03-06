@@ -962,7 +962,7 @@ body {
 
 .verse--active {
   background-color: color-mix(in srgb, var(--text-color), transparent 93%);
-  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--text-color), transparent 40%);
+  /* box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--text-color), transparent 40%); */
   border-radius: 0.5rem;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
