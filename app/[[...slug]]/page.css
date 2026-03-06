@@ -1183,11 +1183,11 @@ body {
   color: var(--topic-color);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 1rem;
   margin-left: -1rem;
-  margin-top: 1rem;
+  padding: 0.7rem;
   text-align: center;
   font-weight: 500;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-color), transparent 88%)
 }
 
 /* ── Commentary cards ── */
